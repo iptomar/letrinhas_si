@@ -1,0 +1,9 @@
+Node.JS + MySQL
+http://stackoverflow.com/questions/5818312/mysql-with-node-js
+https://github.com/felixge/node-mysql
+
+HTTP and Android
+http://developer.android.com/training/basics/network-ops/connecting.html
+
+HTTP + Android + JSON
+http://www.androidhive.info/2012/05/how-to-connect-android-with-php-mysql/
