@@ -1,0 +1,12 @@
+Tarefas para o dia 27 Março;
+-- Webservice (Servidor) -> André, Luís, João
+	--GET -> ?
+	--POST -> ?
+-- Webservice (App) -> Alex, Joni
+	--Visual -> ?
+	--GET -> ?
+	--POST -> ?
+	
+--Reunião no dia 25 (13h-15h)
+	
+
