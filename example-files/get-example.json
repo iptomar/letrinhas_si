@@ -1,5 +1,3 @@
-// GET
-
 {
   "tests": [
     {
@@ -16,26 +14,5 @@
       "professorName": "Um professor qualquer",
       "maxTries": 2
     },
-  ]
-}
-
-// POST
-
-{
-  "solvedTests": [
-    {
-      "id": 1,
-      "testId": 1,
-      "completionDate": "1-1-2014",
-      "studentName": "Nome do aluno",
-      "voiceBase64": ""
-    },
-    {
-      "id": 2,
-      "testId": 1,
-      "completionDate": "2-1-2014",
-      "studentName": "Outro aluno",
-      "voiceBase64": ""
-    }
   ]
 }
