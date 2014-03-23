@@ -14,6 +14,7 @@ void _fetchTests(_io.HttpRequest req) {
 }
 
 void _postResults(_io.HttpRequest req) {
+  // Data from the request comes a byte array (list).
   req.listen((List<int> data) {
     tasks.saveResultsToDb(new String.fromCharCodes(data));
     req.response.close();
@@ -60,7 +61,7 @@ void _sendNotFound(_io.HttpRequest req) {
 
 void startServer() {
   _io.HttpServer.bind('0.0.0.0', 8888).then((server) {
-    server.listen((req) => _handleRequest(req));
+    server.listen(_handleRequest);
   });
 
   print('Server running on 0.0.0.0:8888');
