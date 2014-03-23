@@ -1,0 +1,41 @@
+// GET
+
+{
+  "tests": [
+    {
+      "id": 1,
+      "title": "O Capuchinho Vermelho",
+      "text": "Era uma vez...",
+      "professorName": "Um professor qualquer",
+      "maxTries": 3
+    },
+    {
+      "id": 2,
+      "title": "A história da Carochinha",
+      "text": "Sou mesmo mau a lembrar-me de histórias.",
+      "professorName": "Um professor qualquer",
+      "maxTries": 2
+    },
+  ]
+}
+
+// POST
+
+{
+  "solvedTests": [
+    {
+      "id": 1,
+      "testId": 1,
+      "completionDate": "1-1-2014",
+      "studentName": "Nome do aluno",
+      "voiceBase64": ""
+    },
+    {
+      "id": 2,
+      "testId": 1,
+      "completionDate": "2-1-2014",
+      "studentName": "Outro aluno",
+      "voiceBase64": ""
+    }
+  ]
+}
