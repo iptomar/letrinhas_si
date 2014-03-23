@@ -29,8 +29,8 @@ void _handleRequest(_io.HttpRequest req) {
   if (req.method == 'POST') {
     // Handle POST requests.
 
-    switch (req.requestedUri.pathSegments[0]) {
-      case 'postTestResults':
+    switch (req.requestedUri.path) {
+      case '/postTestResults':
         _postResults(req);
         break;
       default:
@@ -39,8 +39,8 @@ void _handleRequest(_io.HttpRequest req) {
   } else if (req.method == 'GET') {
     // Handle GET requests.
 
-    switch (req.requestedUri.pathSegments[0]) {
-      case 'testList':
+    switch (req.requestedUri.path) {
+      case '/testList':
         _fetchTests(req);
         break;
       default:
