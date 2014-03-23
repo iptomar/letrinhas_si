@@ -1,10 +1,14 @@
+// Data which is to be sent to the server, to be stored in the DB.
 {
+  // Array with all the solutions.
   "solvedTests": [
     {
+      // The server is expecting the following fields from each item:
       "id": 1,
       "testId": 1,
       "completionDate": "1-1-2014",
       "studentName": "Nome do aluno",
+      // I don't know if base64 encoding is the best choice.
       "voiceBase64": ""
     },
     {
