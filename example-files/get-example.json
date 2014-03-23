@@ -1,5 +1,8 @@
+// Example data which is to be consumed by the Android app demo.
 {
+  // This will contain all the tests.
   "tests": [
+    // Each test has these fields:
     {
       "id": 1,
       "title": "O Capuchinho Vermelho",
