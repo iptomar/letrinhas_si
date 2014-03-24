@@ -83,8 +83,12 @@ _async.Future saveResultsToDb(String json) {
       }
 
       // Run the query. If anything goes wrong, we'll tell as such.
-      query.executeMulti(parameters).catchError((ex) => print(ex.toString()));
+      query.executeMulti(parameters).catchError(_printError);
     }, // If something goes wrong while preparing the query, tell it here.
-    onError: (ex) => print('Unable to prepare query., ${ex.toString()}'));
+    onError: _printError);
   });
+}
+
+void _printError(errorObject) {
+  print('Error: ${errorObject.toString()}');
 }
