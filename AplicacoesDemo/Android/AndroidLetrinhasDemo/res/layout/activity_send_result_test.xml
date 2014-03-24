@@ -1,0 +1,122 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <!-- Name Label -->
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="10dip"
+        android:text="ID"
+        android:textSize="17dip" />
+
+    <!-- Input Name -->
+
+
+    <!-- Price Label -->
+
+    <EditText
+        android:id="@+id/txtBoxId"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:layout_marginBottom="15dip"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:singleLine="true" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="10dip"
+        android:text="TestID"
+        android:textSize="17dip" />
+
+    <!-- Input Price -->
+
+    <EditText
+        android:id="@+id/txtBoxtestId"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:layout_marginBottom="15dip"
+        android:inputType="numberDecimal"
+        android:singleLine="true" />
+
+    <!-- Description Label -->
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="10dip"
+        android:text="Date"
+        android:textSize="17dip" />
+
+    <!-- Input description -->
+
+    <EditText
+        android:id="@+id/txtBoxDate"
+        android:layout_width="fill_parent"
+        android:layout_height="36dp"
+        android:layout_margin="5dip"
+        android:layout_marginBottom="15dip"
+        android:gravity="top"
+        android:lines="4"
+        android:text="1-1-2014" />
+
+    <!-- Button Create Product -->
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="10dip"
+        android:text="Student Name"
+        android:textSize="17dip" />
+
+    <EditText
+        android:id="@+id/txtBoxStudentName"
+        android:layout_width="fill_parent"
+        android:layout_height="36dp"
+        android:layout_margin="5dip"
+        android:layout_marginBottom="15dip"
+        android:ems="10"
+        android:gravity="top"
+        android:lines="4" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="10dip"
+        android:text="VoiceBase64"
+        android:textSize="17dip" />
+
+    <EditText
+        android:id="@+id/txtBoxVoiceB"
+        android:layout_width="fill_parent"
+        android:layout_height="36dp"
+        android:layout_margin="5dip"
+        android:layout_marginBottom="15dip"
+        android:ems="10"
+        android:gravity="top"
+        android:lines="4" />
+
+    <Button
+        android:id="@+id/btnSendResult"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btnSendResult" />
+
+
+</LinearLayout>
