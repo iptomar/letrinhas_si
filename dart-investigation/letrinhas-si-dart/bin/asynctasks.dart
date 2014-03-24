@@ -47,6 +47,21 @@ _async.Future<String> getTestsFromDb() {
 }
 
 /// Receives a [json] string containing test resolution data,
+/// parses it, and prints it to the console.
+void printTests(String json) {
+  Map<String, dynamic> dataToShow = _convert.JSON.decode(json);
+
+  List<Map<String, dynamic>> tests = dataToShow['solvedTests'];
+
+  for (var test in tests) {
+    for (var key in test.keys) {
+      print('$key -> ${test[key]}');
+    }
+    print('');
+  }
+}
+
+/// Receives a [json] string containing test resolution data,
 /// parses it, and inserts it into the DB.
 /// This is run asynchronously.
 _async.Future saveResultsToDb(String json) {
