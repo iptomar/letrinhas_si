@@ -19,7 +19,8 @@ _async.Future<String> getTestsFromDb() {
 
     // Prepare the structure which will be transformed to JSON.
     var data = <String, dynamic> {
-      'tests': <Map<String, dynamic>>[]
+      'tests': <Map<String, dynamic>>[],
+      'success': 1
     };
 
     res.forEach((_sql.Row row) {
