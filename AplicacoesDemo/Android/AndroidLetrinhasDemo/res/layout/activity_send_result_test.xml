@@ -35,7 +35,7 @@
         android:paddingLeft="10dip"
         android:paddingRight="10dip"
         android:paddingTop="10dip"
-        android:text="TestID"
+        android:text="Teste ID"
         android:textSize="17dip" />
 
     <!-- Input Price -->
@@ -57,7 +57,7 @@
         android:paddingLeft="10dip"
         android:paddingRight="10dip"
         android:paddingTop="10dip"
-        android:text="Date"
+        android:text="Data"
         android:textSize="17dip" />
 
     <!-- Input description -->
@@ -80,7 +80,7 @@
         android:paddingLeft="10dip"
         android:paddingRight="10dip"
         android:paddingTop="10dip"
-        android:text="Student Name"
+        android:text="Nome do Estudante"
         android:textSize="17dip" />
 
     <EditText

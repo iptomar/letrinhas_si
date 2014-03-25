@@ -2,10 +2,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:gravity="center_horizontal">
-	
-    <!--  Sample Dashboard screen with Two buttons -->
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <!-- Sample Dashboard screen with Two buttons -->
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="127dp"
+        android:layout_height="244dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lb_mainIpServidor"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/txtBoxIpServer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="192.168.1.3" />
 
     <Button
         android:id="@+id/btnViewProducts"

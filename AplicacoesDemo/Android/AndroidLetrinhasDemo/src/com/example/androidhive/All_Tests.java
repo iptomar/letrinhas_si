@@ -7,6 +7,8 @@ import org.apache.http.NameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,25 +34,33 @@ public class All_Tests extends ListActivity {
 		//Array list de testes
 		ArrayList<HashMap<String, String>> testsList;
 
-		// URL do Servidor //////////////////////////////////////////////////////////////
-		private static String url_all_products = "http://192.168.1.3:8080/testList"; ////
+		// URL do Servidor  Nota: Recebido em baixo//////////////////////////////////////////////////////////////
+		private static String url_all_tests= ""; ////
         ////////////////////////////////////////////////////////////////////////////////
 		// JSON Nome dos campos
 		private static final String TAG_SUCCESS = "success";
-		private static final String TAG_PRODUCTS = "tests";
+		private static final String TAG_TESTS= "tests";
 		private static final String TAG_PID = "id";
 		private static final String TAG_TITLE = "title";
 		private static final String TAG_TEXT = "text";
 		private static final String TAG_MAX_TRIES = "maxTries";
 		
 		//Products JSONArray
-		JSONArray products = null;
+		JSONArray tests = null;
 
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_all__tests);
 
+			// Obtendo Detalhes dos Testes do intent
+			Intent i = getIntent();
+			
+			// Obtendo CAMPO IP  enviados para esta Janela
+			String ip = i.getStringExtra("IP");
+			url_all_tests = "http://"+ip+":8080/testList"; 
+			
+			
 			// Hashmap para ListView
 			testsList = new ArrayList<HashMap<String, String>>();
 
@@ -67,7 +77,7 @@ public class All_Tests extends ListActivity {
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
 					
-					////Vai Buscar as TextView Ocultas Informação///
+					////Vai Buscar as TextView Ocultas na list_item ///
 					String title = ((TextView) view.findViewById(R.id.title)).getText()
 							.toString();
 					String text = ((TextView) view.findViewById(R.id.text)).getText()
@@ -77,7 +87,7 @@ public class All_Tests extends ListActivity {
 					
 					
 					Intent i = new Intent(getApplicationContext(), ViewMoreInfo.class);
-					// Insere um  Extra, coloca duas variaveis para serem enviadas para a janela MoreInfo
+					// Insere um  Extra, coloca variaveis para serem enviadas para a janela ViewMoreInfo
 					i.putExtra(TAG_TITLE, title);
 					i.putExtra(TAG_TEXT, text);
 					i.putExtra(TAG_MAX_TRIES, tries);
@@ -87,21 +97,8 @@ public class All_Tests extends ListActivity {
 
 		}
 
-		// Response from Edit Product Activity
-		@Override
-		protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-			super.onActivityResult(requestCode, resultCode, data);
-			// if result code 100
-			if (resultCode == 100) {
-				// if result code 100 is received 
-				// means user edited/deleted product
-				// reload this screen again
-				Intent intent = getIntent();
-				finish();
-				startActivity(intent);
-			}
-
-		}
+		// Resposta 
+		
 
 		/**
 		 * Background Async Task para carregar todos os Testes por HTTP Request
@@ -109,13 +106,13 @@ public class All_Tests extends ListActivity {
 		class LoadAllProducts extends AsyncTask<String, String, String> {
 
 			/**
-			 * Before starting background thread Show Progress Dialog
+			 * Antes de iniciar a Thread Bacground aparece a progress Dialog
 			 * */
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
 				pDialog = new ProgressDialog(All_Tests.this);
-				pDialog.setMessage("Loading Tests. Please wait...");
+				pDialog.setMessage("A Carregar Testes. Por Favor aguarde...");
 				pDialog.setIndeterminate(false);
 				pDialog.setCancelable(false);
 				pDialog.show();
@@ -128,76 +125,68 @@ public class All_Tests extends ListActivity {
 				// Construi os Parametros
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 				// getting JSON string from URL
-				JSONObject json = jParser.makeHttpRequest(url_all_products, "GET", params);
+				JSONObject json = jParser.Get(url_all_tests, params);
 				
-				// Check your log cat for JSON reponse
-				Log.d("All Tests: ", json.toString());
-
 				try {
-					// Checking for SUCCESS TAG
+					// verifica a Tag SUCCESS, usada para verificar de a mensagem chegou a nós como deve ser
 					int success = json.getInt(TAG_SUCCESS);
 
 					if (success == 1) {
-						// products found
-						// Getting Array of Products
-						products = json.getJSONArray(TAG_PRODUCTS);
+						// Testes encontrados
+						// Obtendo um Array de todos os Tests
+						tests = json.getJSONArray(TAG_TESTS);
 
-						// looping through All Products
-						for (int i = 0; i < products.length(); i++) {
-							JSONObject c = products.getJSONObject(i);
-
-							// Storing each json item in variable
+						// For (loop)looping atraves de todos os Testes
+						for (int i = 0; i < tests.length(); i++) {
+							JSONObject c = tests.getJSONObject(i);
+							
+							// Armazenar cada item json nas variáveis
 							String id = c.getString(TAG_PID);
 							String title = c.getString(TAG_TITLE);
 							String text = c.getString(TAG_TEXT);
 							String tries = c.getString(TAG_MAX_TRIES);
 
-							// creating new HashMap
+							// Criar um novo HashMap
 							HashMap<String, String> map = new HashMap<String, String>();
 
-							// adding each child node to HashMap key => value
+							// Adicionar cada NODE filho ao HashMap chave => valor
 							map.put(TAG_PID, id);
 							map.put(TAG_TITLE, title);
 							map.put(TAG_TEXT, text);
 							map.put(TAG_MAX_TRIES, tries);
 							
-							// adding HashList to ArrayList
+							// Acrescentando HashList para ArrayList
 							testsList.add(map);
 						}
 					} else {
-						// no products found
-						// Launch Add New product Activity
-						Intent i = new Intent(getApplicationContext(),
-								Send_ResultTest.class);
-						// Closing all previous activities
-						i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						startActivity(i);
+						// Sem testes Encontrados
+						AlertDialog.Builder alertDialog = new AlertDialog.Builder(All_Tests.this);	       
+						alertDialog.setMessage("Sem Registos");
+				        alertDialog.show();
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-
 				return null;
 			}
 
 			/**
-			 * After completing background task Dismiss the progress dialog
+			 * Depois de completar tarefa de background Fechar a Progress Dialog
 			 * **/
 			protected void onPostExecute(String file_url) {
-				// dismiss the dialog after getting all products
+				//fechar a janela de Progress Dialog depois de receber todos os Tests
 				pDialog.dismiss();
-				// updating UI from Background Thread
+				// Actualizar a UI a partir da Background Thread
 				runOnUiThread(new Runnable() {
 					public void run() {
 						/**
-						 * Updating parsed JSON data into ListView
+						 * Inserir parsed JSON para dentro da ListView
 						 * */
 						ListAdapter adapter = new SimpleAdapter(
 								All_Tests.this, testsList,
-								R.layout.list_item, new String[] { TAG_PID,
-										TAG_TITLE, TAG_TEXT, TAG_MAX_TRIES},
+								R.layout.list_item, new String[] { TAG_PID, TAG_TITLE, TAG_TEXT, TAG_MAX_TRIES},
 								new int[] { R.id.id, R.id.title, R.id.text, R.id.tries});
-						// updating listview
+						// actualizar listview
 						setListAdapter(adapter);
 					}
 				});

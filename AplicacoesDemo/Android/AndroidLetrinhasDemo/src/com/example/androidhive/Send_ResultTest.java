@@ -1,9 +1,17 @@
 package com.example.androidhive;
 
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -20,29 +28,33 @@ public class Send_ResultTest extends Activity {
 		EditText inputStudentName;
 		EditText inputVoiceBase64;
 
-		// url to create new product
-		private static String url_create_product = "http://192.168.1.3:8080/postTestResults";
-
-		// JSON Node names
-		private static final String TAG_SUCCESS = "success";
+		// url DO servidor, preenchido em baixo 
+		private static String url_Server = "";
 
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_send_result_test);
-
-			// Edit Text
+			
+			// Obtendo Detalhes dos Testes do intent
+			Intent i = getIntent();
+						
+	    	// Obtendo CAMPO IP  enviados para esta Janela
+			String ip = i.getStringExtra("IP");
+			url_Server = "http://"+ip+":8080/postTestResults"; 
+			
+			
+			// Preenchimento das variaveis do a informacao da janela
 			inputId = (EditText) findViewById(R.id.txtBoxId);
 			inputTestId = (EditText) findViewById(R.id.txtBoxtestId);
 			inputCompletionDate = (EditText) findViewById(R.id.txtBoxDate);
 			inputStudentName = (EditText) findViewById(R.id.txtBoxStudentName);
 			inputVoiceBase64 = (EditText) findViewById(R.id.txtBoxVoiceB);
-			// Create button
+			// criar o botao
 			Button btnSend = (Button) findViewById(R.id.btnSendResult);
 
-			// button click event
+			// evento do botao
 			btnSend.setOnClickListener(new View.OnClickListener() {
-
 				@Override
 				public void onClick(View view) {
 					// creating new product in background thread
@@ -52,25 +64,25 @@ public class Send_ResultTest extends Activity {
 		}
 
 		/**
-		 * Background Async Task to Send Result
+		 * Background Async Task para enviar os resultadost
 		 * */
 		class SendResult extends AsyncTask<String, String, String> {
 
 			/**
-			 * Before starting background thread Show Progress Dialog
+			 * Antes de começar o processo exibe uma Progress Dialog
 			 * */
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
 				pDialog = new ProgressDialog(Send_ResultTest.this);
-				pDialog.setMessage("Sending....");
+				pDialog.setMessage("Enviando....");
 				pDialog.setIndeterminate(false);
 				pDialog.setCancelable(true);
 				pDialog.show();
 			}
 
 			/**
-			 * Sending Result
+			 * Envia os Resultados
 			 * */
 			protected String doInBackground(String... args) {
 				String id = inputId.getText().toString();
@@ -78,35 +90,52 @@ public class Send_ResultTest extends Activity {
 				String date = inputCompletionDate.getText().toString();
 				String studentName = inputStudentName.getText().toString();
 				String voiceBase64 = inputVoiceBase64.getText().toString();
+				 
 
-				// Building Parameters
-		    //List<NameValuePair> params = new ArrayList<NameValuePair>();
-			//	params.add(new BasicNameValuePair("name", name));
-			//	params.add(new BasicNameValuePair("price", price));
-			//	params.add(new BasicNameValuePair("description", description));
+				String base64 ="";
 
-			//System.out.println("*************************  "+params.get(2));
-				// getting JSON Object
-				// Note that create product url accepts POST method
-			
-		String campos = "{\"solvedTests\": " +
+					byte[] data;
+					try {
+						data = voiceBase64.getBytes("UTF-8");
+						 base64 = Base64.encodeToString(data, Base64.DEFAULT);
+					} catch (UnsupportedEncodingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+                 
+					 
+                
+				//	String filePath= "drawable/ic_launcher.png";
+					 
+					 
+					// Bitmap  bm = BitmapFactory.decodeFile(filePath);
+					// ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+					// bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);  
+					// byte[] b = baos.toByteArray(); 
+
+					//String imageStr = Base64.encodeToString(b, Base64.DEFAULT);
+					 
+					// System.out.println("*************"+imageStr+"********");
+					 
+					 
+					 
+					 
+				
+				//Criar o ficheiro de JSON
+				String campos = "{\"solvedTests\": " +
 				"[{\"id\": "+id+", " +
 				"\"testId\": "+testId+"," +
 				"\"completionDate\": \" "+date+" \"," +
 				"\"studentName\": \""+studentName+"\"," +
-				"\"voiceBase64\": \""+voiceBase64+"\"}]} ";
-		
-		
-			//	JSONObject json = jsonParser.makeHttpRequest(url_create_product,
-				//		"POST", params);
-				jsonParser.Post(url_create_product, campos);
-				// check log cat fro response
-				//Log.d("Create Response", json.toString());
+				"\"voiceBase64\": \""+base64.substring(0, base64.length()-1)+"\"}]} ";
+
+				jsonParser.Post(url_Server, campos);
 				return null;
 			}
 
 			/**
-			 * After completing background task Dismiss the progress dialog
+			 * Depois de concluida a background task fecha a Progress dialog
 			 * **/
 			protected void onPostExecute(String file_url) {
 				// dismiss the dialog once done

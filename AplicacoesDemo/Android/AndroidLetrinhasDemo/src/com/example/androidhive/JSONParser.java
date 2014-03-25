@@ -31,48 +31,30 @@ public class JSONParser {
 	static String json = "";
 
 	// constructor
-	public JSONParser() {
+	public JSONParser() {}
 
-	}
-
-	// function get json from url
-	// by making HTTP POST or GET mehtod
-	public JSONObject makeHttpRequest(String url, String method,
-			List<NameValuePair> params) {
-
-		// Making HTTP request
+	/**
+	 * Faz um HTTP request, onde recebe um Json e o envia com um Return
+	 * Recebe como paramentros o URL do servidor e uma lista de paramentros a receber
+	 * **/
+	public JSONObject Get(String url, List<NameValuePair> params) {
+		// Faz um HTTP request
 		try {
-			
-			// check for request method
-						if(method == "POST"){
-							
-				//HttpEntity httpEntity = httpResponse.getEntity();
-				//is = httpEntity.getContent();
-				
-			}else if(method == "GET"){
-				// request method is GET
+				// executa o GET
 				DefaultHttpClient httpClient = new DefaultHttpClient();
 				String paramString = URLEncodedUtils.format(params, "utf-8");
 				url += "?" + paramString;
+				
+				
 				HttpGet httpGet = new HttpGet(url);
-
 				HttpResponse httpResponse = httpClient.execute(httpGet);
 				HttpEntity httpEntity = httpResponse.getEntity();
 				is = httpEntity.getContent();
-			}			
-			
-
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+				
+		} catch (Exception e) {e.printStackTrace();}
 
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					is, "iso-8859-1"), 8);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
 			StringBuilder sb = new StringBuilder();
 			String line = null;
 			while ((line = reader.readLine()) != null) {
@@ -82,43 +64,36 @@ public class JSONParser {
 			json = sb.toString();
 			
 		} catch (Exception e) {
-			Log.e("Buffer Error", "Error converting result " + e.toString());
+			Log.e("Erro no Buffer", "Erro a converter resultados" + e.toString());
 		}
-
-		// try parse the string to a JSON object
+		// tentar analisar a sequencia do objeto JSON
 		try {
 			jObj = new JSONObject(json);
 		} catch (JSONException e) {
-			Log.e("JSON Parser", "Error parsing data " + e.toString());
+			Log.e("JSON Parser", "Erro parsing " + e.toString());
 		}
-
 		// return JSON String
 		return jObj;
-
 	}
 	
+
+	/**
+	 * Faz um HTTP request, onde envia um Json para o servidor com a informaçao
+	 * Recebe como paramentros o URL do servidor e ficheiro de Json em String
+	 * **/
 	public void Post(String url, String camps)
-	{
+	{		// método de solicitação é POST
 		try {
-		// request method is POST
 		// defaultHttpClient
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		HttpPost httpPost = new HttpPost(url);
-	//httpPost.setEntity(new UrlEncodedFormEntity(params));
-		
-		
-		
 		httpPost.setEntity(new StringEntity(camps));
-     
-		
-		
 		HttpResponse httpResponse = httpClient.execute(httpPost);
 		HttpEntity httpEntity = httpResponse.getEntity();
 		is = httpEntity.getContent();
 		} catch (Exception e) {
-			Log.e("Buffer Error", "Error converting result " + e.toString());
+			Log.e("Erro no Buffer", "Erro a converter resultados" + e.toString());
 		}
-		
 	}
 	
 	

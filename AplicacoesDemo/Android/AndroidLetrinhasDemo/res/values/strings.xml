@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, AndroidConnectingToPhpMySQLActivity!</string>
-    <string name="app_name">MENU</string>
-    <string name="title_activity_view_more_info">View More Info</string>
-    <string name="title_all_tests">View More Info</string>
-    <string name="action_settings">Settings</string>
+    <string name="Letrinhas">letrinhas</string>
+    <string name="app_name">Letrinhas</string>
+    <string name="title_activity_view_more_info">Ver mais Informação</string>
+    <string name="title_all_tests">Ver mais Informação</string>
+    <string name="action_settings">Definições</string>
     <string name="hello_world">Hello world!</string>
-    <string name="btnback">Back</string>
-    <string name="title_activity_all__tests">All Tests</string>
-    <string name="btnMainAllTest">All Tests</string>
-    <string name="btnMainSendResult">Create Result of Test and SEND</string>
-    <string name="btnSendResult">Send Result</string>
-    <string name="title_activity_send__result_test">Send Result of Test</string>
+    <string name="btnback">Voltar</string>
+    <string name="title_activity_all__tests">Todos os Testes</string>
+    <string name="btnMainAllTest">Todos os Testes</string>
+    <string name="btnMainSendResult">Criar e enviar Resultado de Teste</string>
+    <string name="btnSendResult">Enviar Resultado</string>
+    <string name="title_activity_send__result_test">Enviar Resultado de Teste</string>
+    <string name="lb_mainIpServidor">IP do Servidor:</string>
 
 </resources>
