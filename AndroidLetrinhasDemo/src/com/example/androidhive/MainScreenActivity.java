@@ -26,18 +26,17 @@ public class MainScreenActivity extends Activity{
 		// Buttons
 		btnViewProducts = (Button) findViewById(R.id.btnViewProducts);
 		btnNewProduct = (Button) findViewById(R.id.btnSendResult);
-		final String txtboxIP = ((TextView) findViewById(R.id.txtBoxIpServer)).getText()
-				.toString();		
-		
 		// view products click event
 		btnViewProducts.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View view) {
 				// Launching All products Activity
+
 			 	Intent i = new Intent(getApplicationContext(), All_Tests.class);
 			 	//Enviar IP para outra janela
-			 	i.putExtra("IP", txtboxIP);
+			 	i.putExtra("IP", ((TextView) findViewById(R.id.txtBoxIpServer)).getText()
+						.toString());
 			 	startActivity(i);
 			}
 		});
@@ -51,7 +50,8 @@ public class MainScreenActivity extends Activity{
 			public void onClick(View view) {
 				// Launching create new product activity
 				Intent i = new Intent(getApplicationContext(), Send_ResultTest.class);
-				i.putExtra("IP", txtboxIP);
+				i.putExtra("IP", ((TextView) findViewById(R.id.txtBoxIpServer)).getText()
+						.toString());
 				startActivity(i);
 				
 			}
