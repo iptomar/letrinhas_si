@@ -1,13 +1,12 @@
+/*jslint devel: true*/
+/*global require*/
 var http = require('http');
 
+var _server = require('./server');
+
 http.createServer(function (req, res) {
-  res.writeHead(200, {
-    'Content-Type': 'text/plain',
-    'Access-Control-Allow-Origin': '*',
-  });
-
-  var d = Date.now();
-
-  res.end(d.toString());
+    
+    _server.handleRequest(req, res);
+    
 }).listen(8888, '127.0.0.1');
 console.log('Server running at http://127.0.0.1:8888/');
