@@ -16,8 +16,8 @@ void _fetchTests(_io.HttpRequest req) {
 void _postResults(_io.HttpRequest req) {
   // Data from the request comes a byte array (list).
   req.listen((List<int> data) {
-    tasks.saveResultsToDb(new String.fromCharCodes(data));
-    // tasks.printTests(new String.fromCharCodes(data));
+    // tasks.saveResultsToDb(new String.fromCharCodes(data));
+    tasks.printTests(new String.fromCharCodes(data));
     req.response.close();
   });
 }
@@ -61,7 +61,7 @@ void _sendNotFound(_io.HttpRequest req) {
 }
 
 void startServer() {
-  _io.HttpServer.bind('0.0.0.0', 8888).then((server) {
+  _io.HttpServer.bind('0.0.0.0', 8080).then((server) {
     server.listen(_handleRequest);
   });
 
