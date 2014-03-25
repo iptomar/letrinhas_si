@@ -26,7 +26,11 @@ void _handleRequest(_io.HttpRequest req) {
   // First, don't forget to add CORS headers, or the request will fail.
   _addCorsHeaders(req.response);
 
-  print('Got a ${req.method} request to ${req.uri.path}.');
+  var d = new DateTime.now();
+
+  var formattedDate = '${d.hour}:${d.minute}:${d.second}-${d.millisecond}';
+
+  print('[$formattedDate] Got a ${req.method} request to ${req.uri.path} from ${req.connectionInfo.remoteAddress.address}');
 
   if (req.method == 'POST') {
     // Handle POST requests.
