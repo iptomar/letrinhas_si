@@ -2,21 +2,28 @@ library server;
 
 import 'dart:io' as _io;
 import 'asynctasks.dart' as tasks;
+import 'dart:convert' as _convert;
 
 void _fetchTests(_io.HttpRequest req) {
-  tasks.getTestsFromDb().then((jsonData) {
-    req.response
-        ..write(jsonData)
-        ..close();
+  tasks.getTestsFromDb()
+      .then((data) {
+        req.response.write(_convert.JSON.encode(data));
+        req.response.close();
 
-    print('Sent results to the client.');
-  });
+        print('Sent results to the client!');
+      });
 }
 
 void _postResults(_io.HttpRequest req) {
+
+  List<int> data = new List<int>();
+
   // Data from the request comes a byte array (list).
-  req.listen((List<int> data) {
-    // tasks.saveResultsToDb(new String.fromCharCodes(data));
+  req.listen((List<int> receivedData) {
+    // We need to add all the data to a list first.
+    data.addAll(receivedData);
+  }, onDone: () {
+    // Once we're done getting it all, we'll write out the data.
     tasks.printTests(new String.fromCharCodes(data));
     req.response.close();
   });
@@ -28,7 +35,7 @@ void _handleRequest(_io.HttpRequest req) {
 
   var d = new DateTime.now();
 
-  var formattedDate = '${d.hour}:${d.minute}:${d.second}-${d.millisecond}';
+  var formattedDate = '${d.hour}:${d.minute}:${d.second}.${d.millisecond}';
 
   print('[$formattedDate] Got a ${req.method} request to ${req.uri.path} from ${req.connectionInfo.remoteAddress.address}');
 
@@ -69,7 +76,7 @@ void startServer() {
     server.listen(_handleRequest);
   });
 
-  print('Server running on 0.0.0.0:8888');
+  print('Server running on 0.0.0.0:8080');
 }
 
 void _addCorsHeaders(_io.HttpResponse res) {
