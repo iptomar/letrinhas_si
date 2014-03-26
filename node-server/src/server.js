@@ -29,6 +29,10 @@ module.exports = {
                         _sendNotFound(response);
                 }
         }
+    },
+    
+    testMethod : function (req, response) {
+        console.log('olá');
     }
 };
 
