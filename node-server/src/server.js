@@ -4,6 +4,9 @@
 
 module.exports = {
     handleRequest: function (request, response) {
+        
+        console.log('Got a request to ' + request.url);
+        
         _addCorsHeaders(response);
 
         switch (request.method) {
