@@ -1,20 +1,26 @@
 /*global require*/
 /*jshint devel: true*/
 
+//-- Tarefas a realizar neste ficheiro:
+// criar modulo export
+//encapsular as pools, de modo a que quando o servidor recebe um get utilize a pool com a query de SELECT, quando recebe um post utilize a pool de insert
+//Nota: muito semelhante ao que esta no DART
+
+//cria conecção com o servidor
 var mysql = require('mysql');
 var pool  = mysql.createPool({
-  host     : '194.210.241.252',
+  host     : '192.168.56.101',
   user     : 'psiapp',
   password : 'psiapp',
-    database: 'letrinhas'
+  database : 'letrinhas'
 });
 
-
-/* SELECT A BD*/
+//Seleciona a base de dados
 
 pool.query('SELECT Nome as "Nome do Professor" from Professores as solution;' ,function(err, rows, fields) {
   if (err) throw err;
     
+    //imprimir os registos da base de dados
     for (var i = 0; i < rows.length; i++) {
         console.log(rows[i]['Nome do Professor']);   
     }
@@ -28,5 +34,5 @@ pool.getConnection(function(err, connection) {
     var query = connection.query('INSERT INTO Professores SET ?', professor, function(err, result) {
         console.log(query.sql);
     });
-});    
+});
 
