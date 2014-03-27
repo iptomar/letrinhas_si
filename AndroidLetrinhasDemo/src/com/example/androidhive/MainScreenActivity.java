@@ -1,5 +1,6 @@
 package com.example.androidhive;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,16 +32,17 @@ public class MainScreenActivity extends Activity{
 			
 			@Override
 			public void onClick(View view) {
-				// Launching All products Activity
-
+				// Executar janela de listar Testes
 			 	Intent i = new Intent(getApplicationContext(), All_Tests.class);
-			 	//Enviar IP para outra janela
-			 	i.putExtra("IP", ((TextView) findViewById(R.id.txtBoxIpServer)).getText()
-						.toString());
+			 	//Enviar IP e Porta para outra janela
+			 	i.putExtra("IP", ((TextView) findViewById(R.id.txtBoxIpServer)).getText().toString());
+			 	i.putExtra("PORTA", ((TextView) findViewById(R.id.txtBoxPorta)).getText().toString()); 	
 			 	startActivity(i);
 			}
 		});
 		
+		
+	
 		
 		
 		// view products click event
@@ -48,10 +50,11 @@ public class MainScreenActivity extends Activity{
 			
 			@Override
 			public void onClick(View view) {
-				// Launching create new product activity
+				// Executar janela de enviar resultados
 				Intent i = new Intent(getApplicationContext(), Send_ResultTest.class);
-				i.putExtra("IP", ((TextView) findViewById(R.id.txtBoxIpServer)).getText()
-						.toString());
+				//Enviar IP e Porta para outra janela
+				i.putExtra("IP", ((TextView) findViewById(R.id.txtBoxIpServer)).getText().toString());
+			 	i.putExtra("PORTA", ((TextView) findViewById(R.id.txtBoxPorta)).getText().toString());
 				startActivity(i);
 				
 			}
