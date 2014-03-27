@@ -3,4 +3,5 @@ version: 0.1.0
 description: '**EXPERIMENTAL** WebService em Dart de suporte à app Android.'
 dependencies:
   browser: any
+  crypto: any
   sqljocky: any
