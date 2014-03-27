@@ -34,10 +34,9 @@ public class ViewMoreInfo extends Activity {
 		
 				TextView txtText = (TextView) findViewById(R.id.txtTextHist);
 				txtText.setText(text);
-		
+				
 				TextView txtTries = (TextView) findViewById(R.id.txtTries);
 				txtTries.setText("Nº Tentativas:  "+tries);
-		
 		
 				Button btnBack = (Button) findViewById(R.id.btnBack);
 				btnBack.setOnClickListener(new View.OnClickListener() {
