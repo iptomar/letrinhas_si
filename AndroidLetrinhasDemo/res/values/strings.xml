@@ -14,5 +14,6 @@
     <string name="btnSendResult">Enviar Resultado</string>
     <string name="title_activity_send__result_test">Enviar Resultado de Teste</string>
     <string name="lb_mainIpServidor">IP do Servidor:</string>
+    <string name="mainPorta">Porta:</string>
 
 </resources>

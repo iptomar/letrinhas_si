@@ -34,25 +34,25 @@ public class JSONParser {
 	public JSONParser() {}
 
 	/**
-	 * Faz um HTTP request, onde recebe um Json e o envia com um Return
-	 * Recebe como paramentros o URL do servidor e uma lista de paramentros a receber
+	 * Faz um HTTP request, envia um Http Get Returna um JSONObject  
+	 * Recebe:
+	 * - String URL do servidor
+	 * - Uma lista de Parametros possiveis
 	 * **/
 	public JSONObject Get(String url, List<NameValuePair> params) {
 		// Faz um HTTP request
-		try {
-				// executa o GET
+		try {		
 				DefaultHttpClient httpClient = new DefaultHttpClient();
 				String paramString = URLEncodedUtils.format(params, "utf-8");
 				url += "?" + paramString;
-				
-				
+
 				HttpGet httpGet = new HttpGet(url);
 				HttpResponse httpResponse = httpClient.execute(httpGet);
 				HttpEntity httpEntity = httpResponse.getEntity();
 				is = httpEntity.getContent();
 				
 		} catch (Exception e) {e.printStackTrace();}
-
+		//Começa a ler a resposta
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
 			StringBuilder sb = new StringBuilder();
@@ -78,16 +78,16 @@ public class JSONParser {
 	
 
 	/**
-	 * Faz um HTTP request, onde envia um Json para o servidor com a informaçao
+	 * Faz um HTTP request, onde envia um Json em String para o servidor com a informacao
 	 * Recebe como paramentros o URL do servidor e ficheiro de Json em String
 	 * **/
-	public void Post(String url, String camps)
+	public void Post(String url, JSONObject json)
 	{		// método de solicitação é POST
 		try {
 		// defaultHttpClient
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		HttpPost httpPost = new HttpPost(url);
-		httpPost.setEntity(new StringEntity(camps));
+		httpPost.setEntity(new StringEntity(json.toString()));
 		HttpResponse httpResponse = httpClient.execute(httpPost);
 		HttpEntity httpEntity = httpResponse.getEntity();
 		is = httpEntity.getContent();

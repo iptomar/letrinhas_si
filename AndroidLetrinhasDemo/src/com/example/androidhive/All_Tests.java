@@ -56,9 +56,10 @@ public class All_Tests extends ListActivity {
 			// Obtendo Detalhes dos Testes do intent
 			Intent i = getIntent();
 			
-			// Obtendo CAMPO IP  enviados para esta Janela
+	    	// Obtendo CAMPO IP e PORTA enviados para esta Janela
 			String ip = i.getStringExtra("IP");
-			url_all_tests = "http://"+ip+":8080/testList"; 
+			String porta = i.getStringExtra("PORTA");
+			url_all_tests = "http://"+ip+":"+porta+"/testList"; 
 			
 			
 			// Hashmap para ListView
