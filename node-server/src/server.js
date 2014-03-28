@@ -16,8 +16,6 @@ module.exports = {
             case 'GET':
                 switch (request.url) {
                     case '/testList':
-                        response.writeHead(200);
-                        //_fetchTests(response);
                         _sqlserver.getResponse(response);
                         break;
                     default:
@@ -28,9 +26,10 @@ module.exports = {
             case 'POST':
                 switch (request.url) {
                     case '/postTestResults':
-                        response.writeHead(200);
+                        // response.writeHead(200);
                         _pushResults(request, response);
                         response.end('Successful.');
+                        
                         break;
                     default:
                         _sendNotFound(response);
@@ -43,28 +42,28 @@ var _addCorsHeaders = function(response) {
     response.setHeader('Access-Control-Allow-Origin', '*');
 };
 
-function _fetchTests(response) {
-    var returnData = {
-        tests: [
-            {
-                id: 1,
-                title: "O capuchinho vermelho",
-                text: "Era uma vez...",
-                professorName: "Um professor qualquer",
-                maxTries: 3
-            },
-            {
-                id: 2,
-                title: "A história da Carochinha",
-                text: "Sou mesmo mau a lembrar-me de histórias.",
-                professorName: "Um professor qualquer",
-                maxTries: 2
-            }
-        ]
-    };
-    
-    response.end(JSON.stringify(returnData));
-}
+//function _fetchTests(response) {
+//    var returnData = {
+//        tests: [
+//            {
+//                id: 1,
+//                title: "O capuchinho vermelho",
+//                text: "Era uma vez...",
+//                professorName: "Um professor qualquer",
+//                maxTries: 3
+//            },
+//            {
+//                id: 2,
+//                title: "A história da Carochinha",
+//                text: "Sou mesmo mau a lembrar-me de histórias.",
+//                professorName: "Um professor qualquer",
+//                maxTries: 2
+//            }
+//        ]
+//    };
+//    
+//    response.end(JSON.stringify(returnData));
+//}
 
 function _pushResults(request, response) {
     var jsonData = '';

@@ -21,24 +21,37 @@ var pool  = mysql.createPool({
 
 module.exports = {
     getResponse: function(response){
+        console.log('GET profs?');
         _fetchTests(response);
     }    
 };
 
 
 function _fetchTests(response){
-    
-    pool.query('SELECT Nome as "Nome do Professor" from Professores as solution;' ,function(err, rows, fields) {
-    if (err) throw err;
-    
-    //imprimir os registos da base de dados
-    for (var i = 0; i < rows.length; i++) {
-        console.log(rows[i]['Nome do Professor']);   
-    }
+  
+    pool.query('SELECT * from Testes as solution;' ,function(err, rows, fields){
+        if (err) throw err;
 
-   // console.log('Professores na BD ', rows[0].solution);
+        //imprimir os registos da base de dados
+        for (var i = 0; i < rows.length; i++) {
+            console.log(rows[i]);   
+
+        }
+        response.writeHead(200, { 
+            'Content-Type': 'application/json; charset=utf-8',
+            
+        
+        });
+        
+        var text = JSON.stringify(rows);
+
+
+        console.log('JSON-Result: ', text);
+
+        response.end(text);
     });
-
+    
+    
 }
 
 
@@ -66,6 +79,3 @@ function _fetchTests(response){
 //        console.log(query.sql);
 //    });
 //});
-
-
-
