@@ -42,29 +42,6 @@ var _addCorsHeaders = function(response) {
     response.setHeader('Access-Control-Allow-Origin', '*');
 };
 
-//function _fetchTests(response) {
-//    var returnData = {
-//        tests: [
-//            {
-//                id: 1,
-//                title: "O capuchinho vermelho",
-//                text: "Era uma vez...",
-//                professorName: "Um professor qualquer",
-//                maxTries: 3
-//            },
-//            {
-//                id: 2,
-//                title: "A história da Carochinha",
-//                text: "Sou mesmo mau a lembrar-me de histórias.",
-//                professorName: "Um professor qualquer",
-//                maxTries: 2
-//            }
-//        ]
-//    };
-//    
-//    response.end(JSON.stringify(returnData));
-//}
-
 function _pushResults(request, response) {
     var jsonData = '';
 
