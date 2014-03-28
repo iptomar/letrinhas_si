@@ -12,5 +12,6 @@ http.createServer(function (req, res) {
     
     _server.handleRequest(req, res);
     
-}).listen(8080, '127.0.0.1');
-console.log('Server running at http://127.0.0.1:8888/');
+}).listen(8080, '0.0.0.0');
+console.log('---NOVO SERVIDOR---');
+console.log('Server running at http://127.0.0.1:8080/');
