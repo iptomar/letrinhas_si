@@ -1,0 +1,7 @@
+Questões para o professor:
+
+1-> Percebemos o interesse dos clientes na correção em paralelo dos testes à medida que os alunos lêem o texto. Isto terá que ser feito em uma de 2 formas:
+      -Ou o professor usa um computador portátil para corrigir, e ele leva o portátil a uma zona com rede para que este sincronize,
+      -Ou terá que existir um segundo tablet para que o professor possa corrigir. Este tablet terá também ligação à rede.
+
+      A questão é: A segunda opção parece algo impossivel, porque não existem tablets suficientes. Será que os professores têm portáteis com acesso à rede?
