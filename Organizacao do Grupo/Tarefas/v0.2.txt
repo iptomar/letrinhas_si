@@ -1,4 +1,4 @@
-Tarefas para versão 0.2:
+﻿Tarefas para versão 0.2:
 
 Servidor de Base de dados:
   (André)-> Colaborar com o pessoal de AS para modelar as tabelas;
@@ -7,7 +7,7 @@ Servidor de Base de dados:
 Servidor Web:
   Reescrita de métodos:
     (None)-> Reescrever o método que devolva testes à app. Está dependente do modelo da BD de AS.
-    (None)-> Reescrever o método que receba resoluções da app. É necessário preparar o método para receber dados binários em Base64 e fazer com que tais dados sejam introduzidos na BD.
+    (Alexandre)-> Reescrever o método que receba resoluções da app. É necessário preparar o método para receber dados binários em Base64 e fazer com que tais dados sejam introduzidos na BD.
 
   Novas funcionalidades:
     (None)-> Escrever um método que leia dados binários de uma imagem, ou de um ficheiro (api fs do Node), ou da BD. Pode-se usar uma tabela temporária com uma coluna do tipo Blob (255 Byte?) ou MediumBlob (16 MB) para testar isto.
@@ -24,7 +24,7 @@ Servidor Web:
 
 
 App Android:
-  (None)-> Alterar a app Android de forma a permitir que esta receba dados binários de uma imagem (a partir da rede) e mostrá-la no ecrã.
+  (Alexandre)-> Alterar a app Android de forma a permitir que esta receba dados binários de uma imagem (a partir da rede) e mostrá-la no ecrã.
     (None)-> Depois da tarefa acima, tentar guardar os dados na BD SQLite?
 
 Outras:
