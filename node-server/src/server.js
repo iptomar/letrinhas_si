@@ -2,6 +2,9 @@
 /*global require, module*/
 // Contains functions to handle Http requests.
 
+var _sqlserver = require ("./servermysql.js");
+
+
 module.exports = {
     handleRequest: function (request, response) {
         
@@ -14,7 +17,8 @@ module.exports = {
                 switch (request.url) {
                     case '/testList':
                         response.writeHead(200);
-                        _fetchTests(response);
+                        //_fetchTests(response);
+                        _sqlserver.getResponse(response);
                         break;
                     default:
                         _sendNotFound(response);
@@ -32,10 +36,6 @@ module.exports = {
                         _sendNotFound(response);
                 }
         }
-    },
-    
-    testMethod : function (req, response) {
-        console.log('olá');
     }
 };
 
