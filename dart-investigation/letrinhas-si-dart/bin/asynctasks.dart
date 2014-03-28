@@ -79,8 +79,10 @@ void printTests(String json) {
 /// parses it, and inserts it into the DB.
 /// This is run asynchronously.
 _async.Future saveResultsToDb(String json) {
-  return _pool.prepare('INSERT INTO Resolucoes VALUES (?, ?, ?, ?, ?)')
+  return _pool.prepare('INSERT INTO Resolucoes (testId, completionDate, studentName, voiceData) VALUES (?, ?, ?, ?)')
       .then((query) {
+        printTests(json);
+
          // First, parse the text.
          Map<String, dynamic> dataToStore = _convert.JSON.decode(json);
 
@@ -89,10 +91,15 @@ _async.Future saveResultsToDb(String json) {
 
          List<List> parameters = new List<List>();
 
-        // Add all the tests to the query.
-        for (var test in tests) {
-          parameters.add(test.values.toList(growable: false));
-        }
+         for (var test in tests) {
+           var params = new List();
+           params.add(test['testId']);
+           params.add(test['completionDate']);
+           params.add(test['studentName']);
+           params.add(new String.fromCharCodes(_crypto.CryptoUtils.base64StringToBytes(test['voiceBase64'])));
+
+           parameters.add(params);
+         }
 
         // Run the query. If anything goes wrong, we'll tell as such.
         query.executeMulti(parameters).catchError(_printError);

@@ -10,7 +10,7 @@ void _fetchTests(_io.HttpRequest req) {
         req.response.write(_convert.JSON.encode(data));
         req.response.close();
 
-        print('Sent results to the client!');
+        print('[$formatDate()]Sent results to the client!');
       });
 }
 
@@ -24,8 +24,8 @@ void _postResults(_io.HttpRequest req) {
     data.addAll(receivedData);
   }, onDone: () {
     // Once we're done getting it all, we'll write out the data.
-    tasks.printTests(new String.fromCharCodes(data));
-    // tasks.saveResultsToDb(new String.fromCharCodes(data));
+    // tasks.printTests(new String.fromCharCodes(data));
+    tasks.saveResultsToDb(new String.fromCharCodes(data));
     req.response.close();
   });
 }
@@ -34,9 +34,7 @@ void _handleRequest(_io.HttpRequest req) {
   // First, don't forget to add CORS headers, or the request will fail.
   _addCorsHeaders(req.response);
 
-  var d = new DateTime.now();
-
-  var formattedDate = '${d.hour}:${d.minute}:${d.second}.${d.millisecond}';
+  var formattedDate = formatDate();
 
   print('[$formattedDate] Got a ${req.method} request to ${req.uri.path} from ${req.connectionInfo.remoteAddress.address}');
 
@@ -64,6 +62,12 @@ void _handleRequest(_io.HttpRequest req) {
     // If we got this far, it means something went wrong.
     _sendNotFound(req);
   }
+}
+
+String formatDate() {
+  var d = new DateTime.now();
+
+  return '${d.hour}:${d.minute}:${d.second}.${d.millisecond}';
 }
 
 void _sendNotFound(_io.HttpRequest req) {
