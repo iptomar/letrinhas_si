@@ -14,9 +14,9 @@ module.exports = {
 
         switch (request.method) {
             case 'GET':
-                switch (request.url) {
+                switch (request.url.replace('?', '')) {
                     case '/testList':
-                        _sqlserver.getResponse(response);
+                        _sqlserver.getTests(response);
                         break;
                     default:
                         _sendNotFound(response);
@@ -24,12 +24,9 @@ module.exports = {
                 }
                 break;
             case 'POST':
-                switch (request.url) {
+                switch (request.url.replace('?', '')) {
                     case '/postTestResults':
-                        // response.writeHead(200);
                         _pushResults(request, response);
-                        response.end('Successful.');
-                        
                         break;
                     default:
                         _sendNotFound(response);
@@ -49,10 +46,10 @@ function _pushResults(request, response) {
 
     request.on('end', function() {
         var results = JSON.parse(jsonData);
-
-        var resultList = results.solvedTests;
         
         console.log(results);
+
+        _sqlserver.postResults(results, response);
     });
 }
 
