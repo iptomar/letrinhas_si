@@ -1,0 +1,34 @@
+Tarefas para versão 0.2:
+
+Servidor de Base de dados:
+  (André)-> Colaborar com o pessoal de AS para modelar as tabelas;
+    (Bruno??)-> Criar os scripts SQL para inserção nas tabelas.
+
+Servidor Web:
+  Reescrita de métodos:
+    (None)-> Reescrever o método que devolva testes à app. Está dependente do modelo da BD de AS.
+    (None)-> Reescrever o método que receba resoluções da app. É necessário preparar o método para receber dados binários em Base64 e fazer com que tais dados sejam introduzidos na BD.
+
+  Novas funcionalidades:
+    (None)-> Escrever um método que leia dados binários de uma imagem, ou de um ficheiro (api fs do Node), ou da BD. Pode-se usar uma tabela temporária com uma coluna do tipo Blob (255 Byte?) ou MediumBlob (16 MB) para testar isto.
+      (None)-> Depois da tarefa acima, enviar estes dados para a app Android, convertendo primeiro para Base64! (A versão 0.1 mostra como o fazer).
+
+  Back-office:
+    [Em limbo*1](None)-> Preparar formulários web de suporte à correção de testes.
+
+  Investigação:
+    (None)-> Estudar frameworks já existentes de autenticação. Exemplo: Passport.js (passportjs.org)
+    (None)-> Estudar frameworks de modulação de web sites. Exemplo: Express.js (expressjs.com)
+    [Pouco prioritário](None)-> Estudar bibliotecas de data-binding e validação para os formulários do back-office. Exemplo: AngularJS (angularjs.org)
+    [Em limbo*1](None)-> Estudo de APIs de HTML5 para persistência de dados locais. Exemplos: WebSQL, IndexedDB, LocalStorage. Poderá ser interessante usar uma Chrome Packaged App para isto.
+
+
+App Android:
+  (None)-> Alterar a app Android de forma a permitir que esta receba dados binários de uma imagem (a partir da rede) e mostrá-la no ecrã.
+    (None)-> Depois da tarefa acima, tentar guardar os dados na BD SQLite?
+
+Outras:
+  (Todos)-> Pensar em questões para o professor entregar aos clientes. Tais questões devem ser colocados num ficheiro à parte.
+
+Notas:
+  *1 -> O professor vai perguntar se os professores têm portáteis que podem levar para uma zona com rede, semelhante aos tablets. Concordamos que, se houver demasiados computadores sem acesso à internet, formulários web estarão fora de questão, e será necessário usar algo como Java, e meter os dados das correções nos tablets.
