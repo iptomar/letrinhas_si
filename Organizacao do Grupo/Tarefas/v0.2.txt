@@ -2,7 +2,7 @@
 
 Servidor de Base de dados:
   (André)-> Colaborar com o pessoal de AS para modelar as tabelas;
-    (Bruno??)-> Criar os scripts SQL para inserção nas tabelas.
+    (Bruno)-> Criar os scripts SQL para inserção nas tabelas.
 
 Servidor Web:
   Reescrita de métodos:
