@@ -1,7 +1,7 @@
 ﻿Tarefas para versão 0.2:
 
 Servidor de Base de dados:
-  (André)-> Colaborar com o pessoal de AS para modelar as tabelas;
+  [IN PROGRESS](André)-> Colaborar com o pessoal de AS para modelar as tabelas;
     (Bruno)-> Criar os scripts SQL para inserção nas tabelas.
 
 Servidor Web:
