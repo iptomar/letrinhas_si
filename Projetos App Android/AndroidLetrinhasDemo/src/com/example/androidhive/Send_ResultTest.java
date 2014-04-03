@@ -54,7 +54,7 @@ public class Send_ResultTest extends Activity {
 			inputTestId = (EditText) findViewById(R.id.txtBoxtestId);
 			inputCompletionDate = (EditText) findViewById(R.id.txtBoxDate);
 			inputStudentName = (EditText) findViewById(R.id.txtBoxStudentName);
-			inputVoiceBase64 = (EditText) findViewById(R.id.txtBoxVoiceB);
+			
 			// criar o botao
 			Button btnSend = (Button) findViewById(R.id.btnSendResult);
 
@@ -94,20 +94,19 @@ public class Send_ResultTest extends Activity {
 				String testId = inputTestId.getText().toString();
 				String date = inputCompletionDate.getText().toString();
 				String studentName = inputStudentName.getText().toString();
-				String voiceBase64 = inputVoiceBase64.getText().toString();
+//				String voiceBase64 = inputVoiceBase64.getText().toString();
 				 
 
-				String base64 ="";
-
-					byte[] data;
-					try {
-						data = voiceBase64.getBytes("UTF-8");
-						 base64 = Base64.encodeToString(data, Base64.DEFAULT);
-					} catch (UnsupportedEncodingException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} 
-					
+//				String base64 ="";
+//
+//					byte[] data;
+//					try {
+//						data = voiceBase64.getBytes("UTF-8");
+//						 base64 = Base64.encodeToString(data, Base64.DEFAULT);
+//					} catch (UnsupportedEncodingException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
 					
                 
 		//////////////Teste De código para converter imagem para Base64//////////////////
