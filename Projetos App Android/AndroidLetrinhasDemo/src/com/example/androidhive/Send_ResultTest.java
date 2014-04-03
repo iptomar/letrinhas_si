@@ -107,17 +107,21 @@ public class Send_ResultTest extends Activity {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} 
+					
+					
                 
 		//////////////Teste De código para converter imagem para Base64//////////////////
-			    	//	String filePath= "drawable/ic_launcher.png";
-					// Bitmap  bm = BitmapFactory.decodeFile(filePath);
-					// ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-					// bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);  
-					// byte[] b = baos.toByteArray(); 
+					Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ax);
+					ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+					bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object   
+					byte[] b = baos.toByteArray(); 
+					
+					
 
-					//String imageStr = Base64.encodeToString(b, Base64.DEFAULT);
+					String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+			
 					 
-					// System.out.println("*************"+imageStr+"********");
+					// System.out.println("*************"+encodedImage+"********");
 					 
 
 				//Criar o ficheiro de JSON
@@ -129,7 +133,7 @@ public class Send_ResultTest extends Activity {
 					  solvedTest.put("testId", testId);
 					  solvedTest.put("completionDate", date);
 					  solvedTest.put("studentName", studentName);
-					  solvedTest.put("voiceBase64", base64.substring(0, base64.length()-1));
+					  solvedTest.put("voiceBase64", encodedImage);
 					  solvedTests.put(solvedTest);
 					  jObj.put("solvedTests", solvedTests);
 				  } catch (JSONException e) {

@@ -24,6 +24,7 @@ Servidor Web:
 
 
 App Android:
+  (Alexandre)-> Enviar uma imagem para o servidor em Base64
   (Alexandre)-> Alterar a app Android de forma a permitir que esta receba dados binários de uma imagem (a partir da rede) e mostrá-la no ecrã.
     (None)-> Depois da tarefa acima, tentar guardar os dados na BD SQLite?
 
