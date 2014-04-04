@@ -1,10 +1,10 @@
-﻿import express = require('express');
-import routes = require('./routes/index');
-import user = require('./routes/user');
-import http = require('http');
-import path = require('path');
+﻿var express = require('express');
+var routes = require('./routes/index');
+var user = require('./routes/user');
+var http = require('http');
+var path = require('path');
 
-import test = require('./routes/tests');
+var test = require('./routes/tests');
 
 var app = express();
 
@@ -19,7 +19,7 @@ app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(app.router);
 
-import stylus = require('stylus');
+var stylus = require('stylus');
 app.use(stylus.middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -35,3 +35,4 @@ app.get('/testSummary', test.listSummary);
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
+//# sourceMappingURL=app.js.map

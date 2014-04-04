@@ -1,6 +1,6 @@
 {
   "name": "letrinhas_node",
-  "version": "0.0.0",
+  "version": "0.2.0",
   "description": "letrinhas-node",
   "main": "app.js",
   "author": {
@@ -8,8 +8,9 @@
     "email": ""
   },
   "dependencies": {
-    "express": "3.4.4",
-    "jade": "*",
-    "stylus": "*"
+    "express": "*",
+    "mysql": "*",
+    "stylus": "^0.42.3",
+    "jade": "^1.3.1"
   }
 }
