@@ -6,15 +6,20 @@ Servidor de Base de dados:
 
 Servidor Web:
   Reescrita de métodos:
-    (Luis [need help maybe!])-> Reescrever o método que devolva testes à app. Está dependente do modelo da BD de AS.
+    (Luís?)-> Separar o método que devolve testes em dois: Um que faça uma listagem do sumário dos testes e outro que receba um(ns) id(s) e devolva esse(s) teste(s).
+      (Luis [need help maybe!])-> Reescrever o método que devolva testes à app. Está dependente do modelo da BD de AS.
     (Alexandre)-> Reescrever o método que receba resoluções da app. É necessário preparar o método para receber dados binários em Base64 e fazer com que tais dados sejam introduzidos na BD.
 
   Novas funcionalidades:
     [DONE, Falta BD](André)-> Escrever um método que leia dados binários de uma imagem, ou de um ficheiro (api fs do Node), ou da BD. Pode-se usar uma tabela temporária com uma coluna do tipo Blob (255 Byte?) ou MediumBlob (16 MB) para testar isto.
-      [Falta converter para JSON+Base64](André)-> Depois da tarefa acima, enviar estes dados para a app Android, convertendo primeiro para Base64! (A versão 0.1 mostra como o fazer).
+      [Falta converter para JSON+Base64](André)-> Depois da tarefa acima, enviar estes dados para a app Android, convertendo primeiro para Base64! (A versão 0.1 mostra como o fazer).  
+    (None)-> Criar um método que permita fazer a sincronização dos dados com a app. A app terá que dizer qual foi a última vez em que foram recebidos conteúdos antes de lhe enviarmos dados (o que é novo, e o que eliminar).
+    
 
   Back-office:
     [Em limbo*1](None)-> Preparar formulários web de suporte à correção de testes.
+    [NOT STARTED](André)-> Preparar formulários para criação de testes, entre outros.
+    (Bruno)-> Fazer mockups de formulários web para o back-office.
     
 
   Investigação:
@@ -33,9 +38,6 @@ Outras:
   (Todos)-> Pensar em questões para o professor entregar aos clientes. Tais questões devem ser colocados num ficheiro à parte.
   
 Versão 0.2 + 1:
-  Back office:
-    [NOT STARTED](André)-> Preparar formulários para criação de testes, entre outros.
-    
   WebService + Back office:
     (None?)-> Autenticação + Autorização da app e do back-office.
 
