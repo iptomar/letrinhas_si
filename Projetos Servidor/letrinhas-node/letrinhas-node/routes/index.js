@@ -1,6 +1,5 @@
 ﻿function index(req, res) {
-    // res.render('index', { title: 'Express' });
-    res.render('formtest', { title: 'Teste de formulário!' });
+    res.render('index', { title: 'Express' });
 }
 exports.index = index;
 ;

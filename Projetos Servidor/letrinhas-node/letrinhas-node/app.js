@@ -1,10 +1,10 @@
 ﻿var express = require('express');
-var routes = require('./routes/index');
-var user = require('./routes/user');
+
+// import routes = require('./routes/index');
+// import user = require('./routes/user');
+// import test = require('./routes/tests');
 var http = require('http');
 var path = require('path');
-
-var test = require('./routes/tests');
 
 var app = express();
 
@@ -29,11 +29,13 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
-app.get('/users', user.list);
-app.get('/testSummary', test.listSummary);
-app.post('/postFiles', test.postImage);
+// Route config
+require('./configs/routes').mapRoutes(app);
 
+// app.get('/', routes.index);
+// app.get('/users', user.list);
+// app.get('/testSummary', test.listSummary);
+// app.post('/postFiles', test.postImage);
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
