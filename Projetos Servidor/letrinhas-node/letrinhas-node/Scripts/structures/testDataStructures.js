@@ -1,7 +1,5 @@
 ﻿var TestSummary = (function () {
-    function TestSummary(title, areaId, number) {
-        this.title = title;
-        this.areaId = areaId;
+    function TestSummary() {
     }
     return TestSummary;
 })();

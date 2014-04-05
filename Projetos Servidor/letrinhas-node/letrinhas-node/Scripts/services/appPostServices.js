@@ -1,4 +1,4 @@
-﻿var mysql = require('../configs/mysql');
+﻿var mysql = require('../../configs/mysql');
 
 /**
 * Gets tests from a database, and returns an array of TestSummary.
@@ -9,13 +9,10 @@ function getTestListSummaryFromDb(max, onResult) {
         if (err) {
             onResult(err, null);
         } else {
-            var result = {
-                tests: [],
-                success: 1
-            };
+            var testList = [];
 
             for (var i = 0; i < rows.length; i++) {
-                result.tests.push({
+                testList.push({
                     id: rows[i].id,
                     title: rows[i].title,
                     text: rows[i].textContent.toString(),
@@ -23,9 +20,14 @@ function getTestListSummaryFromDb(max, onResult) {
                 });
             }
 
-            onResult(null, result);
+            onResult(null, testList);
         }
     });
 }
 exports.getTestListSummaryFromDb = getTestListSummaryFromDb;
+
+// TODO: Implement this.
+function sendBinaryDataToFile(onDone) {
+}
+exports.sendBinaryDataToFile = sendBinaryDataToFile;
 //# sourceMappingURL=appPostServices.js.map

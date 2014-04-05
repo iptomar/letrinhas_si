@@ -1,22 +1,20 @@
 ﻿import letrinhasDataStructures = require('../structures/testDataStructures');
-import mysql = require('../configs/mysql');
+import mysql = require('../../configs/mysql');
+import tests = require('../structures/testDataStructures');
 
 /**
  * Gets tests from a database, and returns an array of TestSummary.
  * 
  */
-export function getTestListSummaryFromDb(max: number, onResult: (err: Error, summaryList: any) => void) {
+export function getTestListSummaryFromDb(max: number, onResult: (err: Error, summaryList: tests.TestSummary[]) => void) {
     mysql.pool.query('SELECT * FROM Testes' + (max === null ? '' : ' LIMIT ' + max), (err, rows, fields) => {
         if (err) {
             onResult(err, null);
         } else {
-            var result = {
-                tests: [],
-                success: 1
-            }
+            var testList: tests.TestSummary[] = [];
 
             for (var i = 0; i < rows.length; i++) {
-                result.tests.push({
+                testList.push(<tests.TestSummary>{
                     id: rows[i].id,
                     title: rows[i].title,
                     text: rows[i].textContent.toString(),
@@ -24,9 +22,12 @@ export function getTestListSummaryFromDb(max: number, onResult: (err: Error, sum
                 });
             }
 
-            onResult(null, result);
+            onResult(null, testList);
         }
-
-        
     });
+}
+
+// TODO: Implement this.
+export function sendBinaryDataToFile(onDone: (err: Error, result: any) => void) {
+
 }

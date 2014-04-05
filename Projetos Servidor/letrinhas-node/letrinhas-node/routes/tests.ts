@@ -2,6 +2,7 @@
 
 import express = require('express');
 import appPostServices = require('../Scripts/services/appPostServices');
+import appGetServices = require('../Scripts/services/appGetServices');
 
 export function listSummary(request: express.Request, response: express.Response) {
 
@@ -19,9 +20,26 @@ export function listSummary(request: express.Request, response: express.Response
                 reason: err.message
             }));
         } else {
-            response.send(JSON.stringify(list));
+            response.send(JSON.stringify({
+                tests: list,
+                success: 1
+            }));
         }
-
-        
     });
+}
+
+export function getImage(request: express.Request, response: express.Response) {
+    appGetServices.getBinaryData((err, result) => {
+        response.end(result);
+    });
+}
+
+export function postImage(request: express.Request, response: express.Response) {
+    var correctId: string = request.body['correct-id'];
+
+    console.log(correctId);
+
+    console.log(request.files[correctId]);
+
+    response.end('Whatever');
 }

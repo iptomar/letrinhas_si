@@ -1,4 +1,7 @@
 ﻿
 export class TestSummary {
-    constructor(public title: string, public areaId, number) { }
+    id: number;
+    title: string;
+    text: string;
+    maxTries: number;
 }
