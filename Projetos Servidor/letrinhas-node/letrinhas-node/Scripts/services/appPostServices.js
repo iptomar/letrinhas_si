@@ -27,7 +27,10 @@ function getTestListSummaryFromDb(max, onResult) {
 exports.getTestListSummaryFromDb = getTestListSummaryFromDb;
 
 // TODO: Implement this.
-function sendBinaryDataToFile(onDone) {
+function sendBinaryDataToDb(binaryData, onDone) {
+    mysql.pool.query('INSERT INTO BinaryTest SET binarydata = ?', binaryData, function (err, result) {
+        onDone(err);
+    });
 }
-exports.sendBinaryDataToFile = sendBinaryDataToFile;
+exports.sendBinaryDataToDb = sendBinaryDataToDb;
 //# sourceMappingURL=appPostServices.js.map

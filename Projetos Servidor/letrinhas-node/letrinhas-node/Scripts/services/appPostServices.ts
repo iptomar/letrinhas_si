@@ -28,6 +28,8 @@ export function getTestListSummaryFromDb(max: number, onResult: (err: Error, sum
 }
 
 // TODO: Implement this.
-export function sendBinaryDataToFile(onDone: (err: Error, result: any) => void) {
-
+export function sendBinaryDataToDb(binaryData: NodeBuffer, onDone: (err: Error) => void) {
+    mysql.pool.query('INSERT INTO BinaryTest SET binarydata = ?', binaryData, (err, result) => {
+        onDone(err);
+    });
 }

@@ -1,4 +1,6 @@
 ﻿///reference path="../typings/express/express.d.ts"/>
+var fs = require('fs');
+
 var appPostServices = require('../Scripts/services/appPostServices');
 var appGetServices = require('../Scripts/services/appGetServices');
 
@@ -28,7 +30,12 @@ exports.listSummary = listSummary;
 
 function getImage(request, response) {
     appGetServices.getBinaryData(function (err, result) {
-        response.end(result);
+        response.type('json');
+        response.end(JSON.stringify({
+            id: 1,
+            data: result.toString('base64')
+        }));
+        // response.end(result);
     });
 }
 exports.getImage = getImage;
@@ -36,11 +43,20 @@ exports.getImage = getImage;
 function postImage(request, response) {
     var correctId = request.body['correct-id'];
 
+    // Read the file
+    fs.readFile(request.files[correctId].path, function (err, data) {
+        appPostServices.sendBinaryDataToDb(data, function (err) {
+            if (err) {
+                console.log(err);
+            }
+
+            response.end('Whatever');
+        });
+    });
+
     console.log(correctId);
 
     console.log(request.files[correctId]);
-
-    response.end('Whatever');
 }
 exports.postImage = postImage;
 //# sourceMappingURL=tests.js.map

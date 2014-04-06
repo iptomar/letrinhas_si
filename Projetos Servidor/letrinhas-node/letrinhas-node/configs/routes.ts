@@ -10,6 +10,7 @@ export function mapRoutes(app: express.Express) {
     // app.get('/users', user.list);
     app.get('/testSummary', testActions.listSummary);
     app.post('/postFiles', testActions.postImage);
+    app.get('/image', testActions.getImage);
 
     app.use(sendNotFound);
 }

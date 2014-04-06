@@ -1,6 +1,8 @@
 ﻿///reference path="../typings/express/express.d.ts"/>
 
 import express = require('express');
+import fs = require('fs');
+
 import appPostServices = require('../Scripts/services/appPostServices');
 import appGetServices = require('../Scripts/services/appGetServices');
 
@@ -30,16 +32,36 @@ export function listSummary(request: express.Request, response: express.Response
 
 export function getImage(request: express.Request, response: express.Response) {
     appGetServices.getBinaryData((err, result) => {
-        response.end(result);
+        response.type('json');
+        response.end(JSON.stringify({
+            id: 1,
+            data: result.toString('base64')
+        }));
+
+        // response.end(result);
     });
 }
 
 export function postImage(request: express.Request, response: express.Response) {
+
     var correctId: string = request.body['correct-id'];
+
+    // Read the file
+    fs.readFile(request.files[correctId].path, (err, data) => {
+        appPostServices.sendBinaryDataToDb(data, (err) => {
+            if (err) {
+                console.log(err);
+            }
+
+            response.end('Whatever');
+        });
+    });
+
+    
 
     console.log(correctId);
 
     console.log(request.files[correctId]);
 
-    response.end('Whatever');
+    
 }

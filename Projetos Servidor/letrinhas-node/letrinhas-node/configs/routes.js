@@ -9,6 +9,7 @@ function mapRoutes(app) {
     // app.get('/users', user.list);
     app.get('/testSummary', testActions.listSummary);
     app.post('/postFiles', testActions.postImage);
+    app.get('/image', testActions.getImage);
 
     app.use(sendNotFound);
 }
