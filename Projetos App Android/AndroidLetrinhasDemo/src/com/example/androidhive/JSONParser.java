@@ -44,7 +44,8 @@ public class JSONParser {
 		try {		
 				DefaultHttpClient httpClient = new DefaultHttpClient();
 				String paramString = URLEncodedUtils.format(params, "utf-8");
-				url += "?" + paramString;
+				// url += "?" + paramString;
+				url += paramString.length() > 0 ? "?" + paramString : "";
 
 				HttpGet httpGet = new HttpGet(url);
 				HttpResponse httpResponse = httpClient.execute(httpGet);
@@ -54,7 +55,7 @@ public class JSONParser {
 		} catch (Exception e) {e.printStackTrace();}
 		//Começa a ler a resposta
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
 			StringBuilder sb = new StringBuilder();
 			String line = null;
 			while ((line = reader.readLine()) != null) {
