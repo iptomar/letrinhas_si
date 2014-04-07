@@ -49,6 +49,10 @@
             android:name="com.example.androidhive.Send_ResultTest"
             android:label="@string/title_activity_send__result_test" >
         </activity>
+        <activity
+            android:name="com.example.androidhive.ReceberImagem"
+            android:label="@string/title_activity_receber_imagem" >
+        </activity>
     </application>
 
     <!-- Internet Permissions -->

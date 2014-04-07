@@ -14,7 +14,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
@@ -55,8 +54,7 @@ public class All_Tests extends ListActivity {
 
 			// Obtendo Detalhes dos Testes do intent
 			Intent i = getIntent();
-			
-	    	// Obtendo CAMPO IP e PORTA enviados para esta Janela
+		  	// Obtendo CAMPO IP e PORTA enviados para esta Janela
 			String ip = i.getStringExtra("IP");
 			String porta = i.getStringExtra("PORTA");
 			url_all_tests = "http://"+ip+":"+porta+"/testList"; 
@@ -85,8 +83,6 @@ public class All_Tests extends ListActivity {
 							.toString();
 					String tries = ((TextView) view.findViewById(R.id.tries)).getText()
 							.toString();
-					
-					
 					Intent i = new Intent(getApplicationContext(), ViewMoreInfo.class);
 					// Insere um  Extra, coloca variaveis para serem enviadas para a janela ViewMoreInfo
 					i.putExtra(TAG_TITLE, title);
@@ -95,12 +91,9 @@ public class All_Tests extends ListActivity {
 					startActivity(i);
 				}
 			});
-
 		}
 
 		// Resposta 
-		
-
 		/**
 		 * Background Async Task para carregar todos os Testes por HTTP Request
 		 * */

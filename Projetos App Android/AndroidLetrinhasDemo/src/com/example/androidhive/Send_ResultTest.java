@@ -94,34 +94,18 @@ public class Send_ResultTest extends Activity {
 				String testId = inputTestId.getText().toString();
 				String date = inputCompletionDate.getText().toString();
 				String studentName = inputStudentName.getText().toString();
-//				String voiceBase64 = inputVoiceBase64.getText().toString();
-				 
-
-//				String base64 ="";
-//
-//					byte[] data;
-//					try {
-//						data = voiceBase64.getBytes("UTF-8");
-//						 base64 = Base64.encodeToString(data, Base64.DEFAULT);
-//					} catch (UnsupportedEncodingException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-					
+				
                 
-		//////////////Teste De código para converter imagem para Base64//////////////////
+					//////////////Teste De código para converter imagem para Base64//////////////////
 					Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ax);
 					ByteArrayOutputStream baos = new ByteArrayOutputStream();  
 					bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object   
 					byte[] b = baos.toByteArray(); 
+						String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
 					
-					
-
-					String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
-			
-					 
+			 
 					// System.out.println("*************"+encodedImage+"********");
-					 
+					 System.out.println("** "+encodedImage);
 
 				//Criar o ficheiro de JSON
 				 JSONObject jObj = new JSONObject();
