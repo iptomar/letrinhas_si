@@ -64,7 +64,7 @@ function _fetchTest(request,response){
  */
 function _fetchTitles(response) {
     // Query
-    pool.query('SELECT * from Testes;', function(err, rows, fields) {
+    pool.query('SELECT id, title from Testes;', function(err, rows, fields) {
         // Verificar se existem erros
         if (err) { 
             console.log(err);
