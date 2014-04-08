@@ -6,7 +6,7 @@ Servidor de Base de dados:
 
 Servidor Web:
   Reescrita de métodos:
-    [DONE?](Luís?)-> Separar o método que devolve testes em dois: Um que faça uma listagem do sumário dos testes e outro que receba um(ns) id(s) e devolva esse(s) teste(s).
+    [DONE **(Ver notas)](Luís)-> Separar o método que devolve testes em dois: Um que faça uma listagem do sumário dos testes e outro que receba um(ns) id(s) e devolva esse(s) teste(s).
       (Luis [need help maybe!])-> Reescrever o método que devolva testes à app. Está dependente do modelo da BD de AS.
     [DONE?](Alexandre)-> Reescrever o método que receba resoluções da app. É necessário preparar o método para receber dados binários em Base64 e fazer com que tais dados sejam introduzidos na BD.
 
@@ -44,3 +44,4 @@ Versão 0.2 + 1:
 Notas:
   *1 -> O professor vai perguntar se os professores têm portáteis que podem levar para uma zona com rede, semelhante aos tablets. Concordamos que, se houver demasiados computadores sem acesso à internet, formulários web estarão fora de questão, e será necessário usar algo como Java, e meter os dados das correções nos tablets.
     Q: Neste caso acima, só se descarta os formulários web para a correção de testes e mantem-se para gerir o backoffice, ou descarta-se mesmo para tudo?
+** - Este método está separado em dois, um que devolve a todos os titulos e ids dos testes, outro que, enviando por querystring UM id, devolve todos os detalhes desse teste. Problema: Ainda está escrito da forma como foram criados os metodos do servidor na versão 0.1, ainda não esta da forma que o André sugeriu. Estou a trabalhar nisso!
