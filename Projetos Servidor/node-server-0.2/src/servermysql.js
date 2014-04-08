@@ -22,7 +22,13 @@ var pool  = mysql.createPool({
         database : 'letrinhas'
 });
 
-function _fetchTest(request,response){
+/**
+ * @private
+ * Description Fetches test from database.
+ * @param {http.ServerResponse} response
+ */
+
+function _fetchTest(request, response){
     //Vai buscar a queryString ao url
     var qs = require('url').parse(request.url,true).query;
     
@@ -59,7 +65,7 @@ function _fetchTest(request,response){
 
 /**
  * @private
- * Description Fetches tests from the database.
+ * Description Fetches titles from the database.
  * @param {http.ServerResponse} response
  */
 function _fetchTitles(response) {
@@ -89,11 +95,6 @@ function _fetchTitles(response) {
         }
     });   
 }
-
-
-
-
-
 
 /**
  * @private

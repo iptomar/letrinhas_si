@@ -21,11 +21,11 @@ function _handleRequest(request, response) {
           _sqlserver.getTestTitles(response);
           break;            
         case '/getSelectedTest':
-          _sqlserver.getSelectedTest(request,response);
+          _sqlserver.getSelectedTest(request, response);
             //aqui ha um bug, ele não aceita a querystring, logo, para funcionar tive de por no default. BUG A CORRIGIR  
           break;      
         default:
-         _sqlserver.getSelectedTest(request,response);
+         _sqlserver.getSelectedTest(request, response);
           break;
       }
       break;
