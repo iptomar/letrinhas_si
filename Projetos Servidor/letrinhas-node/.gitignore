@@ -1,2 +1,4 @@
+*.suo
+
 node_modules/
 obj/
