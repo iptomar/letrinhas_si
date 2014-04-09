@@ -7,6 +7,7 @@
     class Connection {
         query(sql: string, onResult: (err: Error, rows: Array<any>, fields: any) => void);
         query(sql: string, data: any, callback: (err: Error, result: any) => void);
+        escape(sql: string): string;
 
         connect(onConnect: (err: Error) => void): void;
 
@@ -29,5 +30,6 @@
         query(sql: string, data: any, callback: (err: Error, rows: Array<any>, fields: any) => void);
 
         getConnection(onConnection: (err: Error, connection: Connection) => void);
+        escape(sql: string): string;
     }
 }

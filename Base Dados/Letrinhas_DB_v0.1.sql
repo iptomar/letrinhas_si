@@ -17,7 +17,7 @@ CREATE TABLE tbl_Escola (
   logotipo varbinary (max) NOT NULL,
   morada varchar (50) NOT NULL,
   PRIMARY KEY (idEscola)
-) TYPE=InnoDB;
+) TYPE=InnoDB DEFAULT CHARSET=utf-8;
 
 
 # --------------------------------------------------------
@@ -37,7 +37,7 @@ CREATE TABLE tbl_Professor (
   FOREIGN KEY (idEscola)
      REFERENCES tbl_Escola(idEscola)
      ON UPDATE CASCADE ON DELETE CASCADE
-) TYPE=InnoDB;
+) TYPE=InnoDB DEFAULT CHARSET=utf-8;
 
 # --------------------------------------------------------
 # tabela 3
@@ -52,7 +52,7 @@ CREATE TABLE tbl_Turma (
   FOREIGN KEY (idEscola)
      REFERENCES tbl_Escola(idEscola)
      ON UPDATE CASCADE ON DELETE CASCADE
-) TYPE=InnoDB;
+) TYPE=InnoDB DEFAULT CHARSET=utf-8;
 
 #-----------------------------------------------------
 #TABELA TURMA_PROFESSOR
@@ -71,7 +71,7 @@ CREATE TABLE tbl_Turma_Professor (
   FOREIGN KEY (idProfessor)
      REFERENCES tbl_Professor(idProfessor)
      ON UPDATE CASCADE ON DELETE CASCADE
-) TYPE=InnoDB;
+) TYPE=InnoDB DEFAULT CHARSET=utf-8;
 
 
 # --------------------------------------------------------
@@ -87,7 +87,7 @@ CREATE TABLE tbl_Aluno(
   FOREIGN KEY (idTurma)
      REFERENCES tbl_Turma(idTurma)
      ON UPDATE CASCADE ON DELETE CASCADE
-) TYPE=InnoDB;
+) TYPE=InnoDB DEFAULT CHARSET=utf-8;
 
 # --------------------------------------------------------
 # tabela 6
@@ -100,7 +100,7 @@ CREATE TABLE tbl_Teste (
   FOREIGN KEY (idProfessor)
      REFERENCES tbl_Professor(idProfessor)
      ON UPDATE CASCADE ON DELETE CASCADE
-) TYPE=InnoDB;
+) TYPE=InnoDB DEFAULT CHARSET=utf-8;
 
 
 # --------------------------------------------------------
@@ -122,7 +122,7 @@ CREATE TABLE tbl_Correcao (
   FOREIGN KEY (idTeste)
      REFERENCES tbl_Teste(idTeste)
      ON UPDATE CASCADE ON DELETE CASCADE
-) TYPE=InnoDB;
+) TYPE=InnoDB DEFAULT CHARSET=utf-8;
 
 
 # --------------------------------------------------------
@@ -138,7 +138,7 @@ CREATE TABLE tbl_TesteLeitura (
   FOREIGN KEY (idTeste)
      REFERENCES tbl_Teste(idTeste)
      ON UPDATE CASCADE ON DELETE CASCADE
-) TYPE=InnoDB;
+) TYPE=InnoDB DEFAULT CHARSET=utf-8;
 
 
 # --------------------------------------------------------
@@ -156,4 +156,4 @@ CREATE TABLE tbl_EscolhaMultipla (
   FOREIGN KEY (idTeste)
      REFERENCES tbl_Teste(idTeste)
      ON UPDATE CASCADE ON DELETE CASCADE,
-) TYPE=InnoDB;
+) TYPE=InnoDB DEFAULT CHARSET=utf-8;
