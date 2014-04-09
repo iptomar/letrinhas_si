@@ -12,6 +12,8 @@ export function mapRoutes(app: express.Express) {
     app.post('/postFiles', testActions.postImage);
     app.get('/image', testActions.getImage);
 
+    app.get('/getTest', testActions.getTest);
+
     app.use(sendNotFound);
 }
 

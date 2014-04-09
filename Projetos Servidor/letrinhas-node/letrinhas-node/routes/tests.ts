@@ -12,7 +12,7 @@ export function listSummary(request: express.Request, response: express.Response
 
     max = isNaN(max) ? null : max;
 
-    appPostServices.getTestListSummaryFromDb(max, (err, list) => {
+    appGetServices.getTestListSummaryFromDb(max, (err, list) => {
         response.set('Content-Type', 'application/json');
         response.charset = 'utf-8';
         if (err) {
@@ -38,7 +38,7 @@ export function getImage(request: express.Request, response: express.Response) {
             data: result.toString('base64')
         }));
 
-        // response.end(result);
+        //response.end(result);
     });
 }
 
@@ -61,7 +61,47 @@ export function postImage(request: express.Request, response: express.Response) 
 
     console.log(correctId);
 
-    console.log(request.files[correctId]);
+    console.log(request.files[correctId]);   
+}
 
-    
+export function teste(request: express.Request, response: express.Response) {
+    console.log(request.url);
+
+    response.render('teste', {
+        title: "Isto é um teste",
+        pessoa: "André Carvalho"
+    });
+}
+
+export function getTest(request: express.Request, response: express.Response) {
+
+    if (request.query.hasOwnProperty('id')) {
+        var idListAsString: string[] = request.query['id'].split(',');
+        var idList = [];
+
+        for (var i = 0; i < idListAsString.length; i++) {
+            var id = parseInt(idListAsString[i]);
+
+            if (!isNaN(id)) {
+                idList.push(id);
+            }
+        }
+
+        if (idList.length == 0) {
+            response.statusCode = 400;
+            response.end('No valid id supplied.');
+        }
+
+        appGetServices.getTestById(idList, (err, testList) => {
+            var sendResult = {
+                tests: testList,
+                success: 1
+            };
+
+            response.end(JSON.stringify(sendResult));
+        });
+    } else {
+        response.statusCode = 400;
+        response.end("No id supplied.");
+    }
 }

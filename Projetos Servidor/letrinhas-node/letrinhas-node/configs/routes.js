@@ -11,6 +11,8 @@ function mapRoutes(app) {
     app.post('/postFiles', testActions.postImage);
     app.get('/image', testActions.getImage);
 
+    app.get('/getTest', testActions.getTest);
+
     app.use(sendNotFound);
 }
 exports.mapRoutes = mapRoutes;

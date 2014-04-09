@@ -9,7 +9,7 @@ function listSummary(request, response) {
 
     max = isNaN(max) ? null : max;
 
-    appPostServices.getTestListSummaryFromDb(max, function (err, list) {
+    appGetServices.getTestListSummaryFromDb(max, function (err, list) {
         response.set('Content-Type', 'application/json');
         response.charset = 'utf-8';
         if (err) {
@@ -35,7 +35,7 @@ function getImage(request, response) {
             id: 1,
             data: result.toString('base64')
         }));
-        // response.end(result);
+        //response.end(result);
     });
 }
 exports.getImage = getImage;
@@ -59,4 +59,47 @@ function postImage(request, response) {
     console.log(request.files[correctId]);
 }
 exports.postImage = postImage;
+
+function teste(request, response) {
+    console.log(request.url);
+
+    response.render('teste', {
+        title: "Isto é um teste",
+        pessoa: "André Carvalho"
+    });
+}
+exports.teste = teste;
+
+function getTest(request, response) {
+    if (request.query.hasOwnProperty('id')) {
+        var idListAsString = request.query['id'].split(',');
+        var idList = [];
+
+        for (var i = 0; i < idListAsString.length; i++) {
+            var id = parseInt(idListAsString[i]);
+
+            if (!isNaN(id)) {
+                idList.push(id);
+            }
+        }
+
+        if (idList.length == 0) {
+            response.statusCode = 400;
+            response.end('No valid id supplied.');
+        }
+
+        appGetServices.getTestById(idList, function (err, testList) {
+            var sendResult = {
+                tests: testList,
+                success: 1
+            };
+
+            response.end(JSON.stringify(sendResult));
+        });
+    } else {
+        response.statusCode = 400;
+        response.end("No id supplied.");
+    }
+}
+exports.getTest = getTest;
 //# sourceMappingURL=tests.js.map
