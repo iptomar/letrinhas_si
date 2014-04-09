@@ -9,9 +9,7 @@ import org.apache.http.NameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import com.example.androidhive.Send_ResultTest.SendResult;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -52,6 +50,8 @@ public class ReceberImagem extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_receber_imagem);
 		
+		  
+		
 					// Obtendo Detalhes dos Testes do intent
 					Intent i = getIntent();
 			    	// Obtendo CAMPO IP e PORTA enviados para esta Janela
@@ -61,6 +61,8 @@ public class ReceberImagem extends Activity {
 		
 				// Buttons
 				Button btnReceberImg = (Button) findViewById(R.id.btnReceberImg);
+				Button btnGuardarImgBD = (Button) findViewById(R.id.btnGuardarEmBD);
+				
 				// view products click event
 				btnReceberImg.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -68,6 +70,30 @@ public class ReceberImagem extends Activity {
 					new ReceberImg().execute();
 					}
 				});
+				
+	}
+	
+	
+	public void GuardarNaBd(String name, String image)
+	{
+		DatabaseHandler db = new DatabaseHandler(this);
+		 /**
+        * CRUD Operations
+        * */
+       // Inserting Contacts
+       Log.d("Insert: ", "Inserting ..");
+       db.addContact(new DadosImg(name, image));
+       
+       // Reading all contacts
+       Log.d("Reading: ", "Reading all contacts..");
+       List<DadosImg> dadosImg = db.getAllContacts();       
+
+       for (DadosImg cn : dadosImg) {
+           String log = "Id: "+cn.getID()+" ,Name: " + cn.getName() + " ,image: " + cn.getImage();
+               // Writing Contacts to log
+       Log.d("Name: ", log);
+		
+	}
 	}
 	
 	
@@ -109,6 +135,8 @@ public class ReceberImagem extends Activity {
 					title = c.getString(TAG_TITLE);
 					String text = c.getString(TAG_IMG);
 			
+					GuardarNaBd(title, text );
+					
 					arrayBytesImage =	Base64.decode(text, Base64.DEFAULT);
 						//Log.d(LETRINHAS_APP_TAG, String.format("Title: %s", text));
 				} else {
@@ -138,8 +166,8 @@ public class ReceberImagem extends Activity {
 					// Acede aos objectos da janela e preenche com informação;
 					TextView txtViewImage= (TextView) findViewById(R.id.txtTituloImageView);
 					txtViewImage.setText(title);
-					 ImageView imgViews= (ImageView) findViewById(R.id.imgView1);
-					 imgViews.setImageBitmap(bmp); 
+				    ImageView imgViews= (ImageView) findViewById(R.id.imgView1);
+				    imgViews.setImageBitmap(bmp); 
 				}
 			});
 
