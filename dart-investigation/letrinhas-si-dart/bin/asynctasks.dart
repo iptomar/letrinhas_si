@@ -6,6 +6,7 @@ import 'dart:async' as _async;
 import 'dart:convert' as _convert;
 import 'package:crypto/crypto.dart' as _crypto;
 import 'dart:io' as _io;
+import 'server.dart';
 
 // Create a connection pool to handle DB queries.
 _sql.ConnectionPool _pool = new _sql.ConnectionPool(
@@ -107,5 +108,5 @@ _async.Future saveResultsToDb(String json) {
 }
 
 void _printError(errorObject) {
-  print('Error: ${errorObject.toString()}');
+  print('[${formatDate()}] Db Error.');
 }

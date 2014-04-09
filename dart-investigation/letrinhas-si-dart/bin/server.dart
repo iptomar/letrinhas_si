@@ -10,8 +10,10 @@ void _fetchTests(_io.HttpRequest req) {
         req.response.write(_convert.JSON.encode(data));
         req.response.close();
 
-        print('[$formatDate()]Sent results to the client!');
+        print('[${formatDate()}] Sent results to the client!');
       });
+
+  print('[${formatDate()}] Exiting _fetchTests.');
 }
 
 void _postResults(_io.HttpRequest req) {
@@ -36,7 +38,7 @@ void _handleRequest(_io.HttpRequest req) {
 
   var formattedDate = formatDate();
 
-  print('[$formattedDate] Got a ${req.method} request to ${req.uri.path} from ${req.connectionInfo.remoteAddress.address}');
+  print('[$formattedDate] ${req.method} ${req.uri.path} from ${req.connectionInfo.remoteAddress.address}');
 
   if (req.method == 'POST') {
     // Handle POST requests.
