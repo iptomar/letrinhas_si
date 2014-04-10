@@ -9,10 +9,14 @@ export function mapRoutes(app: express.Express) {
     app.get('/', indexActions.index);
     // app.get('/users', user.list);
     app.get('/testSummary', testActions.listSummary);
-    app.post('/postFiles', testActions.postImage);
+    
     app.get('/image', testActions.getImage);
 
     app.get('/getTest', testActions.getTest);
+
+    // POST Routes.
+    app.post('/postTestResults', testActions.postTestResults);
+    app.post('/postFiles', testActions.postImage);
 
     app.use(sendNotFound);
 }

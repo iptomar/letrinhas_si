@@ -33,7 +33,9 @@ function getImage(request, response) {
         response.type('json');
         response.end(JSON.stringify({
             id: 1,
-            data: result.toString('base64')
+            title: 'Um carrinho bonito',
+            image: result.toString('base64'),
+            success: 1
         }));
         //response.end(result);
     });
@@ -102,4 +104,22 @@ function getTest(request, response) {
     }
 }
 exports.getTest = getTest;
+
+function postTestResults(request, response) {
+    appPostServices.saveTestsToDb(request.body, function (err) {
+        if (err) {
+            response.statusCode = 500;
+            console.log(err.message);
+
+            response.end(JSON.stringify({
+                success: 0
+            }));
+        } else {
+            response.end(JSON.stringify({
+                success: 1
+            }));
+        }
+    });
+}
+exports.postTestResults = postTestResults;
 //# sourceMappingURL=tests.js.map

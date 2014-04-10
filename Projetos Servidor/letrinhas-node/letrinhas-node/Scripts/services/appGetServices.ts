@@ -12,51 +12,43 @@ export function getBinaryData(onResult: (err: Error, result: NodeBuffer) => void
     //    }
     //});
 
-    fs.readFile('D:/imagem.jpg', onResult);
+     fs.readFile('D:/z4.png', onResult);
 }
 
 export function getTestById(idList: number[], onResult: (err: Error, result: Array<any>) => void) {
 
-    var whereString = 'WHERE id = ' + idList[0];
+    //var listResult = [];
 
-    for (var i = 1; i < idList.length; i++) {
-        whereString += ' OR id = ' + idList[i];
-    }
+    //for (var i = 0; i < idList.length; i++) {
+    //    listResult.push({
+    //        id: idList[i],
+    //        title: 'Teste ' + i
+    //    });
+    //}
 
-    var listResult = [];
+    //onResult(null, listResult);
 
-    for (var i = 0; i < idList.length; i++) {
-        listResult.push({
-            id: idList[i],
-            title: 'Teste ' + i
-        });
-    }
+    var sql = 'SELECT * FROM Testes WHERE id IN (' + idList.toString() + ')';
 
-    onResult(null, listResult);
+    mysql.pool.query(sql, (err, rows, fields) => {
+        if (err) {
+            onResult(err, null);
+        } else {
+            var result = [];
 
-    var sql = 'SELECT * FROM Testes ' + whereString;
+            for (var i = 0; i < rows.length; i++) {
+                result.push({
+                    id: rows[i].id,
+                    title: rows[i].title,
+                    textContent: rows[i].textContent,
+                    professorName: rows[i].professorName,
+                    maxTries: rows[i].maxTries,
+                });
+            }
 
-    console.log(sql);
-
-    //mysql.pool.query(sql, [id], (err, rows, fields) => {
-    //    if (err) {
-    //        onResult(err, null);
-    //    } else {
-    //        var result = [];
-
-    //        for (var i = 0; i < rows.length; i++) {
-    //            result.push({
-    //                id: rows[i].id,
-    //                title: rows[i].title,
-    //                textContent: rows[i].textContent,
-    //                professorName: rows[i].professorName,
-    //                maxTries: rows[i].maxTries,
-    //            });
-    //        }
-
-    //        onResult(null, result);
-    //    }
-    //});
+            onResult(null, result);
+        }
+    });
 }
 
 /**

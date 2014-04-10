@@ -35,7 +35,9 @@ export function getImage(request: express.Request, response: express.Response) {
         response.type('json');
         response.end(JSON.stringify({
             id: 1,
-            data: result.toString('base64')
+            title: 'Um carrinho bonito',
+            image: result.toString('base64'),
+            success: 1
         }));
 
         //response.end(result);
@@ -104,4 +106,21 @@ export function getTest(request: express.Request, response: express.Response) {
         response.statusCode = 400;
         response.end("No id supplied.");
     }
+}
+
+export function postTestResults(request: express.Request, response: express.Response) {
+    appPostServices.saveTestsToDb(request.body, (err) => {
+        if (err) {
+            response.statusCode = 500;
+            console.log(err.message);
+
+            response.end(JSON.stringify({
+                success: 0
+            }));
+        } else {
+            response.end(JSON.stringify({
+                success: 1
+            }));
+        }
+    });
 }

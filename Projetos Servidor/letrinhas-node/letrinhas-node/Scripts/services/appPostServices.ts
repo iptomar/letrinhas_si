@@ -8,22 +8,22 @@ export function sendBinaryDataToDb(binaryData: NodeBuffer, onDone: (err: Error) 
     });
 }
 
-export function saveTestToDb(jsonData: string, onDone: (err: Error) => void) {
-    var testData = JSON.parse(jsonData);
+export function saveTestsToDb(jsonData: any, onDone: (err: Error) => void) {
+    var list: any[] = jsonData.solvedTests;
 
-    var list: any[] = testData.solvedTests;
-
-    var insertData = [[]];
+    var insertData = [];
 
     for (var i = 0; i < list.length; i++) {
         insertData.push(
-            [/*list[0].id, */list[0].testId, list[0].completionDate, list[0].studentName, new Buffer(list[i].voiceBase64, 'base64')]
+            [/*list[0].id, */list[i].testId, list[i].completionDate, list[i].studentName, new Buffer(list[i].voiceBase64, 'base64')]
         );
     }
 
-    var sql = 'INSERT INTO Resolucoes (testId, completionDate, studentName, voiceData) VALUES (?, ?, ?, ?)';
+    console.log(insertData);
 
-    var query = mysql.pool.query(sql, insertData, (err, result) => {
+    var sql = 'INSERT INTO Resolucoes (testId, completionDate, studentName, voiceData) VALUES ?';
+
+    var query = mysql.pool.query(sql, [insertData], (err, result) => {
         onDone(err);
     });
 }
