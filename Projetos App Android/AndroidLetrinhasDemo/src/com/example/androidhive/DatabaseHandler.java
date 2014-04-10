@@ -11,17 +11,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
-	// All Static variables
-	// Database Version
+	// Versão da base de dados
 	private static final int DATABASE_VERSION = 1;
 
-	// Database Name
+	// Nome da Base  de dados
 	private static final String DATABASE_NAME = "letrinhasDb";
-
-	// Contacts table name
+	// Nome da tabela da Base de dados
 	private static final String TABLE_CONTACTS = "tblImages";
 
-	// Contacts Table Columns names
+	// Nomes dos campos
 	private static final String KEY_ID = "id";
 	private static final String KEY_NAME = "name";
 	private static final String KEY_IMAGE = "image";
@@ -30,97 +28,106 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
-	// Creating Tables
+	// Criar Tabela
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_CONTACTS + "("
+		String createTableString= "CREATE TABLE " + TABLE_CONTACTS + "("
 				+ KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-				+ KEY_IMAGE + " TEXT" + ")";
-		db.execSQL(CREATE_CONTACTS_TABLE);
+				+ KEY_IMAGE + " BLOB" + ")";
+		db.execSQL(createTableString);
 	}
 
-	// Upgrading database
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// Drop older table if existed
+		// Apagar tabelas antigas existentes
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS);
-
 		// Create tables again
 		onCreate(db);
 	}
 
 	/**
-	 * All CRUD(Create, Read, Update, Delete) Operations
+	 * Operacoes CRUD(Create, Read, Update, Delete) 
 	 */
 
-	// Adding new contact
-	void addContact(DadosImg contact) {
+	// Adicionar Novo ItemComImagem
+	void addNewItem(DadosImg contact) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put(KEY_NAME, contact.getName()); // Contact Name
-		values.put(KEY_IMAGE, contact.getImage()); // Contact Phone
-
-		// Inserting Row
+		values.put(KEY_NAME, contact.getName());   // Inserir na tabela campo Nome
+		values.put(KEY_IMAGE, contact.getImage()); // Inserir na tabela campo Imagem
+		// Inserir LINHAS:
 		db.insert(TABLE_CONTACTS, null, values);
-		db.close(); // Closing database connection
+		db.close(); // Fechar a conecao a Base de dados
 	}
 
-	// Getting single contact
-	DadosImg getContact(int id) {
-		SQLiteDatabase db = this.getReadableDatabase();
 
-		Cursor cursor = db.query(TABLE_CONTACTS, new String[] { KEY_ID,
-				KEY_NAME, KEY_IMAGE }, KEY_ID + "=?",
-				new String[] { String.valueOf(id) }, null, null, null, null);
+	/**
+	 * Buscar item pelo o ID do ITEM
+	 * @id recebe o Id
+	 * Retorna um objecto de dados do tipo Imagem
+	 */
+	DadosImg getItemById(int id) {
+		
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.query(TABLE_CONTACTS, 
+				new String[] { KEY_ID,
+				KEY_NAME, KEY_IMAGE }, 
+				KEY_ID + "=?",
+				new String[] { String.valueOf(id) }, 
+				null, null, null, null);
 		if (cursor != null)
 			cursor.moveToFirst();
-
-		DadosImg contact = new DadosImg(Integer.parseInt(cursor.getString(0)),
-				cursor.getString(1), cursor.getString(2));
-		// return contact
-		return contact;
+		DadosImg ItemImage = new DadosImg(Integer.parseInt(cursor.getString(0)),
+				cursor.getString(1), cursor.getBlob(2));
+		// return o Item ja carregado com os dados
+		return ItemImage;
 	}
 	
-	// Getting All Contacts
+	/**
+	 * Buscar todos os Item Imagem da BD
+	 * Retorna uma lista com varios objectos do tipo DadosImg
+	 */
 	public List<DadosImg> getAllContacts() {
 		List<DadosImg> contactList = new ArrayList<DadosImg>();
-		// Select All Query
+		// Select TODOS OS DADOS
 		String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS;
-
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
-
-		// looping through all rows and adding to list
+		// loop através de todas as linhas e adicionando à lista
 		if (cursor.moveToFirst()) {
 			do {
 				DadosImg contact = new DadosImg();
 				contact.setID(Integer.parseInt(cursor.getString(0)));
 				contact.setName(cursor.getString(1));
-				contact.setImage(cursor.getString(2));
-				// Adding contact to list
+				contact.setImage(cursor.getBlob(2));
+				// Adicionar os os items da base de dados a lista 
 				contactList.add(contact);
 			} while (cursor.moveToNext());
 		}
-
-		// return contact list
+		// return a lista com todos os items da base de dados
 		return contactList;
 	}
 
-	// Updating single contact
+	/**
+	 * Actualizar um registo unico
+	 * @DadosImg  Objecto com os dados a actualizar
+	 */
 	public int updateContact(DadosImg contact) {
 		SQLiteDatabase db = this.getWritableDatabase();
-
 		ContentValues values = new ContentValues();
-		values.put(KEY_NAME, contact.getName());
-		values.put(KEY_IMAGE, contact.getImage());
-
-		// updating row
+		values.put(KEY_NAME, contact.getName()); // Actualizar campo nome
+		values.put(KEY_IMAGE, contact.getImage()); // Actualizar campo imagem
+		// Actualizar registos na Base de dados
 		return db.update(TABLE_CONTACTS, values, KEY_ID + " = ?",
 				new String[] { String.valueOf(contact.getID()) });
 	}
 
-	// Deleting single contact
+	
+	/**
+	 * Apagar registo unico
+	 * @DadosImg  Objecto com os dados ao que se prentende apagar na bd
+	 */
 	public void deleteContact(DadosImg contact) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.delete(TABLE_CONTACTS, KEY_ID + " = ?",
@@ -129,14 +136,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	}
 
 
-	// Getting contacts Count
+	/**
+	 * Obtendo Contagem Items na Base de  dados
+	 * Retorna um inteiro com o total de resgisto da Base de dados
+	 */
 	public int getContactsCount() {
 		String countQuery = "SELECT  * FROM " + TABLE_CONTACTS;
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(countQuery, null);
 		cursor.close();
-
-		// return count
+		// return Total de registos da Base de Dados
 		return cursor.getCount();
 	}
 
