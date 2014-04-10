@@ -21,12 +21,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.11"
-        android:text="Receber" />
+        android:text="Receber imagem e Guardar BD" />
 
     <Button
         android:id="@+id/btnGuardarEmBD"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Guardar em BD" />
+        android:text="Receber Imagem da BD" />
 
 </LinearLayout>

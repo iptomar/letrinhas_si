@@ -5,21 +5,21 @@ public class DadosImg {
 	//private variables
 	int id;
 	String name;
-	String image;
+	byte[] image;
 	
 	// Empty constructor
 	public DadosImg(){
 		
 	}
-	// constructor
-	public DadosImg(int id, String name, String image){
+	// constructor 1
+	public DadosImg(int id, String name, 	byte[] image){
 		this.id = id;
 		this.name = name;
 		this.image = image;
 	}
 	
-	// constructor
-		public DadosImg( String name, String image){
+	// constructor 2
+		public DadosImg( String name, 	byte[] image){
 			this.name = name;
 			this.image = image;
 		}
@@ -45,12 +45,12 @@ public class DadosImg {
 	}
 	
 	// getting phone number
-	public String getImage(){
+	public 	byte[] getImage(){
 		return this.image;
 	}
 	
 	// setting phone number
-	public void setImage(String image){
+	public void setImage(	byte[] image){
 		this.image = image;
 	}
 }
