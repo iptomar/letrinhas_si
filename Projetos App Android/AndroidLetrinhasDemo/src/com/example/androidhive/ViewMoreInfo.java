@@ -12,7 +12,7 @@ public class ViewMoreInfo extends Activity {
 
 	// JSON Nome dos campos
 	private static final String TAG_TITLE = "title";
-	private static final String TAG_TEXT = "text";
+	private static final String TAG_TEXT = "textContent";
 	private static final String TAG_MAX_TRIES = "maxTries";
 	
 	@Override

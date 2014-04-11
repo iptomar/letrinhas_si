@@ -8,17 +8,17 @@
     <!-- Sample Dashboard screen with Two buttons -->
 
     <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="140dp"
-        android:layout_height="141dp"
+        android:id="@+id/imgView1"
+        android:layout_width="86dp"
+        android:layout_height="86dp"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/ic_launcher" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/txtTituloImageView"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="0.65"
         android:text="@string/lb_mainIpServidor"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -27,16 +27,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:text="192.168.1.3" >
-
-        <requestFocus />
-    </EditText>
+        android:text="192.168.10.196" />
 
     <TextView
         android:id="@+id/TextView01"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:text="@string/mainPorta"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -44,9 +40,11 @@
         android:id="@+id/txtBoxPorta"
         android:layout_width="144dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:ems="10"
-        android:text="8080" />
+        android:text="8080" >
+
+        <requestFocus />
+    </EditText>
 
     <Button
         android:id="@+id/btnViewProducts"
@@ -55,6 +53,14 @@
         android:layout_marginTop="25dip"
         android:layout_weight="0.45"
         android:text="@string/btnMainAllTest" />
+
+    <Button
+        android:id="@+id/btnReceberImagem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dip"
+        android:layout_weight="0.45"
+        android:text="@string/btnReceberImagem" />
 
     <Button
         android:id="@+id/btnSendResult"

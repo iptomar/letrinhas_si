@@ -14,7 +14,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
@@ -30,44 +29,41 @@ public class All_Tests extends ListActivity {
 
 		// Criar o objecto JSON Parser
 		JSONParser jParser = new JSONParser();
-
 		//Array list de testes
 		ArrayList<HashMap<String, String>> testsList;
 
-		// URL do Servidor  Nota: Recebido em baixo//////////////////////////////////////////////////////////////
+		// URL do Servidor  Nota: Recebido em baixo//////////////////////////////
 		private static String url_all_tests= ""; ////
         ////////////////////////////////////////////////////////////////////////////////
 		// JSON Nome dos campos
 		private static final String TAG_SUCCESS = "success";
 		private static final String TAG_TESTS= "tests";
-		private static final String TAG_PID = "id";
+		private static final String TAG_ID = "id";
 		private static final String TAG_TITLE = "title";
-		private static final String TAG_TEXT = "text";
+		private static final String TAG_TEXT = "textContent";
+		private static final String TAG_PROF = "professorName";
 		private static final String TAG_MAX_TRIES = "maxTries";
-		
-		//Products JSONArray
+		/////Variaveis que vai guardar o ip e porta recebido da janela anterior/////
+		public String ip;
+		public String porta;
+		//Ficheiro JSONArray dos testes
 		JSONArray tests = null;
 
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_all__tests);
-
 			// Obtendo Detalhes dos Testes do intent
 			Intent i = getIntent();
-			
-	    	// Obtendo CAMPO IP e PORTA enviados para esta Janela
-			String ip = i.getStringExtra("IP");
-			String porta = i.getStringExtra("PORTA");
-			url_all_tests = "http://"+ip+":"+porta+"/testList"; 
-			
-			
+		  	// Obtendo CAMPO IP e PORTA enviados para esta Janela
+			ip = i.getStringExtra("IP");
+			porta = i.getStringExtra("PORTA");
+			url_all_tests = "http://"+ip+":"+porta+"/testSummary"; 
 			// Hashmap para ListView
 			testsList = new ArrayList<HashMap<String, String>>();
 
-			// Load Tests em Background Thread
-			new LoadAllProducts().execute();
-
+			// Executar  a thread em background para carregar uma lista de Testes
+			new LoadAllTests().execute();
 			// Get listview
 			ListView lv = getListView();
 
@@ -77,34 +73,57 @@ public class All_Tests extends ListActivity {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
-					
-					////Vai Buscar as TextView Ocultas na list_item ///
-					String title = ((TextView) view.findViewById(R.id.title)).getText()
+					String idSelect = ((TextView) view.findViewById(R.id.id)).getText()
 							.toString();
-					String text = ((TextView) view.findViewById(R.id.text)).getText()
-							.toString();
-					String tries = ((TextView) view.findViewById(R.id.tries)).getText()
-							.toString();
-					
-					
-					Intent i = new Intent(getApplicationContext(), ViewMoreInfo.class);
-					// Insere um  Extra, coloca variaveis para serem enviadas para a janela ViewMoreInfo
-					i.putExtra(TAG_TITLE, title);
-					i.putExtra(TAG_TEXT, text);
-					i.putExtra(TAG_MAX_TRIES, tries);
-					startActivity(i);
+					GetItemSelectRequest(idSelect);
 				}
 			});
-
 		}
-
-		// Resposta 
 		
+		
+		/**
+		 * Faz o Request ao servidor Para obter os detalhes do teste selecionado
+		 * */
+		public void GetItemSelectRequest(String idSelect)
+		{
+			// Construi os Parametros
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			
+			// getting JSON string from URL
+			String urlGetItem =   "http://"+ip+":"+porta+"/getTest?id="+idSelect; 
+			
+			JSONObject json = jParser.Get(urlGetItem, params);
+			try {
+				/// Lê o campo sucesso para verificar se a mensagem chegou toda
+			int success = json.getInt(TAG_SUCCESS);
+			if (success == 1) {
+				// Obtendo um Array de os detalhes do Teste
+				tests = json.getJSONArray(TAG_TESTS);
+			
+			JSONObject c = tests.getJSONObject(0);
+			// Armazenar cada item json nas variáveis
+			String idItem = c.getString(TAG_ID);
+			String title = c.getString(TAG_TITLE);
+			String text = c.getString(TAG_TEXT);
+			String profName = c.getString(TAG_PROF);
+			String maxTries = c.getString(TAG_MAX_TRIES);
+			
+			Intent i = new Intent(getApplicationContext(), ViewMoreInfo.class);
+			i.putExtra(TAG_TITLE, title);
+			i.putExtra(TAG_TEXT, text);
+			i.putExtra(TAG_PROF, profName);
+			i.putExtra(TAG_MAX_TRIES, maxTries);
+			startActivity(i);
+			}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
 
 		/**
 		 * Background Async Task para carregar todos os Testes por HTTP Request
 		 * */
-		class LoadAllProducts extends AsyncTask<String, String, String> {
+		class LoadAllTests extends AsyncTask<String, String, String> {
 
 			/**
 			 * Antes de iniciar a Thread Bacground aparece a progress Dialog
@@ -120,18 +139,16 @@ public class All_Tests extends ListActivity {
 			}
 
 			/**
-			 * getting All products from url
+			 * Faz em Background 
 			 * */
 			protected String doInBackground(String... args) {
 				// Construi os Parametros
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 				// getting JSON string from URL
 				JSONObject json = jParser.Get(url_all_tests, params);
-				
 				try {
 					// verifica a Tag SUCCESS, usada para verificar de a mensagem chegou a nós como deve ser
 					int success = json.getInt(TAG_SUCCESS);
-
 					if (success == 1) {
 						// Testes encontrados
 						// Obtendo um Array de todos os Tests
@@ -140,22 +157,14 @@ public class All_Tests extends ListActivity {
 						// For (loop)looping atraves de todos os Testes
 						for (int i = 0; i < tests.length(); i++) {
 							JSONObject c = tests.getJSONObject(i);
-							
 							// Armazenar cada item json nas variáveis
-							String id = c.getString(TAG_PID);
+							String id = c.getString(TAG_ID);
 							String title = c.getString(TAG_TITLE);
-							String text = c.getString(TAG_TEXT);
-							String tries = c.getString(TAG_MAX_TRIES);
-
 							// Criar um novo HashMap
 							HashMap<String, String> map = new HashMap<String, String>();
-
 							// Adicionar cada NODE filho ao HashMap chave => valor
-							map.put(TAG_PID, id);
+							map.put(TAG_ID, id);
 							map.put(TAG_TITLE, title);
-							map.put(TAG_TEXT, text);
-							map.put(TAG_MAX_TRIES, tries);
-							
 							// Acrescentando HashList para ArrayList
 							testsList.add(map);
 						}
@@ -183,10 +192,10 @@ public class All_Tests extends ListActivity {
 						/**
 						 * Inserir parsed JSON para dentro da ListView
 						 * */
-						ListAdapter adapter = new SimpleAdapter(
+								ListAdapter adapter = new SimpleAdapter(
 								All_Tests.this, testsList,
-								R.layout.list_item, new String[] { TAG_PID, TAG_TITLE, TAG_TEXT, TAG_MAX_TRIES},
-								new int[] { R.id.id, R.id.title, R.id.text, R.id.tries});
+								R.layout.list_item, new String[] { TAG_ID, TAG_TITLE},
+								new int[] { R.id.id, R.id.title});
 						// actualizar listview
 						setListAdapter(adapter);
 					}
