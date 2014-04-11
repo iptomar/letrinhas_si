@@ -49,7 +49,6 @@ public class ReceberImagem extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_receber_imagem);
-
 		// Obtendo Detalhes dos Testes do intent
 		Intent i = getIntent();
 		// Obtendo CAMPO IP e PORTA enviados para esta Janela
@@ -73,8 +72,10 @@ public class ReceberImagem extends Activity {
 		btnLerDaBD.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				TextView txtBoxIdImage = (TextView) findViewById(R.id.txtBoxIDcampoImg);
+				String textTxtBox = txtBoxIdImage.getText().toString();
 				//Vai ler o campo 1 da base de  dados
-				LerDaBd(1);
+				LerDaBd(Integer.parseInt(textTxtBox));
 			}
 		});
 
@@ -167,19 +168,18 @@ public class ReceberImagem extends Activity {
 		/**
 		 * CRUD Operations
 		 * */
-		// Inserting Contacts
+		// Inserir dados na base de dados
 		Log.d("Insert: ", "Inserting ..");
 		db.addNewItem(new DadosImg(name, image));
 
-		// Reading all contacts
-		Log.d("Reading: ", "Reading all contacts..");
-		List<DadosImg> dadosImg = db.getAllContacts();
-
+		// Ler dados da base de dados
+			List<DadosImg> dadosImg = db.getAllContacts();
+			Log.d("BDDADOS: ", "**********************************");
 		for (DadosImg cn : dadosImg) {
 			String log = "Id: " + cn.getID() + " ,Name: " + cn.getName()
 					+ " ,image: " + cn.getImage();
 			// Writing Contacts to log
-			Log.d("Name: ", log);
+			Log.d("BDDADOS: ", log);
 
 		}
 	}
@@ -192,15 +192,12 @@ public class ReceberImagem extends Activity {
 		DatabaseHandler db = new DatabaseHandler(this);
 		DadosImg data = db.getItemById(idCampo);
 
-		// dadosImg.get(5)
 		byte[] imgBytes = data.getImage();
-		
+		//Preenche a label
 		TextView txtViewImage = (TextView) findViewById(R.id.txtTituloImageView);
 		txtViewImage.setText(data.getName());
 
-		Log.d("letrinhas",
-				String.format("Tamanho da imagem: %d", imgBytes.length));
-
+		//Preenche a imagem
 		Bitmap bmp = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length);
 		ImageView imgViews = (ImageView) findViewById(R.id.imgView1);
 		imgViews.setImageBitmap(bmp);

@@ -17,7 +17,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	// Nome da Base  de dados
 	private static final String DATABASE_NAME = "letrinhasDb";
 	// Nome da tabela da Base de dados
-	private static final String TABLE_CONTACTS = "tblImages";
+	private static final String TABLE_IMAGES = "tblImages";
 
 	// Nomes dos campos
 	private static final String KEY_ID = "id";
@@ -28,10 +28,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
-	// Criar Tabela
+	// Create Tabela
+		/**
+		 * Criar Tabela
+		 * @db recebe a base de dados onde inserir a tabela
+		 */
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		String createTableString= "CREATE TABLE " + TABLE_CONTACTS + "("
+		String createTableString= "CREATE TABLE " + TABLE_IMAGES + "("
 				+ KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
 				+ KEY_IMAGE + " BLOB" + ")";
 		db.execSQL(createTableString);
@@ -40,7 +44,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// Apagar tabelas antigas existentes
-		db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMAGES);
 		// Create tables again
 		onCreate(db);
 	}
@@ -49,7 +53,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	 * Operacoes CRUD(Create, Read, Update, Delete) 
 	 */
 
-	// Adicionar Novo ItemComImagem
+	/// INSERT 
+		/**
+		 * Adicionar novo Item
+		 * @contact recebe um objecto com os dados a inserir na BD
+		 */
 	void addNewItem(DadosImg contact) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
@@ -57,28 +65,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		values.put(KEY_NAME, contact.getName());   // Inserir na tabela campo Nome
 		values.put(KEY_IMAGE, contact.getImage()); // Inserir na tabela campo Imagem
 		// Inserir LINHAS:
-		db.insert(TABLE_CONTACTS, null, values);
+		db.insert(TABLE_IMAGES, null, values);
 		db.close(); // Fechar a conecao a Base de dados
 	}
 
 
-	/**
-	 * Buscar item pelo o ID do ITEM
-	 * @id recebe o Id
-	 * Retorna um objecto de dados do tipo Imagem
-	 */
+	///SELECT 
+		/**
+		 * Buscar item pelo o ID do ITEM
+		 * @id recebe o Id
+		 * Retorna um objecto que contem (campo: nome, campo: imagem) preenchido
+		 */
 	DadosImg getItemById(int id) {
-		
 		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.query(TABLE_CONTACTS, 
+		Cursor cursor = db.query(TABLE_IMAGES, 
 				new String[] { KEY_ID,
 				KEY_NAME, KEY_IMAGE }, 
 				KEY_ID + "=?",
 				new String[] { String.valueOf(id) }, 
 				null, null, null, null);
-		if (cursor != null)
+		if (cursor!= null)
 			cursor.moveToFirst();
-		DadosImg ItemImage = new DadosImg(Integer.parseInt(cursor.getString(0)),
+		DadosImg ItemImage = new DadosImg(cursor.getInt(0),
 				cursor.getString(1), cursor.getBlob(2));
 		// return o Item ja carregado com os dados
 		return ItemImage;
@@ -91,7 +99,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	public List<DadosImg> getAllContacts() {
 		List<DadosImg> contactList = new ArrayList<DadosImg>();
 		// Select TODOS OS DADOS
-		String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS;
+		String selectQuery = "SELECT  * FROM " + TABLE_IMAGES;
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
 		// loop através de todas as linhas e adicionando à lista
@@ -119,18 +127,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		values.put(KEY_NAME, contact.getName()); // Actualizar campo nome
 		values.put(KEY_IMAGE, contact.getImage()); // Actualizar campo imagem
 		// Actualizar registos na Base de dados
-		return db.update(TABLE_CONTACTS, values, KEY_ID + " = ?",
+		return db.update(TABLE_IMAGES, values, KEY_ID + " = ?",
 				new String[] { String.valueOf(contact.getID()) });
 	}
 
 	
-	/**
-	 * Apagar registo unico
-	 * @DadosImg  Objecto com os dados ao que se prentende apagar na bd
-	 */
+	// Apagar registo
+		/**
+		 * Apagar registo na tabela
+		 * @contact  Objecto com os dados ao que se prentende apagar na bd
+		 */
 	public void deleteContact(DadosImg contact) {
 		SQLiteDatabase db = this.getWritableDatabase();
-		db.delete(TABLE_CONTACTS, KEY_ID + " = ?",
+		db.delete(TABLE_IMAGES, KEY_ID + " = ?",
 				new String[] { String.valueOf(contact.getID()) });
 		db.close();
 	}
@@ -141,7 +150,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	 * Retorna um inteiro com o total de resgisto da Base de dados
 	 */
 	public int getContactsCount() {
-		String countQuery = "SELECT  * FROM " + TABLE_CONTACTS;
+		String countQuery = "SELECT  * FROM " + TABLE_IMAGES;
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(countQuery, null);
 		cursor.close();

@@ -95,14 +95,13 @@ public class Send_ResultTest extends Activity {
 			String studentName = inputStudentName.getText().toString();
 
 			// ////////////Teste De código para converter imagem para
-			// Base64//////////////////
+			// Vai buscar uma imagem interna a aplicacao//////////////////
 			Bitmap bm = BitmapFactory.decodeResource(getResources(),
 					R.drawable.ax);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); // bm is the
-																// bitmap object
+			ByteArrayOutputStream baos = new ByteArrayOutputStream(); // Transforma a imagem num array de bytes
+			bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); 
 			byte[] b = baos.toByteArray();
-			String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+			String encodedImage = Base64.encodeToString(b, Base64.DEFAULT); //Faz o encoding para BASE64
 
 			// Criar o ficheiro de JSON
 			JSONObject jObj = new JSONObject();

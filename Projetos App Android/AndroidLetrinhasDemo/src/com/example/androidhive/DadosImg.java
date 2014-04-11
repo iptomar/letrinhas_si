@@ -1,5 +1,7 @@
 package com.example.androidhive;
 
+//////ESTE OBJECTO É O OBJECTO QUE SERVE COMO CONTENTOR COM OS DADOS DA IMAGEM////
+/////////////Simula um objecto imagem////////
 public class DadosImg {
 	
 	//private variables
@@ -29,7 +31,7 @@ public class DadosImg {
 		return this.id;
 	}
 	
-	// setting id
+	// setting ID
 	public void setID(int id){
 		this.id = id;
 	}
@@ -44,12 +46,12 @@ public class DadosImg {
 		this.name = name;
 	}
 	
-	// getting phone number
+	// getting Image
 	public 	byte[] getImage(){
 		return this.image;
 	}
 	
-	// setting phone number
+	// setting image
 	public void setImage(	byte[] image){
 		this.image = image;
 	}
