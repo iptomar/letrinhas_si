@@ -1,9 +1,10 @@
 ﻿// import mysql = require('../../configs/mysql');
 var fs = require('fs');
+
 var mysql = require('../../configs/mysql');
 
 function getBinaryData(onResult) {
-    //mysql.pool.query('SELECT binarydata FROM BinaryTest where id = 1', (err, rows, fields) => {
+    //mysql.pool.query('SELECT binarydata FROM BinaryTest where id = 2', (err, rows, fields) => {
     //    if (err) {
     //        onResult(err, null);
     //    } else {

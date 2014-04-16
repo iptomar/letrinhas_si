@@ -1,43 +1,45 @@
-﻿var express = require('express');
+﻿/// <reference path="Scripts/typings/express/express.d.ts" />
+var express = require('express');
 
-// import routes = require('./routes/index');
-// import user = require('./routes/user');
-// import test = require('./routes/tests');
-var http = require('http');
 var path = require('path');
 
+//var bodyParser = require('body-parser');
+//var morgan = require('morgan');
+// Create the Express app.
 var app = express();
 
-// all environments
-app.set('port', process.env.PORT || 3000);
-app.set('views', path.join(__dirname, 'views'));
+// Define the port.
+app.set('port', process.env.PORT || 8080);
+
+// The view engine for this server.
 app.set('view engine', 'jade');
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
 
-//app.use(express.json());
-//app.use(express.urlencoded());
-app.use(express.methodOverride());
-app.use(app.router);
+// Definição da path das views para o view engine.
+app.set('views', path.join(__dirname, 'views'));
 
-var stylus = require('stylus');
-app.use(stylus.middleware(path.join(__dirname, 'public')));
+// Logger
+app.use(require('morgan')('dev'));
+
+// Body parser for express.
+app.use(require('body-parser')());
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-// development only
+// Set the error handler.
 if ('development' == app.get('env')) {
-    app.use(express.errorHandler());
+    //     app.use(express.errorHandler());
+    app.use(function (err, req, res, next) {
+        console.error(err.stack);
+        next();
+        res.send(500);
+    });
 }
 
-// Route config
+// Configure routes.
 require('./configs/routes').mapRoutes(app);
 
-// app.get('/', routes.index);
-// app.get('/users', user.list);
-// app.get('/testSummary', test.listSummary);
-// app.post('/postFiles', test.postImage);
-http.createServer(app).listen(app.get('port'), function () {
+// Start the server.
+app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
 //# sourceMappingURL=app.js.map

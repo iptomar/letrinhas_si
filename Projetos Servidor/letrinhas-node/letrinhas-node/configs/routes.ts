@@ -5,6 +5,11 @@ import indexActions = require('../routes/index');
 import testActions = require('../routes/tests');
 import express = require('express');
 
+/**
+ * Maps routes to the server.
+ * 
+ * @param app The server which routes will be mapped to.
+ */
 export function mapRoutes(app: express.Express) {
     app.get('/', indexActions.index);
     // app.get('/users', user.list);
@@ -18,9 +23,13 @@ export function mapRoutes(app: express.Express) {
     app.post('/postTestResults', testActions.postTestResults);
     app.post('/postFiles', testActions.postImage);
 
-    app.use(sendNotFound);
+    // Probably unnecessary.
+    // app.use(sendNotFound);
 }
 
+/**
+ * @deprecated
+ */
 function sendNotFound(req: express.Request, res: express.Response, next) {
     res.status(404);
 

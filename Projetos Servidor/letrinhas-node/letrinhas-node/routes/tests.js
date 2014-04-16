@@ -30,14 +30,14 @@ exports.listSummary = listSummary;
 
 function getImage(request, response) {
     appGetServices.getBinaryData(function (err, result) {
-        response.type('json');
-        response.end(JSON.stringify({
-            id: 1,
-            title: 'Um carrinho bonito',
-            image: result.toString('base64'),
-            success: 1
-        }));
-        //response.end(result);
+        //response.type('json');
+        //response.end(JSON.stringify({
+        //    id: 1,
+        //    title: 'Um carrinho bonito',
+        //    image: result.toString('base64'),
+        //    success: 1
+        //}));
+        response.end(result);
     });
 }
 exports.getImage = getImage;

@@ -32,15 +32,15 @@ export function listSummary(request: express.Request, response: express.Response
 
 export function getImage(request: express.Request, response: express.Response) {
     appGetServices.getBinaryData((err, result) => {
-        response.type('json');
-        response.end(JSON.stringify({
-            id: 1,
-            title: 'Um carrinho bonito',
-            image: result.toString('base64'),
-            success: 1
-        }));
+        //response.type('json');
+        //response.end(JSON.stringify({
+        //    id: 1,
+        //    title: 'Um carrinho bonito',
+        //    image: result.toString('base64'),
+        //    success: 1
+        //}));
 
-        //response.end(result);
+        response.end(result);
     });
 }
 
@@ -58,8 +58,6 @@ export function postImage(request: express.Request, response: express.Response) 
             response.end('Whatever');
         });
     });
-
-    
 
     console.log(correctId);
 

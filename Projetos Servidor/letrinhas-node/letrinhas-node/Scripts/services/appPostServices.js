@@ -3,6 +3,7 @@
 // TODO: Implement this.
 function sendBinaryDataToDb(binaryData, onDone) {
     mysql.pool.query('INSERT INTO BinaryTest SET binarydata = ?', binaryData, function (err, result) {
+        console.log(result);
         onDone(err);
     });
 }

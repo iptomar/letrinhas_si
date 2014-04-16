@@ -1,10 +1,11 @@
 ﻿// import mysql = require('../../configs/mysql');
 import fs = require('fs');
+import stream = require('stream');
 import mysql = require('../../configs/mysql');
 import tests = require('../structures/testDataStructures');
 
 export function getBinaryData(onResult: (err: Error, result: NodeBuffer) => void) {
-    //mysql.pool.query('SELECT binarydata FROM BinaryTest where id = 1', (err, rows, fields) => {
+    //mysql.pool.query('SELECT binarydata FROM BinaryTest where id = 2', (err, rows, fields) => {
     //    if (err) {
     //        onResult(err, null);
     //    } else {
