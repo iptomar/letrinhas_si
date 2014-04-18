@@ -1,4 +1,5 @@
 ﻿/// <reference path="Scripts/typings/express/express.d.ts" />
+/// <reference path="Scripts/typings/node/node.d.ts" />
 import express = require('express');
 
 import path = require('path');
@@ -21,7 +22,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(require('morgan')('dev'));
 
 // Body parser for express. 
+app.use(require('multer')());
 app.use(require('body-parser')());
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 

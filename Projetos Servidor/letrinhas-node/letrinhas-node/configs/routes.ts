@@ -3,6 +3,7 @@
 
 import indexActions = require('../routes/index');
 import testActions = require('../routes/tests');
+import syncActions = require('../routes/sync');
 import express = require('express');
 
 /**
@@ -18,6 +19,8 @@ export function mapRoutes(app: express.Express) {
     app.get('/image', testActions.getImage);
 
     app.get('/getTest', testActions.getTest);
+
+    app.get('/professors', syncActions.getProfessors);
 
     // POST Routes.
     app.post('/postTestResults', testActions.postTestResults);

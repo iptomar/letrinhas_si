@@ -1,4 +1,5 @@
-﻿///reference path="../typings/express/express.d.ts"/>
+﻿/// <reference path="../typings/express/express.d.ts" />
+/// <reference path="Scripts/typings/node/node.d.ts" />
 
 import express = require('express');
 import fs = require('fs');
@@ -42,26 +43,39 @@ export function getImage(request: express.Request, response: express.Response) {
 
         response.end(result);
     });
+    console.log("Hello");
 }
 
 export function postImage(request: express.Request, response: express.Response) {
 
+    // console.log(request);
+
     var correctId: string = request.body['correct-id'];
 
-    // Read the file
-    fs.readFile(request.files[correctId].path, (err, data) => {
-        appPostServices.sendBinaryDataToDb(data, (err) => {
-            if (err) {
-                console.log(err);
-            }
+    //// Read the file
+    //fs.readFile(request.files[correctId].path, (err, data) => {
+    //    appPostServices.sendBinaryDataToDb(data, (err) => {
+    //        if (err) {
+    //            console.log(err);
+    //        }
 
-            response.end('Whatever');
+    //        response.end('Whatever');
+    //    });
+    //});
+
+    // console.log(request.body);
+
+    fs.readFile(request.files[correctId].path, (err, data) => {
+        fs.writeFile('D:/' + request.files[correctId].path, data, (err) => {
+            console.log('Saved file.');
         });
     });
 
     console.log(correctId);
 
-    console.log(request.files[correctId]);   
+    console.log(request.files);
+
+    response.end('Whatever');
 }
 
 export function teste(request: express.Request, response: express.Response) {
@@ -90,16 +104,14 @@ export function getTest(request: express.Request, response: express.Response) {
         if (idList.length == 0) {
             response.statusCode = 400;
             response.end('No valid id supplied.');
+        } else {
+            appGetServices.getTestById(idList, (err, testList) => {
+                response.json({
+                    tests: testList,
+                    success: 1
+                });
+            });
         }
-
-        appGetServices.getTestById(idList, (err, testList) => {
-            var sendResult = {
-                tests: testList,
-                success: 1
-            };
-
-            response.end(JSON.stringify(sendResult));
-        });
     } else {
         response.statusCode = 400;
         response.end("No id supplied.");
@@ -107,18 +119,20 @@ export function getTest(request: express.Request, response: express.Response) {
 }
 
 export function postTestResults(request: express.Request, response: express.Response) {
+    console.log(request.body);
+
     appPostServices.saveTestsToDb(request.body, (err) => {
         if (err) {
             response.statusCode = 500;
             console.log(err.message);
 
-            response.end(JSON.stringify({
+            response.json({
                 success: 0
-            }));
+            });
         } else {
-            response.end(JSON.stringify({
+            response.json({
                 success: 1
-            }));
+            });
         }
     });
 }

@@ -1,6 +1,7 @@
-﻿// import mysql = require('../../configs/mysql');
+/// <reference path="../typings/node/node.d.ts" />
+
+// import mysql = require('../../configs/mysql');
 import fs = require('fs');
-import stream = require('stream');
 import mysql = require('../../configs/mysql');
 import tests = require('../structures/testDataStructures');
 

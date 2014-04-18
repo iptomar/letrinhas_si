@@ -1,4 +1,6 @@
-﻿import mysql = require('mysql');
+﻿/// <reference path="../Scripts/typings/mysql/mysql.d.ts" />
+
+import mysql = require('mysql');
 
 /**
  * Connection pool for this app.

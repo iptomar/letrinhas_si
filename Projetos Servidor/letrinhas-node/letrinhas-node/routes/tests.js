@@ -1,4 +1,5 @@
-﻿///reference path="../typings/express/express.d.ts"/>
+﻿/// <reference path="../typings/express/express.d.ts" />
+/// <reference path="Scripts/typings/node/node.d.ts" />
 var fs = require('fs');
 
 var appPostServices = require('../Scripts/services/appPostServices');
@@ -43,22 +44,30 @@ function getImage(request, response) {
 exports.getImage = getImage;
 
 function postImage(request, response) {
+    // console.log(request);
     var correctId = request.body['correct-id'];
 
-    // Read the file
+    //// Read the file
+    //fs.readFile(request.files[correctId].path, (err, data) => {
+    //    appPostServices.sendBinaryDataToDb(data, (err) => {
+    //        if (err) {
+    //            console.log(err);
+    //        }
+    //        response.end('Whatever');
+    //    });
+    //});
+    // console.log(request.body);
     fs.readFile(request.files[correctId].path, function (err, data) {
-        appPostServices.sendBinaryDataToDb(data, function (err) {
-            if (err) {
-                console.log(err);
-            }
-
-            response.end('Whatever');
+        fs.writeFile('D:/' + request.files[correctId].path, data, function (err) {
+            console.log('Saved file.');
         });
     });
 
     console.log(correctId);
 
-    console.log(request.files[correctId]);
+    console.log(request.files);
+
+    response.end('Whatever');
 }
 exports.postImage = postImage;
 
@@ -106,6 +115,8 @@ function getTest(request, response) {
 exports.getTest = getTest;
 
 function postTestResults(request, response) {
+    console.log(request.body);
+
     appPostServices.saveTestsToDb(request.body, function (err) {
         if (err) {
             response.statusCode = 500;

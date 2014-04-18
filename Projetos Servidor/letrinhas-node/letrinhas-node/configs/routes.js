@@ -2,6 +2,7 @@
 /// <reference path="../Scripts/typings/express/express.d.ts" />
 var indexActions = require('../routes/index');
 var testActions = require('../routes/tests');
+var syncActions = require('../routes/sync');
 
 /**
 * Maps routes to the server.
@@ -17,6 +18,8 @@ function mapRoutes(app) {
     app.get('/image', testActions.getImage);
 
     app.get('/getTest', testActions.getTest);
+
+    app.get('/professors', syncActions.getProfessors);
 
     // POST Routes.
     app.post('/postTestResults', testActions.postTestResults);

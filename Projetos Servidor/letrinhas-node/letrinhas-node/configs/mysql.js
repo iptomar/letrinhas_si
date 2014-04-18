@@ -1,4 +1,5 @@
-﻿var mysql = require('mysql');
+﻿/// <reference path="../Scripts/typings/mysql/mysql.d.ts" />
+var mysql = require('mysql');
 
 /**
 * Connection pool for this app.
