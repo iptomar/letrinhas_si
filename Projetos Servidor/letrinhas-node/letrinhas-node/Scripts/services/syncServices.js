@@ -1,5 +1,4 @@
 ﻿/// <reference path="../typings/mysql/mysql.d.ts" />
-'use strict';
 var mysqlConfig = require('../../configs/mysql');
 
 var pool = mysqlConfig.pool;
@@ -14,12 +13,12 @@ var Professor = (function () {
 })();
 exports.Professor = Professor;
 
-var SchoolClass = (function () {
-    function SchoolClass() {
+var Class = (function () {
+    function Class() {
     }
-    return SchoolClass;
+    return Class;
 })();
-exports.SchoolClass = SchoolClass;
+exports.Class = Class;
 
 var ProfessorClassLecture = (function () {
     function ProfessorClassLecture() {
@@ -57,7 +56,7 @@ function getSchools(onDone) {
     // Get the schools.
     pool.query(SELECT_SCHOOLS, function (err, rows, fields) {
         if (err) {
-            return onDone(err, []);
+            return onDone(err, null);
         }
 
         var schools = new Array(rows.length);
@@ -79,7 +78,7 @@ exports.getSchools = getSchools;
 function getProfessors(onDone) {
     pool.query(SELECT_PROFESSORS, function (err, rows, fields) {
         if (err) {
-            return onDone(err, []);
+            return onDone(err, null);
         }
 
         var professors = new Array(rows.length);
@@ -98,8 +97,42 @@ function getProfessors(onDone) {
             };
         }
 
-        onDone(err, professors);
+        onDone(null, professors);
     });
 }
 exports.getProfessors = getProfessors;
+
+function getClasses(onDone) {
+    pool.query('SELECT * FROM Classes', function (err, rows, fields) {
+        if (err) {
+            return onDone(err, null);
+        }
+
+        var classes = new Array(rows.length);
+
+        for (var i = 0; i < rows.length; i++) {
+            classes[i] = {
+                id: rows[i].id,
+                schoolId: rows[i].schoolId,
+                classLevel: rows[i].classLevel,
+                className: rows[i].className,
+                classYear: rows[i].classYear
+            };
+        }
+
+        onDone(null, classes);
+    });
+}
+exports.getClasses = getClasses;
+
+function getStudents(onDone) {
+    pool.query('SELECT * FROM Students', function (err, rows, fields) {
+        if (err) {
+            return onDone(err, null);
+        }
+
+        onDone(null, rows);
+    });
+}
+exports.getStudents = getStudents;
 //# sourceMappingURL=syncServices.js.map

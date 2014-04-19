@@ -1,5 +1,5 @@
-﻿/// <reference path="../typings/express/express.d.ts" />
-/// <reference path="Scripts/typings/node/node.d.ts" />
+﻿/// <reference path="../Scripts/typings/express/express.d.ts" />
+/// <reference path="../Scripts/typings/node/node.d.ts" />
 var fs = require('fs');
 
 var appPostServices = require('../Scripts/services/appPostServices');
@@ -40,6 +40,7 @@ function getImage(request, response) {
         //}));
         response.end(result);
     });
+    console.log("Hello");
 }
 exports.getImage = getImage;
 
@@ -97,16 +98,14 @@ function getTest(request, response) {
         if (idList.length == 0) {
             response.statusCode = 400;
             response.end('No valid id supplied.');
+        } else {
+            appGetServices.getTestById(idList, function (err, testList) {
+                response.json({
+                    tests: testList,
+                    success: 1
+                });
+            });
         }
-
-        appGetServices.getTestById(idList, function (err, testList) {
-            var sendResult = {
-                tests: testList,
-                success: 1
-            };
-
-            response.end(JSON.stringify(sendResult));
-        });
     } else {
         response.statusCode = 400;
         response.end("No id supplied.");
@@ -122,13 +121,13 @@ function postTestResults(request, response) {
             response.statusCode = 500;
             console.log(err.message);
 
-            response.end(JSON.stringify({
+            response.json({
                 success: 0
-            }));
+            });
         } else {
-            response.end(JSON.stringify({
+            response.json({
                 success: 1
-            }));
+            });
         }
     });
 }

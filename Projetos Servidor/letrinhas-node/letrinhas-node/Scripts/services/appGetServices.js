@@ -1,4 +1,4 @@
-/// <reference path="../typings/node/node.d.ts" />
+﻿/// <reference path="../typings/node/node.d.ts" />
 // import mysql = require('../../configs/mysql');
 var fs = require('fs');
 var mysql = require('../../configs/mysql');

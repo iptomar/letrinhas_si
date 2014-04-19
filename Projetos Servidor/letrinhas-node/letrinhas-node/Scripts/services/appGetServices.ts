@@ -36,6 +36,7 @@ export function getTestById(idList: number[], onResult: (err: Error, result: Arr
         if (err) {
             onResult(err, null);
         } else {
+
             var result = [];
 
             for (var i = 0; i < rows.length; i++) {

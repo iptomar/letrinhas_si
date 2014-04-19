@@ -1,5 +1,5 @@
-﻿/// <reference path="../typings/express/express.d.ts" />
-/// <reference path="Scripts/typings/node/node.d.ts" />
+﻿/// <reference path="../Scripts/typings/express/express.d.ts" />
+/// <reference path="../Scripts/typings/node/node.d.ts" />
 
 import express = require('express');
 import fs = require('fs');
@@ -7,7 +7,7 @@ import fs = require('fs');
 import appPostServices = require('../Scripts/services/appPostServices');
 import appGetServices = require('../Scripts/services/appGetServices');
 
-export function listSummary(request: express.Request, response: express.Response) {
+export function listSummary(request: express.Request, response: express.Response): void {
 
     var max = parseInt(request.param('max'));
 

@@ -1,7 +1,4 @@
 ﻿/// <reference path="../typings/mysql/mysql.d.ts" />
-
-'use strict';
-
 import mysqlConfig = require('../../configs/mysql');
 
 var pool = mysqlConfig.pool;
@@ -50,8 +47,8 @@ export class Professor {
     password: string;
 }
 
-export class SchoolClass {
-    classId: number;
+export class Class {
+    id: number;
     schoolId: number;
     classLevel: number;
     className: string;
@@ -72,7 +69,7 @@ export class School {
 }
 
 export class Student {
-    studentId: number;
+    id: number;
     classId: number;
 
     name: string;
@@ -99,7 +96,7 @@ export function getSchools(onDone: (err: Error, data: Array<School>) => void) {
     pool.query(SELECT_SCHOOLS, (err, rows, fields) => {
 
         if (err) {
-            return onDone(err, []);
+            return onDone(err, null);
         }
 
         var schools = new Array<School>(rows.length);
@@ -120,7 +117,7 @@ export function getSchools(onDone: (err: Error, data: Array<School>) => void) {
 export function getProfessors(onDone: (err: Error, data: Array<Professor>) => void) {
     pool.query(SELECT_PROFESSORS, (err, rows, fields) => {
         if (err) {
-            return onDone(err, []);
+            return onDone(err, null);
         }
 
         var professors = new Array<Professor>(rows.length);
@@ -136,9 +133,41 @@ export function getProfessors(onDone: (err: Error, data: Array<Professor>) => vo
                 telephoneNumber: rows[i].telephoneNumber,
                 isActive: rows[i].isActive,
                 photoUrl: rows[i].photoUrl
-            }
+            };
         }
 
-        onDone(err, professors);
+        onDone(null, professors);
+    });
+}
+
+export function getClasses(onDone: (err: Error, data: Array<Class>) => void) {
+    pool.query('SELECT * FROM Classes', (err, rows, fields) => {
+        if (err) {
+            return onDone(err, null);
+        }
+
+        var classes = new Array<Class>(rows.length);
+
+        for (var i = 0; i < rows.length; i++) {
+            classes[i] = <Class> {
+                id: rows[i].id,
+                schoolId: rows[i].schoolId,
+                classLevel: rows[i].classLevel,
+                className: rows[i].className,
+                classYear: rows[i].classYear
+            };
+        }
+
+        onDone(null, classes);
+    });
+}
+
+export function getStudents(onDone: (err: Error, data: Array<Student>) => void) {
+    pool.query('SELECT * FROM Students', (err, rows: Array<Student>, fields) => {
+        if (err) {
+            return onDone(err, null);
+        }
+
+        onDone(null, rows);
     });
 }
