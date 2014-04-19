@@ -3,5 +3,5 @@
     }
     return TestSummary;
 })();
-exports.TestSummary = TestSummary;
-//# sourceMappingURL=testSummary.js.map
+module.exports = TestSummary;
+//# sourceMappingURL=TestSummary.js.map

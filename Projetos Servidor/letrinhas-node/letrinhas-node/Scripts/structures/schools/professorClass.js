@@ -5,4 +5,4 @@
 })();
 
 module.exports = ProfessorClass;
-//# sourceMappingURL=professorClass.js.map
+//# sourceMappingURL=ProfessorClass.js.map

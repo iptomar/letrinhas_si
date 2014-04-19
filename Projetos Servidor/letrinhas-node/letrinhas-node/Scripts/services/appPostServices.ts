@@ -1,5 +1,7 @@
-﻿import TestSummary = require('../structures/testDataStructures/testSummary');
-import pool = require('../../configs/mysql');
+﻿import pool = require('../../configs/mysql');
+
+import TestSummary = require('../structures/tests/TestSummary');
+
 
 // TODO: Implement this.
 export function sendBinaryDataToDb(binaryData: NodeBuffer, onDone: (err: Error) => void) {
@@ -10,6 +12,8 @@ export function sendBinaryDataToDb(binaryData: NodeBuffer, onDone: (err: Error) 
 }
 
 export function saveTestsToDb(jsonData: any, onDone: (err: Error) => void) {
+    // TODO: Split into two, or figure out the type of resolution for each item.
+
     var list: any[] = jsonData.solvedTests;
 
     var insertData = [];

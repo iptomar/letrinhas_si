@@ -20,6 +20,7 @@ function mapRoutes(app) {
     app.get('/getTest', testActions.getTest);
 
     app.get('/professors', syncActions.getProfessors);
+    app.get('/schools', syncActions.getSchools);
 
     // POST Routes.
     app.post('/postTestResults', testActions.postTestResults);

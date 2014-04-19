@@ -4,4 +4,4 @@
     return Student;
 })();
 module.exports = Student;
-//# sourceMappingURL=student.js.map
+//# sourceMappingURL=Student.js.map

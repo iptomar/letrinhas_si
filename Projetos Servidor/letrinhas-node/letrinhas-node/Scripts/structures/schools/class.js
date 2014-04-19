@@ -5,4 +5,4 @@
 })();
 
 module.exports = Class;
-//# sourceMappingURL=class.js.map
+//# sourceMappingURL=Class.js.map

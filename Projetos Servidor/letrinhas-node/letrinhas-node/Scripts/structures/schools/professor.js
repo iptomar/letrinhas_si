@@ -8,4 +8,4 @@ var Professor = (function () {
 })();
 
 module.exports = Professor;
-//# sourceMappingURL=professor.js.map
+//# sourceMappingURL=Professor.js.map

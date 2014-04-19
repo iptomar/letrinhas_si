@@ -3,7 +3,7 @@
 // import mysql = require('../../configs/mysql');
 import fs = require('fs');
 import pool = require('../../configs/mysql');
-import TestSummary = require('../structures/testDataStructures/testSummary');
+import TestSummary = require('../structures/tests/TestSummary');
 
 export function getBinaryData(onResult: (err: Error, result: NodeBuffer) => void) {
     //mysql.pool.query('SELECT binarydata FROM BinaryTest where id = 2', (err, rows, fields) => {

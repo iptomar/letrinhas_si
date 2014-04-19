@@ -1,10 +1,10 @@
 ﻿import pool = require('../../configs/mysql');
 
-import Professor = require('../structures/schoolDataStructures/professor');
-import Class = require('../structures/schoolDataStructures/class');
-import ProfessorClass = require('../structures/schoolDataStructures/professorClass');
-import School = require('../structures/schoolDataStructures/school');
-import Student = require('../structures/schoolDataStructures/student');
+import Professor = require('../structures/schools/Professor');
+import Class = require('../structures/schools/Class');
+import ProfessorClass = require('../structures/schools/ProfessorClass');
+import School = require('../structures/schools/School');
+import Student = require('../structures/schools/Student');
 
 /**
  * Gets the list of schools from the db.
@@ -12,7 +12,6 @@ import Student = require('../structures/schoolDataStructures/student');
 export function getSchools(onDone: (err: Error, data: Array<School>) => void) {
     // Get the schools.
     pool.query('SELECT * FROM Schools', (err, rows: Array<School>, fields) => {
-
         if (err) {
             return onDone(err, null);
         }
@@ -104,9 +103,32 @@ export function getStudents(onDone: (err: Error, data: Array<Student>) => void) 
                 isActive: rows[i].isActive,
                 name: rows[i].name,
                 photoUrl: rows[i].photoUrl
-            }
+            };
         }
 
         onDone(null, students);
+    });
+}
+
+/**
+ * Gets a list of relationships between professors and classes,
+ * for the current year.
+ */
+export function getProfessorsForClasses(onDone: (err: Error, data: Array<ProfessorClass>) => void) {
+    pool.query('SELECT * FROM Professor_Class WHERE Year = ', (err, rows: Array<ProfessorClass>, fields) => {
+        if (err) {
+            return onDone(err, null);
+        }
+
+        var professorClasses = new Array<ProfessorClass>(rows.length);
+
+        for (var i = 0; i < rows.length; i++) {
+            professorClasses[i] = <ProfessorClass> {
+                classId: rows[i].classId,
+                professorId: rows[i].professorId
+            };
+        }
+
+        onDone(null, professorClasses);
     });
 }

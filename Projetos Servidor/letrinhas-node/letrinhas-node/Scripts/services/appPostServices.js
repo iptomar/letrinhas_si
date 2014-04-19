@@ -10,6 +10,7 @@ function sendBinaryDataToDb(binaryData, onDone) {
 exports.sendBinaryDataToDb = sendBinaryDataToDb;
 
 function saveTestsToDb(jsonData, onDone) {
+    // TODO: Split into two, or figure out the type of resolution for each item.
     var list = jsonData.solvedTests;
 
     var insertData = [];
