@@ -5,3 +5,5 @@ export class TestSummary {
     text: string;
     maxTries: number;
 }
+
+export = TestSummary;

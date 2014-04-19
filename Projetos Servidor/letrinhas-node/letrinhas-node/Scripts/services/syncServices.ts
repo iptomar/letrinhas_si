@@ -1,99 +1,17 @@
-﻿/// <reference path="../typings/mysql/mysql.d.ts" />
-import mysqlConfig = require('../../configs/mysql');
+﻿import pool = require('../../configs/mysql');
 
-var pool = mysqlConfig.pool;
-
-/**
- * Defines a professor in this app.
- */
-export class Professor {
-    id: number;
-    /**
-     * The ID of the school associated with this professor.
-     */
-    schoolId: number;
-    /**
-     * The name of this professor.
-     */
-    name: string;
-    /**
-     * The email address of this professor.
-     */
-    emailAddress: string;
-    /**
-     * The telephone number of this professor.
-     */
-    telephoneNumber: string;
-    /**
-     * Url for this professor's picture.
-     */
-    photoUrl: string;
-    /**
-     * True if this professor is active. False otherwise.
-     *
-     * 'Active' means that the professor is giving lectures
-     * in this school year.
-     */
-    isActive: boolean;
-    /**
-     * The user name that will be used to authenticate this
-     * user, both in back-office and in the tablet.
-     */
-    username: string;
-    /**
-     * The password that will be used to authenticate this
-     * user, both in back-office and in the tablet.
-     */
-    password: string;
-}
-
-export class Class {
-    id: number;
-    schoolId: number;
-    classLevel: number;
-    className: string;
-
-    classYear: string;
-}
-
-export class ProfessorClassLecture {
-    classId: number;
-    professorId: number;
-}
-
-export class School {
-    id: number;
-    schoolName: string;
-    schoolLogoUrl: string;
-    schoolAddress: string;
-}
-
-export class Student {
-    id: number;
-    classId: number;
-
-    name: string;
-
-    photoUrl: string;
-
-    isActive: boolean;
-}
-
-
-// Select statements.
-/**
- * SELECT statmeent to obtain all schools.
- */
-var SELECT_SCHOOLS = 'SELECT * FROM Schools';
+import Professor = require('../structures/schoolDataStructures/professor');
+import Class = require('../structures/schoolDataStructures/class');
+import ProfessorClass = require('../structures/schoolDataStructures/professorClass');
+import School = require('../structures/schoolDataStructures/school');
+import Student = require('../structures/schoolDataStructures/student');
 
 /**
- * SELECT statmeent to obtain all schools.
+ * Gets the list of schools from the db.
  */
-var SELECT_PROFESSORS = 'SELECT * FROM Professors';
-
 export function getSchools(onDone: (err: Error, data: Array<School>) => void) {
     // Get the schools.
-    pool.query(SELECT_SCHOOLS, (err, rows, fields) => {
+    pool.query('SELECT * FROM Schools', (err, rows: Array<School>, fields) => {
 
         if (err) {
             return onDone(err, null);
@@ -114,8 +32,11 @@ export function getSchools(onDone: (err: Error, data: Array<School>) => void) {
     });
 }
 
+/**
+ * Gets a list of professors which are currently active.
+ */
 export function getProfessors(onDone: (err: Error, data: Array<Professor>) => void) {
-    pool.query(SELECT_PROFESSORS, (err, rows, fields) => {
+    pool.query('SELECT * FROM Professors WHERE isActive = 1', (err, rows: Array<Professor>, fields) => {
         if (err) {
             return onDone(err, null);
         }
@@ -140,8 +61,11 @@ export function getProfessors(onDone: (err: Error, data: Array<Professor>) => vo
     });
 }
 
+/**
+ * Gets a list of classes for the current year.
+ */
 export function getClasses(onDone: (err: Error, data: Array<Class>) => void) {
-    pool.query('SELECT * FROM Classes', (err, rows, fields) => {
+    pool.query('SELECT * FROM Classes', (err, rows: Array<Class>, fields) => {
         if (err) {
             return onDone(err, null);
         }
@@ -162,12 +86,27 @@ export function getClasses(onDone: (err: Error, data: Array<Class>) => void) {
     });
 }
 
+/**
+ * Gets a list of students which are currently active.
+ */
 export function getStudents(onDone: (err: Error, data: Array<Student>) => void) {
-    pool.query('SELECT * FROM Students', (err, rows: Array<Student>, fields) => {
+    pool.query('SELECT * FROM Students WHERE isActive = true', (err, rows: Array<Student>, fields) => {
         if (err) {
             return onDone(err, null);
         }
 
-        onDone(null, rows);
+        var students = new Array<Student>(rows.length);
+
+        for (var i = 0; i < rows.length; i++) {
+            students[i] = <Student> {
+                id: rows[i].id,
+                classId: rows[i].classId,
+                isActive: rows[i].isActive,
+                name: rows[i].name,
+                photoUrl: rows[i].photoUrl
+            }
+        }
+
+        onDone(null, students);
     });
 }

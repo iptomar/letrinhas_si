@@ -1,9 +1,9 @@
-﻿import letrinhasDataStructures = require('../structures/testDataStructures');
-import mysql = require('../../configs/mysql');
+﻿import TestSummary = require('../structures/testDataStructures/testSummary');
+import pool = require('../../configs/mysql');
 
 // TODO: Implement this.
 export function sendBinaryDataToDb(binaryData: NodeBuffer, onDone: (err: Error) => void) {
-    mysql.pool.query('INSERT INTO BinaryTest SET binarydata = ?', binaryData, (err, result) => {
+    pool.query('INSERT INTO BinaryTest SET binarydata = ?', binaryData, (err, result) => {
         console.log(result);
         onDone(err);
     });
@@ -24,7 +24,7 @@ export function saveTestsToDb(jsonData: any, onDone: (err: Error) => void) {
 
     var sql = 'INSERT INTO Resolucoes (testId, completionDate, studentName, voiceData) VALUES ?';
 
-    var query = mysql.pool.query(sql, [insertData], (err, result) => {
+    var query = pool.query(sql, [insertData], (err, result) => {
         onDone(err);
     });
 }

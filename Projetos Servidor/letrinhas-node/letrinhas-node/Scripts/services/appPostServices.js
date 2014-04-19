@@ -1,8 +1,8 @@
-﻿var mysql = require('../../configs/mysql');
+﻿var pool = require('../../configs/mysql');
 
 // TODO: Implement this.
 function sendBinaryDataToDb(binaryData, onDone) {
-    mysql.pool.query('INSERT INTO BinaryTest SET binarydata = ?', binaryData, function (err, result) {
+    pool.query('INSERT INTO BinaryTest SET binarydata = ?', binaryData, function (err, result) {
         console.log(result);
         onDone(err);
     });
@@ -22,7 +22,7 @@ function saveTestsToDb(jsonData, onDone) {
 
     var sql = 'INSERT INTO Resolucoes (testId, completionDate, studentName, voiceData) VALUES ?';
 
-    var query = mysql.pool.query(sql, [insertData], function (err, result) {
+    var query = pool.query(sql, [insertData], function (err, result) {
         onDone(err);
     });
 }

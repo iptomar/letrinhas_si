@@ -38,14 +38,19 @@
     <TypeScriptCompile Include="routes\sync.ts" />
     <TypeScriptCompile Include="routes\user.ts" />
     <TypeScriptCompile Include="configs\mysql.ts" />
+    <TypeScriptCompile Include="configs\authConfig.ts" />
     <TypeScriptCompile Include="Scripts\services\appGetServices.ts" />
     <TypeScriptCompile Include="Scripts\services\appPostServices.ts" />
     <TypeScriptCompile Include="Scripts\services\syncServices.ts" />
+    <TypeScriptCompile Include="Scripts\structures\schoolDataStructures\class.ts" />
+    <TypeScriptCompile Include="Scripts\structures\schoolDataStructures\professor.ts" />
+    <TypeScriptCompile Include="Scripts\structures\schoolDataStructures\professorClass.ts" />
+    <TypeScriptCompile Include="Scripts\structures\schoolDataStructures\school.ts" />
+    <TypeScriptCompile Include="Scripts\structures\schoolDataStructures\student.ts" />
     <TypeScriptCompile Include="Scripts\structures\testDataStructures.ts" />
     <TypeScriptCompile Include="Scripts\typings\express\express.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\mysql\mysql.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\stylus\stylus.d.ts" />
     <TypeScriptCompile Include="configs\routes.ts" />
     <Content Include="package.json" />
     <Content Include="public\scripts\formtest.ts" />
@@ -59,7 +64,6 @@
   <ItemGroup>
     <Folder Include="public\" />
     <Folder Include="public\images\" />
-    <Folder Include="public\javascripts\" />
     <Folder Include="public\scripts\" />
     <Folder Include="public\stylesheets\" />
     <Folder Include="routes\" />
@@ -67,11 +71,12 @@
     <Folder Include="configs\" />
     <Folder Include="Scripts\structures\" />
     <Folder Include="Scripts\services\" />
+    <Folder Include="Scripts\structures\testDataStructures\" />
+    <Folder Include="Scripts\structures\schoolDataStructures\" />
     <Folder Include="Scripts\typings\" />
     <Folder Include="Scripts\typings\express\" />
     <Folder Include="Scripts\typings\mysql\" />
     <Folder Include="Scripts\typings\node\" />
-    <Folder Include="Scripts\typings\stylus\" />
     <Folder Include="views\" />
   </ItemGroup>
   <ItemGroup>

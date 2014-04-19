@@ -1,7 +1,7 @@
-﻿/// <reference path="../typings/node/node.d.ts" />
+/// <reference path="../typings/node/node.d.ts" />
 // import mysql = require('../../configs/mysql');
 var fs = require('fs');
-var mysql = require('../../configs/mysql');
+var pool = require('../../configs/mysql');
 
 function getBinaryData(onResult) {
     //mysql.pool.query('SELECT binarydata FROM BinaryTest where id = 2', (err, rows, fields) => {
@@ -26,7 +26,7 @@ function getTestById(idList, onResult) {
     //onResult(null, listResult);
     var sql = 'SELECT * FROM Testes WHERE id IN (' + idList.toString() + ')';
 
-    mysql.pool.query(sql, function (err, rows, fields) {
+    pool.query(sql, function (err, rows, fields) {
         if (err) {
             onResult(err, null);
         } else {
@@ -53,7 +53,7 @@ exports.getTestById = getTestById;
 *
 */
 function getTestListSummaryFromDb(max, onResult) {
-    mysql.pool.query('SELECT * FROM Testes' + (max === null ? '' : ' LIMIT ' + max), function (err, rows, fields) {
+    pool.query('SELECT * FROM Testes' + (max === null ? '' : ' LIMIT ' + max), function (err, rows, fields) {
         if (err) {
             onResult(err, null);
         } else {

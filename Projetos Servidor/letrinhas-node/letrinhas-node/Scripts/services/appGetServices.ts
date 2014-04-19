@@ -2,8 +2,8 @@
 
 // import mysql = require('../../configs/mysql');
 import fs = require('fs');
-import mysql = require('../../configs/mysql');
-import tests = require('../structures/testDataStructures');
+import pool = require('../../configs/mysql');
+import TestSummary = require('../structures/testDataStructures/testSummary');
 
 export function getBinaryData(onResult: (err: Error, result: NodeBuffer) => void) {
     //mysql.pool.query('SELECT binarydata FROM BinaryTest where id = 2', (err, rows, fields) => {
@@ -32,7 +32,7 @@ export function getTestById(idList: number[], onResult: (err: Error, result: Arr
 
     var sql = 'SELECT * FROM Testes WHERE id IN (' + idList.toString() + ')';
 
-    mysql.pool.query(sql, (err, rows, fields) => {
+    pool.query(sql, (err, rows, fields) => {
         if (err) {
             onResult(err, null);
         } else {
@@ -58,15 +58,15 @@ export function getTestById(idList: number[], onResult: (err: Error, result: Arr
  * Gets tests from a database, and returns an array of TestSummary.
  * 
  */
-export function getTestListSummaryFromDb(max: number, onResult: (err: Error, summaryList: tests.TestSummary[]) => void) {
-    mysql.pool.query('SELECT * FROM Testes' + (max === null ? '' : ' LIMIT ' + max), (err, rows, fields) => {
+export function getTestListSummaryFromDb(max: number, onResult: (err: Error, summaryList: TestSummary[]) => void) {
+    pool.query('SELECT * FROM Testes' + (max === null ? '' : ' LIMIT ' + max), (err, rows, fields) => {
         if (err) {
             onResult(err, null);
         } else {
-            var testList: tests.TestSummary[] = [];
+            var testList: TestSummary[] = [];
 
             for (var i = 0; i < rows.length; i++) {
-                testList.push(<tests.TestSummary>{
+                testList.push(<TestSummary>{
                     id: rows[i].id,
                     title: rows[i].title
                 });

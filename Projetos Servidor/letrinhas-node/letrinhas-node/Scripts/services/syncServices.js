@@ -1,60 +1,11 @@
-﻿/// <reference path="../typings/mysql/mysql.d.ts" />
-var mysqlConfig = require('../../configs/mysql');
-
-var pool = mysqlConfig.pool;
+﻿var pool = require('../../configs/mysql');
 
 /**
-* Defines a professor in this app.
+* Gets the list of schools from the db.
 */
-var Professor = (function () {
-    function Professor() {
-    }
-    return Professor;
-})();
-exports.Professor = Professor;
-
-var Class = (function () {
-    function Class() {
-    }
-    return Class;
-})();
-exports.Class = Class;
-
-var ProfessorClassLecture = (function () {
-    function ProfessorClassLecture() {
-    }
-    return ProfessorClassLecture;
-})();
-exports.ProfessorClassLecture = ProfessorClassLecture;
-
-var School = (function () {
-    function School() {
-    }
-    return School;
-})();
-exports.School = School;
-
-var Student = (function () {
-    function Student() {
-    }
-    return Student;
-})();
-exports.Student = Student;
-
-// Select statements.
-/**
-* SELECT statmeent to obtain all schools.
-*/
-var SELECT_SCHOOLS = 'SELECT * FROM Schools';
-
-/**
-* SELECT statmeent to obtain all schools.
-*/
-var SELECT_PROFESSORS = 'SELECT * FROM Professors';
-
 function getSchools(onDone) {
     // Get the schools.
-    pool.query(SELECT_SCHOOLS, function (err, rows, fields) {
+    pool.query('SELECT * FROM Schools', function (err, rows, fields) {
         if (err) {
             return onDone(err, null);
         }
@@ -75,8 +26,11 @@ function getSchools(onDone) {
 }
 exports.getSchools = getSchools;
 
+/**
+* Gets a list of professors which are currently active.
+*/
 function getProfessors(onDone) {
-    pool.query(SELECT_PROFESSORS, function (err, rows, fields) {
+    pool.query('SELECT * FROM Professors WHERE isActive = 1', function (err, rows, fields) {
         if (err) {
             return onDone(err, null);
         }
@@ -102,6 +56,9 @@ function getProfessors(onDone) {
 }
 exports.getProfessors = getProfessors;
 
+/**
+* Gets a list of classes for the current year.
+*/
 function getClasses(onDone) {
     pool.query('SELECT * FROM Classes', function (err, rows, fields) {
         if (err) {
@@ -125,13 +82,28 @@ function getClasses(onDone) {
 }
 exports.getClasses = getClasses;
 
+/**
+* Gets a list of students which are currently active.
+*/
 function getStudents(onDone) {
-    pool.query('SELECT * FROM Students', function (err, rows, fields) {
+    pool.query('SELECT * FROM Students WHERE isActive = true', function (err, rows, fields) {
         if (err) {
             return onDone(err, null);
         }
 
-        onDone(null, rows);
+        var students = new Array(rows.length);
+
+        for (var i = 0; i < rows.length; i++) {
+            students[i] = {
+                id: rows[i].id,
+                classId: rows[i].classId,
+                isActive: rows[i].isActive,
+                name: rows[i].name,
+                photoUrl: rows[i].photoUrl
+            };
+        }
+
+        onDone(null, students);
     });
 }
 exports.getStudents = getStudents;
