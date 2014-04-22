@@ -1,4 +1,5 @@
 ﻿import pool = require('../../configs/mysql');
+import mysqlAsync = require('../utils/promiseBasedMySql');
 
 import Professor = require('../structures/schools/Professor');
 import Class = require('../structures/schools/Class');
@@ -10,25 +11,48 @@ import Student = require('../structures/schools/Student');
  * Gets the list of schools from the db.
  */
 export function getSchools(onDone: (err: Error, data: Array<School>) => void) {
-    // Get the schools.
-    pool.query('SELECT * FROM Schools', (err, rows: Array<School>, fields) => {
-        if (err) {
-            return onDone(err, null);
-        }
 
-        var schools = new Array<School>(rows.length);
+    mysqlAsync.selectQuery('SELECT * FROM Schools')
+        .then((result) => {
+            var rows = result.rows;
 
-        for (var i = 0; i < rows.length; i++) {
-            schools[i] = <School> {
-                id: rows[i].id,
-                schoolAddress: rows[i].schoolAddress,
-                schoolLogoUrl: rows[i].schoolLogoUrl,
-                schoolName: rows[i].schoolName
-            };
-        }
+            var schools = new Array<School>(rows.length);
 
-        onDone(null, schools);
-    });
+            for (var i = 0; i < rows.length; i++) {
+                schools[i] = <School> {
+                    id: rows[i].id,
+                    schoolAddress: rows[i].schoolAddress,
+                    schoolLogoUrl: rows[i].schoolLogoUrl,
+                    schoolName: rows[i].schoolName
+                };
+            }
+
+            onDone(null, schools);
+        })
+        .catch((err) => {
+            onDone(err, null);
+        });
+
+
+    //// Get the schools.
+    //pool.query('SELECT * FROM Schools', (err, rows: Array<School>, fields) => {
+    //    if (err) {
+    //        return onDone(err, null);
+    //    }
+
+    //    var schools = new Array<School>(rows.length);
+
+    //    for (var i = 0; i < rows.length; i++) {
+    //        schools[i] = <School> {
+    //            id: rows[i].id,
+    //            schoolAddress: rows[i].schoolAddress,
+    //            schoolLogoUrl: rows[i].schoolLogoUrl,
+    //            schoolName: rows[i].schoolName
+    //        };
+    //    }
+
+    //    onDone(null, schools);
+    //});
 }
 
 /**

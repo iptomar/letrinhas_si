@@ -72,6 +72,7 @@ function getStudents(request, response) {
             response.json({
                 students: []
             });
+            return;
         }
 
         response.json({
@@ -80,4 +81,22 @@ function getStudents(request, response) {
     });
 }
 exports.getStudents = getStudents;
+
+function getProfessorClasses(request, response) {
+    syncServices.getProfessorsForClasses(function (err, professorClasses) {
+        if (err) {
+            response.statusCode = 500;
+
+            response.json({
+                professorClasses: []
+            });
+            return;
+        }
+
+        response.json({
+            professorClasses: []
+        });
+    });
+}
+exports.getProfessorClasses = getProfessorClasses;
 //# sourceMappingURL=sync.js.map

@@ -3,6 +3,7 @@
 // import mysql = require('../../configs/mysql');
 import fs = require('fs');
 import pool = require('../../configs/mysql');
+import mysqlAsync = require('../utils/promiseBasedMySql');
 import TestSummary = require('../structures/tests/TestSummary');
 
 export function getBinaryData(onResult: (err: Error, result: NodeBuffer) => void) {
@@ -14,33 +15,20 @@ export function getBinaryData(onResult: (err: Error, result: NodeBuffer) => void
     //    }
     //});
 
-     fs.readFile('D:/z4.png', onResult);
+    fs.readFile('D:/z4.png', onResult);
 }
 
 export function getTestById(idList: number[], onResult: (err: Error, result: Array<any>) => void) {
-
-    //var listResult = [];
-
-    //for (var i = 0; i < idList.length; i++) {
-    //    listResult.push({
-    //        id: idList[i],
-    //        title: 'Teste ' + i
-    //    });
-    //}
-
-    //onResult(null, listResult);
-
     var sql = 'SELECT * FROM Testes WHERE id IN (' + idList.toString() + ')';
 
-    pool.query(sql, (err, rows, fields) => {
-        if (err) {
-            onResult(err, null);
-        } else {
+    mysqlAsync.selectQuery(sql)
+        .then((result) => {
+            var rows = result.rows;
 
-            var result = [];
+            var data = [];
 
             for (var i = 0; i < rows.length; i++) {
-                result.push({
+                data.push({
                     id: rows[i].id,
                     title: rows[i].title,
                     textContent: rows[i].textContent,
@@ -49,9 +37,32 @@ export function getTestById(idList: number[], onResult: (err: Error, result: Arr
                 });
             }
 
-            onResult(null, result);
-        }
-    });
+            onResult(null, data);
+        })
+        .catch((err) => {
+            onResult(err, null);
+        });
+
+    //pool.query(sql, (err, rows, fields) => {
+    //    if (err) {
+    //        onResult(err, null);
+    //    } else {
+
+    //        var result = [];
+
+    //        for (var i = 0; i < rows.length; i++) {
+    //            result.push({
+    //                id: rows[i].id,
+    //                title: rows[i].title,
+    //                textContent: rows[i].textContent,
+    //                professorName: rows[i].professorName,
+    //                maxTries: rows[i].maxTries,
+    //            });
+    //        }
+
+    //        onResult(null, result);
+    //    }
+    //});
 }
 
 /**

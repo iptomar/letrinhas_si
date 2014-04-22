@@ -121,6 +121,31 @@ export function getTest(request: express.Request, response: express.Response) {
 export function postTestResults(request: express.Request, response: express.Response) {
     console.log(request.body);
 
+    // TODO: Figure out a structure for the POST. It could be done 1 by 1,
+    // or multiple at a time.
+
+    // Fields:
+    // * execution-date: The date on which the test was done. String, formatted as dd-mm-yyyy (hh:mm ???)
+    // * test-id: The ID of the test. Integer, higher than 0.
+    // * student-id: The ID of the student. Integer, higher than 0.
+    // * type: String Enum, values: read, multimedia (? Could get the type from the DB)
+
+    // * (If type is multimedia) 
+    //   * option: The option which was chosen.Integer, values = 1, 2, or 3.
+
+    // * (If type is read):
+    //   * observations: Professor observations. String.
+    //   * wpm: Words per minute. Number.
+    //   * correct: Correct word count: Integer.
+    //   * precision: Reading precision. Number.
+    //   * speed: Reading speed. Number.
+    //   * expressiveness: The student's expressiveness. Number.
+    //   * rhythm: The student's rhythm. Number.
+    //   * incorrect: Incorrect word count. Integer.
+    //   * audio: The audio for the recording. File.
+
+
+
     appPostServices.saveTestsToDb(request.body, (err) => {
         if (err) {
             response.statusCode = 500;

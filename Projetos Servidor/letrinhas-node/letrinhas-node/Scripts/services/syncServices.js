@@ -1,14 +1,12 @@
 ﻿var pool = require('../../configs/mysql');
+var mysqlAsync = require('../utils/promiseBasedMySql');
 
 /**
 * Gets the list of schools from the db.
 */
 function getSchools(onDone) {
-    // Get the schools.
-    pool.query('SELECT * FROM Schools', function (err, rows, fields) {
-        if (err) {
-            return onDone(err, null);
-        }
+    mysqlAsync.selectQuery('SELECT * FROM Schools').then(function (result) {
+        var rows = result.rows;
 
         var schools = new Array(rows.length);
 
@@ -22,7 +20,25 @@ function getSchools(onDone) {
         }
 
         onDone(null, schools);
+    }).catch(function (err) {
+        onDone(err, null);
     });
+    //// Get the schools.
+    //pool.query('SELECT * FROM Schools', (err, rows: Array<School>, fields) => {
+    //    if (err) {
+    //        return onDone(err, null);
+    //    }
+    //    var schools = new Array<School>(rows.length);
+    //    for (var i = 0; i < rows.length; i++) {
+    //        schools[i] = <School> {
+    //            id: rows[i].id,
+    //            schoolAddress: rows[i].schoolAddress,
+    //            schoolLogoUrl: rows[i].schoolLogoUrl,
+    //            schoolName: rows[i].schoolName
+    //        };
+    //    }
+    //    onDone(null, schools);
+    //});
 }
 exports.getSchools = getSchools;
 
@@ -107,4 +123,28 @@ function getStudents(onDone) {
     });
 }
 exports.getStudents = getStudents;
+
+/**
+* Gets a list of relationships between professors and classes,
+* for the current year.
+*/
+function getProfessorsForClasses(onDone) {
+    pool.query('SELECT * FROM Professor_Class WHERE Year = ', function (err, rows, fields) {
+        if (err) {
+            return onDone(err, null);
+        }
+
+        var professorClasses = new Array(rows.length);
+
+        for (var i = 0; i < rows.length; i++) {
+            professorClasses[i] = {
+                classId: rows[i].classId,
+                professorId: rows[i].professorId
+            };
+        }
+
+        onDone(null, professorClasses);
+    });
+}
+exports.getProfessorsForClasses = getProfessorsForClasses;
 //# sourceMappingURL=syncServices.js.map

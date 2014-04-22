@@ -63,6 +63,7 @@
     <Content Include="views\index.jade" />
     <Content Include="views\teste.jade" />
     <Content Include="views\layout.jade" />
+    <TypeScriptCompile Include="Scripts\utils\promiseBasedMySql.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="public\" />
@@ -72,6 +73,7 @@
     <Folder Include="routes\" />
     <Folder Include="Scripts\" />
     <Folder Include="configs\" />
+    <Folder Include="Scripts\utils\" />
     <Folder Include="Scripts\structures\" />
     <Folder Include="Scripts\services\" />
     <Folder Include="Scripts\structures\tests\" />

@@ -12,23 +12,45 @@ import express = require('express');
  * @param app The server which routes will be mapped to.
  */
 export function mapRoutes(app: express.Express) {
+    mapGetRoutes(app);
+    mapPostRoutes(app);
+    mapSyncRoutes(app);
+
+    // POST Routes.
+    
+
+    // Probably unnecessary.
+    // app.use(sendNotFound);
+}
+
+function mapGetRoutes(app: express.Express) {
     app.get('/', indexActions.index);
     // app.get('/users', user.list);
     app.get('/testSummary', testActions.listSummary);
-    
+
     app.get('/image', testActions.getImage);
 
     app.get('/getTest', testActions.getTest);
 
-    app.get('/professors', syncActions.getProfessors);
-    app.get('/schools', syncActions.getSchools);
+    console.log("Successfully mapped GET routes.");
+}
 
-    // POST Routes.
+function mapPostRoutes(app: express.Express) {
     app.post('/postTestResults', testActions.postTestResults);
     app.post('/postFiles', testActions.postImage);
 
-    // Probably unnecessary.
-    // app.use(sendNotFound);
+    console.log('Successfully mapped POST routes.');
+}
+
+function mapSyncRoutes(app: express.Express) {
+    // Sync routes.
+    app.get('/professors', syncActions.getProfessors);
+    app.get('/schools', syncActions.getSchools);
+    app.get('/students', syncActions.getStudents);
+    app.get('/classes', syncActions.getClasses);
+    app.get('/professorClasses', syncActions.getProfessorClasses);
+
+    console.log('Successfully mapped GET and POST routes for sync.');
 }
 
 /**

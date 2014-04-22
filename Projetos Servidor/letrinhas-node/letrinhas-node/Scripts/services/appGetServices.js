@@ -2,6 +2,7 @@
 // import mysql = require('../../configs/mysql');
 var fs = require('fs');
 var pool = require('../../configs/mysql');
+var mysqlAsync = require('../utils/promiseBasedMySql');
 
 function getBinaryData(onResult) {
     //mysql.pool.query('SELECT binarydata FROM BinaryTest where id = 2', (err, rows, fields) => {
@@ -16,35 +17,44 @@ function getBinaryData(onResult) {
 exports.getBinaryData = getBinaryData;
 
 function getTestById(idList, onResult) {
-    //var listResult = [];
-    //for (var i = 0; i < idList.length; i++) {
-    //    listResult.push({
-    //        id: idList[i],
-    //        title: 'Teste ' + i
-    //    });
-    //}
-    //onResult(null, listResult);
     var sql = 'SELECT * FROM Testes WHERE id IN (' + idList.toString() + ')';
 
-    pool.query(sql, function (err, rows, fields) {
-        if (err) {
-            onResult(err, null);
-        } else {
-            var result = [];
+    mysqlAsync.selectQuery(sql).then(function (result) {
+        var rows = result.rows;
 
-            for (var i = 0; i < rows.length; i++) {
-                result.push({
-                    id: rows[i].id,
-                    title: rows[i].title,
-                    textContent: rows[i].textContent,
-                    professorName: rows[i].professorName,
-                    maxTries: rows[i].maxTries
-                });
-            }
+        var data = [];
 
-            onResult(null, result);
+        for (var i = 0; i < rows.length; i++) {
+            data.push({
+                id: rows[i].id,
+                title: rows[i].title,
+                textContent: rows[i].textContent,
+                professorName: rows[i].professorName,
+                maxTries: rows[i].maxTries
+            });
         }
+
+        onResult(null, data);
+    }).catch(function (err) {
+        onResult(err, null);
     });
+    //pool.query(sql, (err, rows, fields) => {
+    //    if (err) {
+    //        onResult(err, null);
+    //    } else {
+    //        var result = [];
+    //        for (var i = 0; i < rows.length; i++) {
+    //            result.push({
+    //                id: rows[i].id,
+    //                title: rows[i].title,
+    //                textContent: rows[i].textContent,
+    //                professorName: rows[i].professorName,
+    //                maxTries: rows[i].maxTries,
+    //            });
+    //        }
+    //        onResult(null, result);
+    //    }
+    //});
 }
 exports.getTestById = getTestById;
 

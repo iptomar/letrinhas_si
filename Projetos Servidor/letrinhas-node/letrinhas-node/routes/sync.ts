@@ -70,10 +70,28 @@ export function getStudents(request: express.Request, response: express.Response
             response.json({
                 students: []
             });
+            return;
         }
 
         response.json({
             students: students
+        });
+    });
+}
+
+export function getProfessorClasses(request: express.Request, response: express.Response) {
+    syncServices.getProfessorsForClasses((err, professorClasses) => {
+        if (err) {
+            response.statusCode = 500;
+
+            response.json({
+                professorClasses: []
+            });
+            return;
+        }
+
+        response.json({
+            professorClasses: []
         });
     });
 }
