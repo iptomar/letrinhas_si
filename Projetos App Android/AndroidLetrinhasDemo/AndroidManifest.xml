@@ -6,12 +6,15 @@
 
     <uses-sdk android:minSdkVersion="8" />
 
+    <!-- Internet Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:configChanges="keyboardHidden|orientation"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
-            android:name="com.example.androidhive.MainScreenActivity"
+            android:name="com.example.letrinhas.MainScreenActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,40 +25,47 @@
 
         <!-- All Product Activity -->
         <activity
-            android:name="com.example.androidhive.AllTestsActivity"
+            android:name="com.example.letrinhas.AllTestsActivity"
             android:label="All Products" >
         </activity>
 
         <!-- Add Product Activity -->
         <activity
-            android:name="com.example.androidhive.Send_Result"
+            android:name="com.example.letrinhas.Send_Result"
             android:label="Add New Product" >
         </activity>
 
         <!-- Edit Product Activity -->
         <activity
-            android:name="com.example.androidhive.EditProductActivity"
+            android:name="com.example.letrinhas.EditProductActivity"
             android:label="Edit Product" >
         </activity>
         <activity
-            android:name="com.example.androidhive.ViewMoreInfo"
+            android:name="com.example.letrinhas.ViewMoreInfo"
             android:label="@string/title_activity_view_more_info" >
         </activity>
         <activity
-            android:name="com.example.androidhive.All_Tests"
+            android:name="com.example.letrinhas.All_Tests"
             android:label="@string/title_activity_all__tests" >
         </activity>
         <activity
-            android:name="com.example.androidhive.Send_ResultTest"
+            android:name="com.example.letrinhas.Send_ResultTest"
             android:label="@string/title_activity_send__result_test" >
         </activity>
         <activity
-            android:name="com.example.androidhive.ReceberImagem"
+            android:name="com.example.letrinhas.ReceberImagem"
             android:label="@string/title_activity_receber_imagem" >
+        </activity>
+        <activity
+            android:name="com.example.letrinhas.ReprodAudio"
+            android:label="@string/title_activity_reprod_audio" >
+        </activity>
+        <activity
+            android:name="com.example.letrinhas.MainBD"
+            android:label="@string/title_activity_main_bd" >
         </activity>
     </application>
 
-    <!-- Internet Permissions -->
-    <uses-permission android:name="android.permission.INTERNET" />
+
 
 </manifest>
