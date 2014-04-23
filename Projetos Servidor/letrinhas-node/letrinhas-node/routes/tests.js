@@ -1,7 +1,5 @@
 ﻿/// <reference path="../Scripts/typings/express/express.d.ts" />
 /// <reference path="../Scripts/typings/node/node.d.ts" />
-var fs = require('fs');
-
 var appPostServices = require('../Scripts/services/appPostServices');
 var appGetServices = require('../Scripts/services/appGetServices');
 
@@ -58,12 +56,11 @@ function postImage(request, response) {
     //    });
     //});
     // console.log(request.body);
-    fs.readFile(request.files[correctId].path, function (err, data) {
-        fs.writeFile('D:/' + request.files[correctId].path, data, function (err) {
-            console.log('Saved file.');
-        });
-    });
-
+    //fs.readFile(request.files[correctId].path, (err, data) => {
+    //    fs.writeFile('D:/' + request.files[correctId].path, data, (err) => {
+    //        console.log('Saved file.');
+    //    });
+    //});
     console.log(correctId);
 
     console.log(request.files);
@@ -114,8 +111,7 @@ function getTest(request, response) {
 exports.getTest = getTest;
 
 function postTestResults(request, response) {
-    console.log(request.body);
-
+    // console.log(request.body);
     // TODO: Figure out a structure for the POST. It could be done 1 by 1,
     // or multiple at a time.
     // Fields:
@@ -135,7 +131,7 @@ function postTestResults(request, response) {
     //   * rhythm: The student's rhythm. Number.
     //   * incorrect: Incorrect word count. Integer.
     //   * audio: The audio for the recording. File.
-    appPostServices.saveTestsToDb(request.body, function (err) {
+    appPostServices.saveTestsToDb(request, function (err) {
         if (err) {
             response.statusCode = 500;
             console.log(err.message);

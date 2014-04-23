@@ -15,3 +15,4 @@ class ReadingTestCorrection extends TestCorrection {
 
     incorrectWordCount: number;
 }
+export = ReadingTestCorrection;

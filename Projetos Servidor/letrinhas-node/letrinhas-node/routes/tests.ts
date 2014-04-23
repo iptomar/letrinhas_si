@@ -3,9 +3,13 @@
 
 import express = require('express');
 import fs = require('fs');
+import Q = require('q');
+import path = require('path');
 
 import appPostServices = require('../Scripts/services/appPostServices');
 import appGetServices = require('../Scripts/services/appGetServices');
+
+
 
 export function listSummary(request: express.Request, response: express.Response): void {
 
@@ -65,11 +69,11 @@ export function postImage(request: express.Request, response: express.Response) 
 
     // console.log(request.body);
 
-    fs.readFile(request.files[correctId].path, (err, data) => {
-        fs.writeFile('D:/' + request.files[correctId].path, data, (err) => {
-            console.log('Saved file.');
-        });
-    });
+    //fs.readFile(request.files[correctId].path, (err, data) => {
+    //    fs.writeFile('D:/' + request.files[correctId].path, data, (err) => {
+    //        console.log('Saved file.');
+    //    });
+    //});
 
     console.log(correctId);
 
@@ -112,14 +116,16 @@ export function getTest(request: express.Request, response: express.Response) {
                 });
             });
         }
-    } else {
+    } else if (request.query.hasOwnProperty('lastSyncDate')) {
+        
+    }  else {
         response.statusCode = 400;
         response.end("No id supplied.");
     }
 }
 
 export function postTestResults(request: express.Request, response: express.Response) {
-    console.log(request.body);
+    // console.log(request.body);
 
     // TODO: Figure out a structure for the POST. It could be done 1 by 1,
     // or multiple at a time.
@@ -144,9 +150,9 @@ export function postTestResults(request: express.Request, response: express.Resp
     //   * incorrect: Incorrect word count. Integer.
     //   * audio: The audio for the recording. File.
 
+    
 
-
-    appPostServices.saveTestsToDb(request.body, (err) => {
+    appPostServices.saveTestsToDb(request, (err) => {
         if (err) {
             response.statusCode = 500;
             console.log(err.message);

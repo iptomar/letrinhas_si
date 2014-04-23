@@ -37,7 +37,7 @@ app.use(require('body-parser')());
 console.log('Mapping static routes...');
 
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use('/appContent', express.static(path.join(__dirname, 'appContent')));
 
 
 // Set the error handler.

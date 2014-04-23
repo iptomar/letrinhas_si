@@ -13,4 +13,5 @@ var ReadingTestCorrection = (function (_super) {
     }
     return ReadingTestCorrection;
 })(TestCorrection);
+module.exports = ReadingTestCorrection;
 //# sourceMappingURL=ReadingTestCorrection.js.map

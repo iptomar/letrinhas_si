@@ -139,7 +139,7 @@ export function getStudents(onDone: (err: Error, data: Array<Student>) => void) 
  * for the current year.
  */
 export function getProfessorsForClasses(onDone: (err: Error, data: Array<ProfessorClass>) => void) {
-    pool.query('SELECT * FROM Professor_Class WHERE Year = ', (err, rows: Array<ProfessorClass>, fields) => {
+    pool.query('SELECT * FROM ProfessorClass', (err, rows: Array<ProfessorClass>, fields) => {
         if (err) {
             return onDone(err, null);
         }

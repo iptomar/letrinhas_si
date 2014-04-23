@@ -94,7 +94,7 @@ function getProfessorClasses(request, response) {
         }
 
         response.json({
-            professorClasses: []
+            professorClasses: professorClasses
         });
     });
 }

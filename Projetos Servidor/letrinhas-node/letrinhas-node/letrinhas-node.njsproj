@@ -47,11 +47,15 @@
     <TypeScriptCompile Include="Scripts\structures\schools\ProfessorClass.ts" />
     <TypeScriptCompile Include="Scripts\structures\schools\School.ts" />
     <TypeScriptCompile Include="Scripts\structures\schools\Student.ts" />
+    <TypeScriptCompile Include="Scripts\structures\tests\MultimediaTest.ts" />
+    <TypeScriptCompile Include="Scripts\structures\tests\ReadingTest.ts" />
     <TypeScriptCompile Include="Scripts\structures\tests\ReadingTestCorrection.ts" />
     <TypeScriptCompile Include="Scripts\structures\tests\MultimediaTestCorrection.ts" />
+    <TypeScriptCompile Include="Scripts\structures\tests\Test.ts" />
     <TypeScriptCompile Include="Scripts\structures\tests\TestCorrection.ts" />
     <TypeScriptCompile Include="Scripts\structures\tests\TestSummary.ts" />
     <TypeScriptCompile Include="Scripts\typings\express\express.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\mysql\mysql.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
     <TypeScriptCompile Include="configs\routes.ts" />
@@ -63,6 +67,7 @@
     <Content Include="views\index.jade" />
     <Content Include="views\teste.jade" />
     <Content Include="views\layout.jade" />
+    <TypeScriptCompile Include="Scripts\typings\q\q.d.ts" />
     <TypeScriptCompile Include="Scripts\utils\promiseBasedMySql.ts" />
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +78,8 @@
     <Folder Include="routes\" />
     <Folder Include="Scripts\" />
     <Folder Include="configs\" />
+    <Folder Include="Scripts\typings\jquery\" />
+    <Folder Include="Scripts\typings\q\" />
     <Folder Include="Scripts\utils\" />
     <Folder Include="Scripts\structures\" />
     <Folder Include="Scripts\services\" />

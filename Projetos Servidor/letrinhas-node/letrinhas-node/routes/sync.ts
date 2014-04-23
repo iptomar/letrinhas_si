@@ -91,7 +91,7 @@ export function getProfessorClasses(request: express.Request, response: express.
         }
 
         response.json({
-            professorClasses: []
+            professorClasses: professorClasses
         });
     });
 }

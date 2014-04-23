@@ -2,9 +2,16 @@
 
 // import mysql = require('../../configs/mysql');
 import fs = require('fs');
+import Q = require('q');
+
 import pool = require('../../configs/mysql');
 import mysqlAsync = require('../utils/promiseBasedMySql');
+
 import TestSummary = require('../structures/tests/TestSummary');
+import Test = require('../structures/tests/Test');
+import ReadingTest = require('../structures/tests/ReadingTest');
+import MultimediaTest = require('../structures/tests/MultimediaTest');
+
 
 export function getBinaryData(onResult: (err: Error, result: NodeBuffer) => void) {
     //mysql.pool.query('SELECT binarydata FROM BinaryTest where id = 2', (err, rows, fields) => {
@@ -16,6 +23,40 @@ export function getBinaryData(onResult: (err: Error, result: NodeBuffer) => void
     //});
 
     fs.readFile('D:/z4.png', onResult);
+}
+
+/**
+ * Returns a list of tests which were created after a set date.
+ */
+export function getTestsNewerThan(date: string): Q.Promise<Array<Test>> {
+
+    var deferred = Q.defer<Array<Test>>();
+
+    var tests = new Array<Test>();
+
+    // Get the reading tests...
+    mysqlAsync.selectQuery('SELECT * FROM ReadingTests WHERE creationDate > ' + date)
+        .then((readingTests) => {
+            var tests: Array<Test> = readingTests.rows;
+            var i;
+
+            for (i = 0; i < tests.length; i++) {
+                // Populate the reading tests...
+            }
+        })
+    // Get the multimedia tests...
+        .then(() => mysqlAsync.selectQuery('SELECT * FROM Tests WHERE creationDate > ' + date + '  JOIN ....'))
+        .then((multimediaTests) => {
+            // Populate the multimedia tests...
+        })
+    // All went well.
+        .then(() => deferred.resolve(tests))
+    // Something went wrong.
+        .fail((err) => {
+            deferred.reject(err);
+        });
+
+    return deferred.promise;
 }
 
 export function getTestById(idList: number[], onResult: (err: Error, result: Array<any>) => void) {

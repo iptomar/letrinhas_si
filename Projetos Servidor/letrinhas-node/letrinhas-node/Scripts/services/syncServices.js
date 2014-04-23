@@ -129,7 +129,7 @@ exports.getStudents = getStudents;
 * for the current year.
 */
 function getProfessorsForClasses(onDone) {
-    pool.query('SELECT * FROM Professor_Class WHERE Year = ', function (err, rows, fields) {
+    pool.query('SELECT * FROM ProfessorClass', function (err, rows, fields) {
         if (err) {
             return onDone(err, null);
         }
