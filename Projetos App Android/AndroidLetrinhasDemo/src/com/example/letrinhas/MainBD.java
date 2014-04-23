@@ -35,7 +35,6 @@ public class MainBD extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_bd);
-
         // Obtendo Detalhes dos Testes do intent
         Intent i = getIntent();
         // Obtendo CAMPO IP e PORTA enviados para esta Janela
@@ -50,7 +49,6 @@ public class MainBD extends Activity {
                 new ReceberDados().execute();
             }
         });
-
     }
 
     @Override
@@ -58,14 +56,12 @@ public class MainBD extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_bd, menu);
         return true;
-
     }
 
     /**
      *  Guarda um array de  ObJECTOS professores na Base de dados
      * @param profs Array com  Professores para se guardar
      */
-
     public void guardarProfBD(Professor[] profs) {
         LetrinhasDB db = new LetrinhasDB(this);
         db.deleteAllItemsProf();
@@ -75,7 +71,7 @@ public class MainBD extends Activity {
         }
         db.close();
         Log.d("DB", "Tudo inserido nos Professores");
-
+        /////PARA EFEITOS DE DEBUG E LOGO  O CODIGO A FRENTE APENAS MOSTRA O CONTEUDO DA TABELA//////////////
         List<Professor> dadosImg = db.getAllProfesors();
         Log.d("BDDADOS: ", "***********PROFESSORES******************");
         for (Professor cn : dadosImg) {
@@ -90,7 +86,6 @@ public class MainBD extends Activity {
             log += "\n" + logs;
             // Writing Contacts to log
             Log.d("BDDADOS: ", logs);
-
         }
 
     }
@@ -108,18 +103,17 @@ public class MainBD extends Activity {
         }
         db.close();
         Log.d("DB", "Tudo inserido nas Escolas");
-
+        /////PARA EFEITOS DE DEBUG E LOGO  O CODIGO A FRENTE APENAS MOSTRA O CONTEUDO DA TABELA//////////////
         List<Escola> dadosImg = db.getAllSchools();
         Log.d("BDDADOS: ", "********ESCOLAS********************");
         for (Escola cn : dadosImg) {
             String logs = "Id: " + cn.getIdEscola() +
                     ", nome: " + cn.getNome() +
-                    "  , logotipo: " + cn.getLogotipo() +
-                    "  , morada: " + cn.getMorada();
+                    ", logotipo: " + cn.getLogotipo() +
+                    ", morada: " + cn.getMorada();
             log += "\n" + logs;
             // Writing Contacts to log
             Log.d("BDDADOS: ", logs);
-
         }
     }
 
@@ -136,7 +130,7 @@ public class MainBD extends Activity {
         }
         db.close();
         Log.d("DB", "Tudo inserido nas Estudantes");
-
+        /////PARA EFEITOS DE DEBUG E LOGO  O CODIGO A FRENTE APENAS MOSTRA O CONTEUDO DA TABELA//////////////
         List<Estudante> dados = db.getAllStudents();
         Log.d("BDDADOS: ", "*********Estudantes********************");
         for (Estudante cn : dados) {
@@ -215,7 +209,6 @@ public class MainBD extends Activity {
 
         }
 
-
         /**
          *  Vai por HTTP buscar toda a informacao sobre os escolas e no final
          *  chama  o metodo para guardar na base de dados
@@ -234,7 +227,7 @@ public class MainBD extends Activity {
                 // For (loop)looping
                 for (int i = 0; i < escola.length(); i++) {
                     JSONObject c = escola.getJSONObject(i);
-                    // Armazenar cada item json nas vari�veis
+                    // Armazenar cada item json nas variaveis
                     arrEscolas[i] = new Escola(
                             c.getInt("id"),
                             c.getString("schoolName"),
@@ -295,7 +288,7 @@ public class MainBD extends Activity {
             // Actualizar a UI a partir da Background Thread
             runOnUiThread(new Runnable() {
                 public void run() {
-
+                 /////////nao faz nada ////
                 }
             });
 

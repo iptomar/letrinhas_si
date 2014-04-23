@@ -1,5 +1,10 @@
-package com.example.letrinhas;
+/////////////////////////////////////////////////////////////////////////
+///// ESTA CLASS É A CLASS QUE GERE A BASE DE  DADOS, CRIA A BASE DE////
+/////DADOS E CONTEM METODOS PARA GERIR AS VARIAS TABELAS           ////
+//////////////////////////////////////////////////////////////////////
 
+
+package com.example.letrinhas;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,6 +14,7 @@ import android.util.Log;
 import com.example.letrinhas.ClassesObjs.Escola;
 import com.example.letrinhas.ClassesObjs.Estudante;
 import com.example.letrinhas.ClassesObjs.Professor;
+import com.example.letrinhas.ClassesObjs.Sistema;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +30,7 @@ public class LetrinhasDB extends SQLiteOpenHelper {
     private static final String TABELA_PROFESSORES = "tblProfessores";
     private static final String TABELA_ESCOLAS = "tblEscolas";
     private static final String TABELA_ESTUDANTE = "tblEstudantes";
+    private static final String TABELA_SISTEMA = "tblSistema";
 
     // Nomes dos campos da tabela Professores
     private static final String PROF_IDPROFS = "idProfessor";
@@ -48,6 +55,11 @@ public class LetrinhasDB extends SQLiteOpenHelper {
     private static final String EST_NOME = "nome";
     private static final String EST_FOTO = "foto";
     private static final String EST_ESTADO = "estado";
+
+    // Nomes dos campos da tabela Sistema - esta tabela serve para guardar configuraçoes do sistema
+    private static final String SIS_ID = "id";
+    private static final String SIS_NOME = "nome";
+    private static final String SIS_VALOR = "valor";
 
     public LetrinhasDB(Context context) {
         super(context, NOME_BASEDADOS, null, VERSAO_BASEDADOS);
@@ -85,7 +97,6 @@ public class LetrinhasDB extends SQLiteOpenHelper {
                 + " MEDIUMBLOB )";
         db.execSQL(createTableString);
 
-
 ////////Construir a Tabela Estudante //////////////////
         createTableString = "CREATE TABLE " + TABELA_ESTUDANTE + "("
                 + EST_ID + " INTEGER PRIMARY KEY,"
@@ -94,6 +105,14 @@ public class LetrinhasDB extends SQLiteOpenHelper {
                 + EST_FOTO + " MEDIUMBLOB,"
                 + EST_ESTADO + " INTEGER" + ")";
         db.execSQL(createTableString);
+
+        //Construir a Tabela Sistema //////////////////
+        createTableString = "CREATE TABLE " + TABELA_SISTEMA + "("
+                + SIS_ID + " INTEGER PRIMARY KEY,"
+                + SIS_NOME + " TEXT,"
+                + SIS_VALOR + " TEXT )";
+        db.execSQL(createTableString);
+
     }
 
     @Override
@@ -173,12 +192,28 @@ public class LetrinhasDB extends SQLiteOpenHelper {
         //	db.close(); // Fechar a conecao a Base de dados
     }
 
+    /**
+     * Adiciona um novo registo na tabela Sistema
+     * @param sistema Recebe um objecto do tipo Sistema onde vai inserir
+     *             os dados na base de dados na tabela sistema
+     */
+    void AddNewItemSistema(Sistema sistema) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SIS_ID, sistema.getId());   // Inserir na tabela campo Id
+        values.put(SIS_NOME, sistema.getNome());   // Inserir na tabela campo nome
+        values.put(SIS_VALOR, sistema.getValor());         // Inserir na tabela o campo valor
+        // Inserir LINHAS:
+        db.insert(TABELA_SISTEMA, null, values);
+        	db.close(); // Fechar a conecao a Base de dados
+    }
+
+
 
     //SELECT
 
     /**
-     * Buscar Um professor pelo o ID do ITEM
-     *
+     * Buscar Um professor pelo o ID
      * @id recebe o Id
      * Retorna um objecto que contem Professor preenchido
      */
@@ -191,6 +226,7 @@ public class LetrinhasDB extends SQLiteOpenHelper {
                 PROF_IDPROFS + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null
         );
+        ////// Se existir dados comeca a preencher o Objecto professor
         if (cursor != null)
             cursor.moveToFirst();
         Professor prof = new Professor(cursor.getInt(0), cursor.getInt(1),
@@ -217,6 +253,7 @@ public class LetrinhasDB extends SQLiteOpenHelper {
                 EST_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null
         );
+        ////// Se existir dados comeca a preencher o Objecto Estudante
         if (cursor != null)
             cursor.moveToFirst();
         Estudante est = new Estudante(cursor.getInt(0),
@@ -320,7 +357,7 @@ public class LetrinhasDB extends SQLiteOpenHelper {
         return listEstudantes;
     }
 
-
+//////////////////////////////////////////APENAS PARA TESTES PARA MAIS TARDE
     /**
      * Actualizar um registo unico
      * @DadosImg Objecto com os dados a actualizar
@@ -350,25 +387,38 @@ public class LetrinhasDB extends SQLiteOpenHelper {
 //				new String[] { String.valueOf(contact.getID()) });
 //		db.close();
 //	}
+
+    /////////////////////////////////////////////////
+    ////DELETE DE TODOS OS DADOS DAS TABELAS
+
+    /**
+     * Apaga todos os dados da tabela professores
+     */
     public void deleteAllItemsProf() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABELA_PROFESSORES + " WHERE 1");
         db.close();
     }
 
+    /**
+     * Apaga todos os dados da tabela escolas
+     */
     public void deleteAllItemsEscola() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABELA_ESCOLAS + " WHERE 1");
         db.close();
     }
 
+    /**
+     * Apaga todos os dados da tabela estudantes
+     */
     public void deleteAllItemsEstudante() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABELA_ESTUDANTE + " WHERE 1");
         db.close();
     }
 
-
+///////////////////Codigo antigo mais tarde deve dar jeito///////////
     /**
      * Obtendo Contagem Items na Base de  dados
      * Retorna um inteiro com o total de resgisto da Base de dados

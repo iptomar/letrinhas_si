@@ -8,30 +8,18 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ReprodAudio" >
 
-    <TextView
-        android:id="@+id/txtLog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
-    <MediaController
-        android:id="@+id/mediaControllerAudio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtLog"
-        android:layout_marginLeft="47dp"
-        android:layout_marginTop="118dp"
-        android:layout_toRightOf="@+id/txtLog" >
-    </MediaController>
-
     <Button
         android:id="@+id/btnTocarSom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/txtLog"
-        android:layout_alignRight="@+id/mediaControllerAudio"
-        android:layout_below="@+id/mediaControllerAudio"
-        android:layout_marginLeft="30dp"
-        android:text="Tocar Som" />
+        android:text="Tocar Som" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
+        android:layout_marginBottom="54dp"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Aqui nesta janela vai ao servidor buscar um Audio e o reproduz"
+            android:id="@+id/textView" android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
+            android:layout_marginTop="45dp"/>
 
 </RelativeLayout>

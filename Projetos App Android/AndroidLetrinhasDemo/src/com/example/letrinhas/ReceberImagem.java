@@ -84,8 +84,7 @@ public class ReceberImagem extends Activity {
          * Faz em Background
          */
         protected String doInBackground(String... args) {
-
-            //Vai ler o campo 1 da base de  dados
+            //Vai ler da BD a linha com o ID  recebido da TxtBox
             LerDaBd(Integer.parseInt(textTxtBox));
             return null;
         }

@@ -21,10 +21,10 @@ public class MainScreenActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_screen);
 
-        // Buttons
+        // Buttons do menu
         btnViewProducts = (Button) findViewById(R.id.btnViewProducts);
         btnNewProduct = (Button) findViewById(R.id.btnSendResult);
-        btnReceberImagem = (Button) findViewById(R.id.btnReceberImagem);
+        btnReceberImagem = (Button) findViewById(R.id.btnVerImagem);
         btnJanelaTocar = (Button) findViewById(R.id.btnJanelaTocar);
 
 
@@ -83,7 +83,6 @@ public class MainScreenActivity extends Activity {
 
             }
         });
-
 
     }
 

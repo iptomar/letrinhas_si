@@ -2,36 +2,33 @@ package com.example.letrinhas;
 
 import android.net.http.AndroidHttpClient;
 import android.util.Log;
+import com.example.letrinhas.ClassesObjs.CorrecaoTeste;
+import com.example.letrinhas.ClassesObjs.CorrecaoTesteLeitura;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class NetworkUtils {
-
     private static final String TAG_NET_UTILS = "net-utils";
 
     /**
      * Le um ficheiro a partir do url especificado.
      *
-     * @param imageUrl O url do ficheiro.
+     * @param url O url do ficheiro.
      * @return Um array de bytes representando o ficheiro que foi lido, ou null
      * se ocorreu um erro.
      */
-    public static byte[] getFile(final String imageUrl) {
+    public static byte[] getFile(final String url) {
         AndroidHttpClient client = AndroidHttpClient.newInstance("letrinhas");
-        HttpGet getRequest = new HttpGet(imageUrl);
+        HttpGet getRequest = new HttpGet(url);
         try {
             HttpResponse response = client.execute(getRequest);
 
@@ -43,12 +40,10 @@ public class NetworkUtils {
             while ((size = in.read(buf)) != -1) {
                 out.write(buf, 0, size);
             }
-
             /// fECHA TODAS AS LIGAÇÕES
             out.close();
             in.close();
             client.close();
-
             return out.toByteArray();
         } catch (IOException e) {
             e.printStackTrace();
@@ -57,68 +52,57 @@ public class NetworkUtils {
     }
 
     /**
-     * em testes
-     * Le um ficheiro a partir do url especificado.
+     * Envia um resultado do teste para um deterninado URL
      * <p/>
      * Usa uma biblioteca da Apache:
      * http://james.apache.org/download.cgi#Apache_Mime4J
      *
-     * @param url O url do ficheiro.
-     * @return Um array de bytes representando o ficheiro que foi lido, ou null
+     * @param url O url de destino para enviar os resultados
+     * @param correcaoTeste Um objecto correcao de teste com os dados carregados que se pretendem enviar
+     *
+     *  array de bytes representando o ficheiro que foi lido, ou null
      * se ocorreu um erro.
      */
-    public static void setFile(final String url, byte[] bm) {
-        HttpClient httpClient = new DefaultHttpClient();
-
+    public static void postResultados(final String url, CorrecaoTeste correcaoTeste) {
+        AndroidHttpClient client = AndroidHttpClient.newInstance("letrinhas");
 
         HttpPost postRequest = new HttpPost(url);
-
-        // HttpPost post = new HttpPost();
-
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 
-        builder.addTextBody("name", "Whatever");
-        // String uri = "android.resource://com.example.androidhive/"+R.raw.mp1;
+        // Construir os campos.
+        builder.addTextBody("testId", correcaoTeste.getTestId()+"");
+        builder.addTextBody("studentId", correcaoTeste.getIdEstudante()+"");
+        builder.addTextBody("executionDate", correcaoTeste.getDataExecucao());
 
-        ///	File file = new File("res/raw/mp1.wav").getAbsoluteFile();
+        if (correcaoTeste instanceof CorrecaoTesteLeitura) {
+            CorrecaoTesteLeitura teste = (CorrecaoTesteLeitura) correcaoTeste;
 
-        //builder.addPart("ficheiro", new FileBody(file));
-
-        // String filePath = file.getAbsolutePath();
-
-        // File file = new File(filePath);
-        // builder.addBinaryBody("ficheiro", file);
-
-        //	Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ax);
-        //	ByteArrayOutputStream baos = new ByteArrayOutputStream(); // Transforma a imagem num array de bytes
-        ///	bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-//		byte[] b = bm.toByteArray();
-//		
-//
-        // builder.addBinaryBody("imagem", bm);
-//		builder.addPart("imagem", new FileBody(getResources().openRawResource(R.raw.mp1)));
-
-        postRequest.setEntity(builder.build());
+            builder.addTextBody("type", "read");
+            builder.addTextBody("observations", teste.getObservacoes());
+            builder.addTextBody("wpm", teste.getNumPalavrasMin()+"");
+            builder.addTextBody("correct", teste.getNumPalavCorretas()+"");
+            builder.addTextBody("incorrect", teste.getNumPalavIncorretas()+"");
+            builder.addTextBody("precision", teste.getPrecisao()+"");
+            builder.addTextBody("expressiveness", teste.getExpressividade()+"");
+            builder.addTextBody("rhythm", teste.getRitmo()+"");
+            builder.addTextBody("speed", teste.getVelocidade()+"");
+                //// Envia Um ficheiro////
+            builder.addBinaryBody("audio", teste.getAudio(), ContentType.APPLICATION_OCTET_STREAM, "foto.jpg");
+        } else {
+            ////////////para se colocar outros  tipos de teste //////////////////////
+        }
+        //Faz o post Request
+            postRequest.setEntity(builder.build());
 
         try {
-            HttpResponse response = httpClient.execute(postRequest);
-
-//			BufferedReader reader = new BufferedReader(new InputStreamReader(
-//					response.getEntity().getContent(), "UTF-8"));
-//			String sResponse;
-//			StringBuilder s = new StringBuilder();
-//			while ((sResponse = reader.readLine()) != null) {
-//				s = s.append(sResponse);
-//			}
-        } catch (ClientProtocolException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.d("Letrinhas", "Enviando um http request. para os resultados do teste");
+            client.execute(postRequest);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
+            Log.e("Letrinhas", e.getMessage());
             e.printStackTrace();
         }
-
+        //Fecha a ligação
+        client.close();
     }
 }

@@ -6,6 +6,9 @@
 
     <uses-sdk android:minSdkVersion="8" />
 
+    <!-- Internet Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:configChanges="keyboardHidden|orientation"
         android:icon="@drawable/ic_launcher"
@@ -63,7 +66,6 @@
         </activity>
     </application>
 
-    <!-- Internet Permissions -->
-    <uses-permission android:name="android.permission.INTERNET" />
+
 
 </manifest>
