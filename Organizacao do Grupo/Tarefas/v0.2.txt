@@ -8,7 +8,7 @@ Servidor Web:
   Reescrita de métodos:
     [DONE **(Ver notas)](Luís)-> Separar o método que devolve testes em dois: Um que faça uma listagem do sumário dos testes e outro que receba um(ns) id(s) e devolva esse(s) teste(s).
       (Luis [need help maybe!])-> Reescrever o método que devolva testes à app. Está dependente do modelo da BD de AS.
-    [DONE?](Alexandre)-> Reescrever o método que receba resoluções da app. É necessário preparar o método para receber dados binários em Base64 e fazer com que tais dados sejam introduzidos na BD.
+    [DONE](Alexandre)-> Reescrever o método que receba resoluções da app. É necessário preparar o método para receber dados binários em Base64 e fazer com que tais dados sejam introduzidos na BD.
 
   Novas funcionalidades:
     [DONE](André)-> Escrever um método que leia dados binários de uma imagem, ou de um ficheiro (api fs do Node), ou da BD. Pode-se usar uma tabela temporária com uma coluna do tipo Blob (255 Byte?) ou MediumBlob (16 MB) para testar isto.
@@ -30,9 +30,9 @@ Servidor Web:
 
 
 App Android:
-  [DONE?](Alexandre)-> Enviar uma imagem para o servidor em Base64
-  (Alexandre)-> Alterar a app Android de forma a permitir que esta receba dados binários de uma imagem (a partir da rede) e mostrá-la no ecrã.
-    (None)-> Depois da tarefa acima, tentar guardar os dados na BD SQLite?
+  [DONE](Alexandre)-> Enviar uma imagem para o servidor em Base64
+  (DONE)(Alexandre)-> Alterar a app Android de forma a permitir que esta receba dados binários de uma imagem (a partir da rede) e mostrá-la no ecrã.
+  (DONE)(Alexandre)-> Depois da tarefa acima, tentar guardar os dados na BD SQLite?
 
 Outras:
   (Todos)-> Pensar em questões para o professor entregar aos clientes. Tais questões devem ser colocados num ficheiro à parte.

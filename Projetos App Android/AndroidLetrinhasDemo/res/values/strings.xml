@@ -17,5 +17,7 @@
     <string name="mainPorta">Porta:</string>
     <string name="title_activity_receber_imagem">ReceberImagem</string>
     <string name="btnReceberImagem">Receber Imagem</string>
+    <string name="title_activity_reprod_audio">ReprodAudio</string>
+    <string name="title_activity_main_bd">MainBD</string>
 
 </resources>

@@ -8,19 +8,11 @@
     <!-- Sample Dashboard screen with Two buttons -->
 
     <ImageView
-        android:id="@+id/imgView1"
+        android:id="@+id/imgVerImg"
         android:layout_width="86dp"
         android:layout_height="86dp"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/ic_launcher" />
-
-    <TextView
-        android:id="@+id/txtTituloImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="0.65"
-        android:text="@string/lb_mainIpServidor"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
         android:id="@+id/txtBoxIpServer"
@@ -53,6 +45,12 @@
         android:layout_marginTop="25dip"
         android:layout_weight="0.45"
         android:text="@string/btnMainAllTest" />
+
+    <Button
+        android:id="@+id/btnJanelaTocar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tocar Som" />
 
     <Button
         android:id="@+id/btnReceberImagem"
