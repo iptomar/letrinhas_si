@@ -106,6 +106,31 @@ export function getTest(request: express.Request, response: express.Response) {
     }
 }
 
+//função que devolve um teste com perguntas random
+export function getRandomTest(request: express.Request, response: express.Response) {
+    //em querystring vem o numero de perguntas que se pretende, o ano e a area
+    var num: number = request.query['num'];
+    var year: number = request.query['ano'];
+    var area: String = request.query['area']; 
+
+    if (isNaN(num) || isNaN(year)) {
+        response.end("Number or Year invalid.");
+    }
+    else {
+        appGetServices.getAllRandomTests(num, year, area, (err, testlist) => {
+            var sendResult = {
+                tests: testlist,
+                success: 1
+            };
+
+            response.end(JSON.stringify(sendResult));
+        });
+    }
+
+   
+}
+
+
 export function postTestResults(request: express.Request, response: express.Response) {
     appPostServices.saveTestsToDb(request.body, (err) => {
         if (err) {
@@ -122,3 +147,4 @@ export function postTestResults(request: express.Request, response: express.Resp
         }
     });
 }
+
