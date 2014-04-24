@@ -18,6 +18,9 @@ function mapRoutes(app) {
 
     app.get('/getTest', testActions.getTest);
 
+    //chama a nova rota para testes random. Forma da QueryString /getRandomTest?
+    app.get('/getRandomTest', testActions.getRandomTest);
+
     // POST Routes.
     app.post('/postTestResults', testActions.postTestResults);
     app.post('/postFiles', testActions.postImage);
