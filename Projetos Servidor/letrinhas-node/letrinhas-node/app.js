@@ -12,7 +12,7 @@ var app = express();
 console.log('Setting the port...');
 
 // Define the port.
-app.set('port', process.env.PORT || 8080);
+app.set('port', process.env.PORT || 80);
 
 console.log('Defining the view engine...');
 
@@ -36,6 +36,7 @@ app.use(require('body-parser')());
 console.log('Mapping static routes...');
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/appContent', express.static(path.join(__dirname, 'appContent')));
 
 // Set the error handler.
 if ('development' == app.get('env')) {
@@ -47,8 +48,14 @@ if ('development' == app.get('env')) {
     });
 }
 
+console.log('Configuring controller routes...');
+
 // Configure routes.
 require('./configs/routes').mapRoutes(app);
+
+console.log('Current root dir is: ' + __dirname);
+
+exports.rootDir = __dirname;
 
 // Start the server.
 app.listen(app.get('port'), function () {

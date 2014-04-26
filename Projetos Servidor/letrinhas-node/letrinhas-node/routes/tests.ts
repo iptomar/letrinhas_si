@@ -6,6 +6,7 @@ import fs = require('fs');
 import Q = require('q');
 import path = require('path');
 
+
 import appPostServices = require('../Scripts/services/appPostServices');
 import appGetServices = require('../Scripts/services/appGetServices');
 
@@ -117,8 +118,8 @@ export function getTest(request: express.Request, response: express.Response) {
             });
         }
     } else if (request.query.hasOwnProperty('lastSyncDate')) {
-        
-    }  else {
+
+    } else {
         response.statusCode = 400;
         response.end("No id supplied.");
     }
@@ -150,20 +151,26 @@ export function postTestResults(request: express.Request, response: express.Resp
     //   * incorrect: Incorrect word count. Integer.
     //   * audio: The audio for the recording. File.
 
-    
 
-    appPostServices.saveTestsToDb(request, (err) => {
-        if (err) {
+    appPostServices.saveTestsToDb(request)
+        .then(() => response.json({ success: 1 }))
+        .catch((err) => {
             response.statusCode = 500;
-            console.log(err.message);
+            response.json({ success: 0, reason: err.toString() })
+        });
 
-            response.json({
-                success: 0
-            });
-        } else {
-            response.json({
-                success: 1
-            });
-        }
-    });
+    //appPostServices.saveTestsToDb(request, (err) => {
+    //    if (err) {
+    //        response.statusCode = 500;
+    //        console.log(err.message);
+
+    //        response.json({
+    //            success: 0
+    //        });
+    //    } else {
+    //        response.json({
+    //            success: 1
+    //        });
+    //    }
+    //});
 }

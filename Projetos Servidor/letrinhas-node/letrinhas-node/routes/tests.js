@@ -103,6 +103,7 @@ function getTest(request, response) {
                 });
             });
         }
+    } else if (request.query.hasOwnProperty('lastSyncDate')) {
     } else {
         response.statusCode = 400;
         response.end("No id supplied.");
@@ -131,20 +132,25 @@ function postTestResults(request, response) {
     //   * rhythm: The student's rhythm. Number.
     //   * incorrect: Incorrect word count. Integer.
     //   * audio: The audio for the recording. File.
-    appPostServices.saveTestsToDb(request, function (err) {
-        if (err) {
-            response.statusCode = 500;
-            console.log(err.message);
-
-            response.json({
-                success: 0
-            });
-        } else {
-            response.json({
-                success: 1
-            });
-        }
+    appPostServices.saveTestsToDb(request).then(function () {
+        return response.json({ success: 1 });
+    }).catch(function (err) {
+        response.statusCode = 500;
+        response.json({ success: 0, reason: err.toString() });
     });
+    //appPostServices.saveTestsToDb(request, (err) => {
+    //    if (err) {
+    //        response.statusCode = 500;
+    //        console.log(err.message);
+    //        response.json({
+    //            success: 0
+    //        });
+    //    } else {
+    //        response.json({
+    //            success: 1
+    //        });
+    //    }
+    //});
 }
 exports.postTestResults = postTestResults;
 //# sourceMappingURL=tests.js.map

@@ -34,6 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="configs\pathConfig.ts" />
     <TypeScriptCompile Include="routes\index.ts" />
     <TypeScriptCompile Include="routes\sync.ts" />
     <TypeScriptCompile Include="routes\user.ts" />
@@ -56,6 +57,7 @@
     <TypeScriptCompile Include="Scripts\structures\tests\TestSummary.ts" />
     <TypeScriptCompile Include="Scripts\typings\express\express.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\mkdirp\mkdirp.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\mysql\mysql.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
     <TypeScriptCompile Include="configs\routes.ts" />
@@ -79,6 +81,7 @@
     <Folder Include="Scripts\" />
     <Folder Include="configs\" />
     <Folder Include="Scripts\typings\jquery\" />
+    <Folder Include="Scripts\typings\mkdirp\" />
     <Folder Include="Scripts\typings\q\" />
     <Folder Include="Scripts\utils\" />
     <Folder Include="Scripts\structures\" />
@@ -93,7 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="public\scripts\formtest.js" />
-    <Compile Include="routes\tests.ts" />
+    <TypeScriptCompile Include="routes\tests.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
   <ProjectExtensions>

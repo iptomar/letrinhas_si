@@ -1,8 +1,10 @@
 ﻿import pool = require('../../configs/mysql');
+import app = require('../../app');
 
 import path = require('path');
 import fs = require('fs');
 import Q = require('q');
+import mkdirp = require('mkdirp');
 
 import mysqlAsync = require('../utils/promiseBasedMySql');
 
@@ -22,7 +24,10 @@ export function sendBinaryDataToDb(binaryData: NodeBuffer, onDone: (err: Error) 
     });
 }
 
-export function saveTestsToDb(request: any, onDone: (err: Error) => void) {
+export function saveTestsToDb(request: any/*, onDone: (err: Error) => void*/): Q.Promise<void> {
+
+    var deferred = Q.defer<void>();
+
     // TODO: Split into two, or figure out the type of resolution for each item.
 
     //var list: any[] = jsonData.solvedTests;
@@ -61,40 +66,66 @@ export function saveTestsToDb(request: any, onDone: (err: Error) => void) {
             (<ReadingTestCorrection> test).rhythm = request.body['rhythm'];
             (<ReadingTestCorrection> test).readingSpeed = request.body['speed'];
 
-            console.log(test);
-
             // TODO: Input sanitization.
-            var filePath = path.join('D:', /*'appContent/tests/test-' + test.testId,*/ request.files['audio'].originalname);
+            var filePath = path.join('appContent/tests/test-' + test.testId/*, request.files['audio'].originalname*/);
 
-            console.log(filePath);
+            mkdirp(filePath, { mode: '777' }, (err, made) => {
+                if (err) {
+                    deferred.reject(err);
+                } else {
+                    console.log('Successfully created dir.');
 
-            // Save the audio file.
-            Q.nfcall<NodeBuffer>(fs.readFile, request.files['audio'].path)
-                .then((fileData) => {
-                    console.log('Read file from the client!');
+                    var fileInStream = fs.createReadStream(request.files['audio'].path, { bufferSize: 4096 });
+                    var fileOutStream = fs.createWriteStream(path.join(app.rootDir, filePath, request.files['audio'].originalname), { mode: '0666' });
 
-                    // TODO: Change this to use a var.
-                    Q.nfcall(fs.writeFile, filePath, fileData)
-                        .then(() => {
-                            console.log('Saved file on ' + filePath);
-                            onDone(null);
-                            //    mysqlAsync.insertQuery('INSERT INTO WhateverTable (testId, studentId, ...) VALUES ?', [test]).then(() => onDone(null));
-                        })
+                    fileOutStream.on('close', () => {
+                        //mysqlAsync.insertQuery('', [])
+                        //    .then(() => {
 
-                })
-                .fail((err) => {
-                    console.log(err);
-                    onDone(err);
-                });
+                        //    })
+                        //    .then(() => mysqlAsync.insertQuery('', []))
+                        //    .then(() => deferred.resolve(null));
+                        deferred.resolve(null);
+                    });
+                    fileOutStream.on('error', (err) => deferred.reject(err));
+
+                    fileInStream.pipe(fileOutStream, { end: true });
+                }
+            });
+
+
+
+
+
+            //// Save the audio file.
+            //Q.nfcall<NodeBuffer>(fs.readFile, request.files['audio'].path)
+            //    .then((fileData) => {
+            //        console.log('Read file from the client!');
+
+
+
+            //        // TODO: Change this to use a var.
+            //        Q.nfcall(fs.writeFile, filePath, fileData)
+            //            .then(() => {
+            //                console.log('Saved file on ' + filePath);
+            //                onDone(null);
+            //                //    mysqlAsync.insertQuery('INSERT INTO WhateverTable (testId, studentId, ...) VALUES ?', [test]).then(() => onDone(null));
+            //            })
+            //            .fail((err) => { throw err });
+            //    })
+            //    .fail((err) => {
+            //        console.log(err);
+            //        onDone(err);
+            //    });
 
             break;
         case 'multimedia':
             (<MultimediaTestCorrection> test).optionChosen = request.body['option'];
             break;
         default:
-            onDone(new Error('Invalid'));
             // Invalid!
+            deferred.reject(new Error('Invalid test type.'));
             break;
     }
-
+    return deferred.promise;
 }

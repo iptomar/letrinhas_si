@@ -1,8 +1,10 @@
 ﻿var pool = require('../../configs/mysql');
+var app = require('../../app');
 
 var path = require('path');
 var fs = require('fs');
 var Q = require('q');
+var mkdirp = require('mkdirp');
 
 // TODO: Implement this.
 function sendBinaryDataToDb(binaryData, onDone) {
@@ -13,7 +15,9 @@ function sendBinaryDataToDb(binaryData, onDone) {
 }
 exports.sendBinaryDataToDb = sendBinaryDataToDb;
 
-function saveTestsToDb(request, onDone) {
+function saveTestsToDb(request /*, onDone: (err: Error) => void*/ ) {
+    var deferred = Q.defer();
+
     // TODO: Split into two, or figure out the type of resolution for each item.
     //var list: any[] = jsonData.solvedTests;
     //var insertData = [];
@@ -44,26 +48,32 @@ function saveTestsToDb(request, onDone) {
             test.rhythm = request.body['rhythm'];
             test.readingSpeed = request.body['speed'];
 
-            console.log(test);
-
             // TODO: Input sanitization.
-            var filePath = path.join('D:', request.files['audio'].originalname);
+            var filePath = path.join('appContent/tests/test-' + test.testId);
 
-            console.log(filePath);
+            mkdirp(filePath, { mode: '777' }, function (err, made) {
+                if (err) {
+                    deferred.reject(err);
+                } else {
+                    console.log('Successfully created dir.');
 
-            // Save the audio file.
-            Q.nfcall(fs.readFile, request.files['audio'].path).then(function (fileData) {
-                console.log('Read file from the client!');
+                    var fileInStream = fs.createReadStream(request.files['audio'].path, { bufferSize: 4096 });
+                    var fileOutStream = fs.createWriteStream(path.join(app.rootDir, filePath, request.files['audio'].originalname), { mode: '0666' });
 
-                // TODO: Change this to use a var.
-                Q.nfcall(fs.writeFile, filePath, fileData).then(function () {
-                    console.log('Saved file on ' + filePath);
-                    onDone(null);
-                    //    mysqlAsync.insertQuery('INSERT INTO WhateverTable (testId, studentId, ...) VALUES ?', [test]).then(() => onDone(null));
-                });
-            }).fail(function (err) {
-                console.log(err);
-                onDone(err);
+                    fileOutStream.on('close', function () {
+                        //mysqlAsync.insertQuery('', [])
+                        //    .then(() => {
+                        //    })
+                        //    .then(() => mysqlAsync.insertQuery('', []))
+                        //    .then(() => deferred.resolve(null));
+                        deferred.resolve(null);
+                    });
+                    fileOutStream.on('error', function (err) {
+                        return deferred.reject(err);
+                    });
+
+                    fileInStream.pipe(fileOutStream, { end: true });
+                }
             });
 
             break;
@@ -71,10 +81,11 @@ function saveTestsToDb(request, onDone) {
             test.optionChosen = request.body['option'];
             break;
         default:
-            onDone(new Error('Invalid'));
-
+            // Invalid!
+            deferred.reject(new Error('Invalid test type.'));
             break;
     }
+    return deferred.promise;
 }
 exports.saveTestsToDb = saveTestsToDb;
 //# sourceMappingURL=appPostServices.js.map
