@@ -1,6 +1,5 @@
-﻿///reference path="../typings/express/express.d.ts"/>
-var fs = require('fs');
-
+﻿/// <reference path="../Scripts/typings/express/express.d.ts" />
+/// <reference path="../Scripts/typings/node/node.d.ts" />
 var appPostServices = require('../Scripts/services/appPostServices');
 var appGetServices = require('../Scripts/services/appGetServices');
 
@@ -39,26 +38,34 @@ function getImage(request, response) {
         //}));
         response.end(result);
     });
+    console.log("Hello");
 }
 exports.getImage = getImage;
 
 function postImage(request, response) {
+    // console.log(request);
     var correctId = request.body['correct-id'];
 
-    // Read the file
-    fs.readFile(request.files[correctId].path, function (err, data) {
-        appPostServices.sendBinaryDataToDb(data, function (err) {
-            if (err) {
-                console.log(err);
-            }
-
-            response.end('Whatever');
-        });
-    });
-
+    //// Read the file
+    //fs.readFile(request.files[correctId].path, (err, data) => {
+    //    appPostServices.sendBinaryDataToDb(data, (err) => {
+    //        if (err) {
+    //            console.log(err);
+    //        }
+    //        response.end('Whatever');
+    //    });
+    //});
+    // console.log(request.body);
+    //fs.readFile(request.files[correctId].path, (err, data) => {
+    //    fs.writeFile('D:/' + request.files[correctId].path, data, (err) => {
+    //        console.log('Saved file.');
+    //    });
+    //});
     console.log(correctId);
 
-    console.log(request.files[correctId]);
+    console.log(request.files);
+
+    response.end('Whatever');
 }
 exports.postImage = postImage;
 
@@ -88,16 +95,15 @@ function getTest(request, response) {
         if (idList.length == 0) {
             response.statusCode = 400;
             response.end('No valid id supplied.');
+        } else {
+            appGetServices.getTestById(idList, function (err, testList) {
+                response.json({
+                    tests: testList,
+                    success: 1
+                });
+            });
         }
-
-        appGetServices.getTestById(idList, function (err, testList) {
-            var sendResult = {
-                tests: testList,
-                success: 1
-            };
-
-            response.end(JSON.stringify(sendResult));
-        });
+    } else if (request.query.hasOwnProperty('lastSyncDate')) {
     } else {
         response.statusCode = 400;
         response.end("No id supplied.");
@@ -128,20 +134,45 @@ function getRandomTest(request, response) {
 exports.getRandomTest = getRandomTest;
 
 function postTestResults(request, response) {
-    appPostServices.saveTestsToDb(request.body, function (err) {
-        if (err) {
-            response.statusCode = 500;
-            console.log(err.message);
-
-            response.end(JSON.stringify({
-                success: 0
-            }));
-        } else {
-            response.end(JSON.stringify({
-                success: 1
-            }));
-        }
+    // console.log(request.body);
+    // TODO: Figure out a structure for the POST. It could be done 1 by 1,
+    // or multiple at a time.
+    // Fields:
+    // * execution-date: The date on which the test was done. String, formatted as dd-mm-yyyy (hh:mm ???)
+    // * test-id: The ID of the test. Integer, higher than 0.
+    // * student-id: The ID of the student. Integer, higher than 0.
+    // * type: String Enum, values: read, multimedia (? Could get the type from the DB)
+    // * (If type is multimedia)
+    //   * option: The option which was chosen.Integer, values = 1, 2, or 3.
+    // * (If type is read):
+    //   * observations: Professor observations. String.
+    //   * wpm: Words per minute. Number.
+    //   * correct: Correct word count: Integer.
+    //   * precision: Reading precision. Number.
+    //   * speed: Reading speed. Number.
+    //   * expressiveness: The student's expressiveness. Number.
+    //   * rhythm: The student's rhythm. Number.
+    //   * incorrect: Incorrect word count. Integer.
+    //   * audio: The audio for the recording. File.
+    appPostServices.saveTestsToDb(request).then(function () {
+        return response.json({ success: 1 });
+    }).catch(function (err) {
+        response.statusCode = 500;
+        response.json({ success: 0, reason: err.toString() });
     });
+    //appPostServices.saveTestsToDb(request, (err) => {
+    //    if (err) {
+    //        response.statusCode = 500;
+    //        console.log(err.message);
+    //        response.json({
+    //            success: 0
+    //        });
+    //    } else {
+    //        response.json({
+    //            success: 1
+    //        });
+    //    }
+    //});
 }
 exports.postTestResults = postTestResults;
 //# sourceMappingURL=tests.js.map

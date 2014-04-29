@@ -2,6 +2,7 @@
 /// <reference path="../Scripts/typings/express/express.d.ts" />
 var indexActions = require('../routes/index');
 var testActions = require('../routes/tests');
+var syncActions = require('../routes/sync');
 
 /**
 * Maps routes to the server.
@@ -9,6 +10,16 @@ var testActions = require('../routes/tests');
 * @param app The server which routes will be mapped to.
 */
 function mapRoutes(app) {
+    mapGetRoutes(app);
+    mapPostRoutes(app);
+    mapSyncRoutes(app);
+    // POST Routes.
+    // Probably unnecessary.
+    // app.use(sendNotFound);
+}
+exports.mapRoutes = mapRoutes;
+
+function mapGetRoutes(app) {
     app.get('/', indexActions.index);
 
     // app.get('/users', user.list);
@@ -21,13 +32,26 @@ function mapRoutes(app) {
     //chama a nova rota para testes random. Forma da QueryString /getRandomTest?
     app.get('/getRandomTest', testActions.getRandomTest);
 
-    // POST Routes.
+    console.log("Successfully mapped GET routes.");
+}
+
+function mapPostRoutes(app) {
     app.post('/postTestResults', testActions.postTestResults);
     app.post('/postFiles', testActions.postImage);
-    // Probably unnecessary.
-    // app.use(sendNotFound);
+
+    console.log('Successfully mapped POST routes.');
 }
-exports.mapRoutes = mapRoutes;
+
+function mapSyncRoutes(app) {
+    // Sync routes.
+    app.get('/professors', syncActions.getProfessors);
+    app.get('/schools', syncActions.getSchools);
+    app.get('/students', syncActions.getStudents);
+    app.get('/classes', syncActions.getClasses);
+    app.get('/professorClasses', syncActions.getProfessorClasses);
+
+    console.log('Successfully mapped GET and POST routes for sync.');
+}
 
 /**
 * @deprecated

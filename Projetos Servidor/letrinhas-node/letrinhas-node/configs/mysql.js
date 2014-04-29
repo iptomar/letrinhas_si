@@ -1,12 +1,15 @@
-﻿var mysql = require('mysql');
+﻿/// <reference path="../Scripts/typings/mysql/mysql.d.ts" />
+var mysql = require('mysql');
 
 /**
 * Connection pool for this app.
 */
-exports.pool = mysql.createPool({
+var pool = mysql.createPool({
     host: '192.168.56.101',
     user: 'psiapp',
     password: 'psiapp',
     database: 'letrinhas'
 });
+
+module.exports = pool;
 //# sourceMappingURL=mysql.js.map
