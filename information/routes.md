@@ -2,13 +2,14 @@
 # Rotas para a app
 
 **Nota:** Rotas do tipo `/Rota/{:id}`, o `{:id}` é substituído por um número.
-Isto traduz-se desta forma:
 
-`/Rota/5` ou `/Rota?id=5`
+Isto traduz-se desta forma: `/Rota/5`
+
+Se o parâmetro estiver com um '?', é opcional.
 
 ### Testes:
-
-  * GET `/Tests/{:id}`
+  
+  * GET `/Tests/{:id?}`
   * GET `/Tests/Random`
 
   * GET + POST `/Tests/Create`
@@ -30,7 +31,7 @@ Isto traduz-se desta forma:
 
 ### Escolas:
 
-  * GET `/Schools/{:id}`
+  * GET `/Schools/{:id?}`
 
   * GET + POST `/Schools/Create`
   * GET + POST `/Schools/Edit/{:id}`
@@ -40,7 +41,7 @@ Isto traduz-se desta forma:
 
 ### Professores:
 
-  * GET `/Professors/{:id}`
+  * GET `/Professors/{:id?}`
 
   * GET + POST `/Professors/Create`
   * GET + POST `/Professors/Edit/{:id}`
@@ -50,7 +51,7 @@ Isto traduz-se desta forma:
 
 ### Alunos:
 
-  * GET `/Students/{:id}`
+  * GET `/Students/{:id?}`
   * GET `/Students/{:id}/TestResults`
 
   * GET + POST `/Students/Create`
@@ -61,7 +62,7 @@ Isto traduz-se desta forma:
 
 ### Turmas:
 
-  * GET `/Classes/{:id}`
+  * GET `/Classes/{:id?}`
 
   * GET + POST `/Classes/Create`
   * GET + POST `/Classes/Edit/{:id}`
