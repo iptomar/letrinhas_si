@@ -2,6 +2,7 @@
     id: number;
     testId: number;
     studentId: number;
-    executionDate: string;
+    executionDate: number;
+    type: number;
 }
 export = TestCorrection;

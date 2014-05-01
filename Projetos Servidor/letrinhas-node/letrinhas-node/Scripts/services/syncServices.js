@@ -23,22 +23,6 @@ function getSchools(onDone) {
     }).catch(function (err) {
         onDone(err, null);
     });
-    //// Get the schools.
-    //pool.query('SELECT * FROM Schools', (err, rows: Array<School>, fields) => {
-    //    if (err) {
-    //        return onDone(err, null);
-    //    }
-    //    var schools = new Array<School>(rows.length);
-    //    for (var i = 0; i < rows.length; i++) {
-    //        schools[i] = <School> {
-    //            id: rows[i].id,
-    //            schoolAddress: rows[i].schoolAddress,
-    //            schoolLogoUrl: rows[i].schoolLogoUrl,
-    //            schoolName: rows[i].schoolName
-    //        };
-    //    }
-    //    onDone(null, schools);
-    //});
 }
 exports.getSchools = getSchools;
 

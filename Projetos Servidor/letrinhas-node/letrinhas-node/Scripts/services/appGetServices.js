@@ -1,10 +1,11 @@
-/// <reference path="../typings/node/node.d.ts" />
+﻿/// <reference path="../typings/node/node.d.ts" />
 // import mysql = require('../../configs/mysql');
 var fs = require('fs');
 var Q = require('q');
 
 var pool = require('../../configs/mysql');
-var mysqlAsync = require('../utils/promiseBasedMySql');
+
+var TestType = require('../structures/tests/TestType');
 
 function getBinaryData(onResult) {
     //mysql.pool.query('SELECT binarydata FROM BinaryTest where id = 2', (err, rows, fields) => {
@@ -21,74 +22,70 @@ exports.getBinaryData = getBinaryData;
 /**
 * Returns a list of tests which were created after a set date.
 */
-function getTestsNewerThan(date) {
-    var deferred = Q.defer();
-
-    var tests = new Array();
-
-    // Get the reading tests...
-    mysqlAsync.selectQuery('SELECT * FROM ReadingTests WHERE creationDate > ' + date).then(function (readingTests) {
-        var tests = readingTests.rows;
-        var i;
-
-        for (i = 0; i < tests.length; i++) {
-            // Populate the reading tests...
-        }
-    }).then(function () {
-        return mysqlAsync.selectQuery('SELECT * FROM Tests WHERE creationDate > ' + date + '  JOIN ....');
-    }).then(function (multimediaTests) {
-        // Populate the multimedia tests...
-    }).then(function () {
-        return deferred.resolve(tests);
-    }).fail(function (err) {
-        deferred.reject(err);
+function getTestsNewerThan(timestamp) {
+    return Q.ninvoke(pool, "query", "SELECT id, professorId, title, mainText, unix_timestamp(creationDate) as creationDate, grade, type, areaId FROM Tests WHERE creationDate > from_unixtime(?)", timestamp).then(function (result) {
+        return result[0];
     });
-
-    return deferred.promise;
 }
 exports.getTestsNewerThan = getTestsNewerThan;
 
-function getTestById(idList, onResult) {
-    var sql = 'SELECT * FROM Testes WHERE id IN (' + idList.toString() + ')';
+function getTestById(id) {
+    // Make use of stored procedures to clean up our code.
+    // The reason is because we need to determine the test type.
+    // It's much simpler to just use a stored procedure which
+    // handles all the logic for us in there.
+    var options = {
+        sql: 'CALL getTestById(?)',
+        nestTables: false
+    };
 
-    mysqlAsync.selectQuery(sql).then(function (result) {
-        var rows = result.rows;
-
-        var data = [];
-
-        for (var i = 0; i < rows.length; i++) {
-            data.push({
-                id: rows[i].id,
-                title: rows[i].title,
-                textContent: rows[i].textContent,
-                professorName: rows[i].professorName,
-                maxTries: rows[i].maxTries
-            });
-        }
-
-        onResult(null, data);
-    }).catch(function (err) {
-        onResult(err, null);
+    return Q.ninvoke(pool, "query", options, id).then(function (result) {
+        return result[0][0].length === 0 ? null : result[0][0];
     });
-    //pool.query(sql, (err, rows, fields) => {
-    //    if (err) {
-    //        onResult(err, null);
-    //    } else {
-    //        var result = [];
-    //        for (var i = 0; i < rows.length; i++) {
-    //            result.push({
-    //                id: rows[i].id,
-    //                title: rows[i].title,
-    //                textContent: rows[i].textContent,
-    //                professorName: rows[i].professorName,
-    //                maxTries: rows[i].maxTries,
-    //            });
-    //        }
-    //        onResult(null, result);
-    //    }
-    //});
 }
 exports.getTestById = getTestById;
+
+function getTests(options) {
+    if (typeof options.type === 'undefined') {
+        return Q.reject(new Error('No parameteres supplied!'));
+    }
+
+    var parameters = [];
+    if (options.areaId !== undefined) {
+        parameters.push({ name: 'areaId', value: options.areaId });
+    }
+    if (options.grade !== undefined) {
+        parameters.push({ name: 'grade', value: options.grade });
+    }
+    if (options.professorId !== undefined) {
+        parameters.push({ name: 'professorId', value: options.professorId });
+    }
+
+    // Build the sql query.
+    var where = 'WHERE t.type = ' + options.type;
+
+    for (var i = 0; i < parameters.length; i += 1) {
+        where += ' AND t.' + parameters[i].name + ' = ' + parameters[i].value;
+    }
+
+    if (options.creationDate) {
+        where += ' AND t.creationDate > from_unixtime(' + options.creationDate + ')';
+    }
+
+    switch (options.type) {
+        case 0 /* read */:
+            return Q.ninvoke(pool, "query", 'select t.id, t.type, t.professorId, t.title, t.mainText, unix_timestamp(t.creationDate) as creationDate, t.grade, t.areaId, rt.professorAudioUrl, rt.textContent from Tests as t join ReadingTests as rt on rt.id = t.id ' + where).then(function (result) {
+                return result[0];
+            });
+        case 1 /* multimedia */:
+            return Q.ninvoke(pool, 'query', 'SELECT t.id, t.type, t.professorId, t.title, t.mainText, UNIX_TIMESTAMP(t.creationDate) AS creationDate, t.grade, t.areaId, mt.option1, mt.option1IsUrl, mt.option2, mt.option2IsUrl, mt.option3, mt.option3IsUrl, mt.correctOption FROM Tests AS t JOIN MultimediaTests AS mt ON mt.id = t.id ' + where).then(function (result) {
+                return result[0];
+            });
+        default:
+            return Q.reject('Invalid test type');
+    }
+}
+exports.getTests = getTests;
 
 /**
 * Gets tests from a database, and returns an array of TestSummary.
@@ -101,13 +98,12 @@ function getTestListSummaryFromDb(max, onResult) {
         } else {
             var testList = [];
 
-            for (var i = 0; i < rows.length; i++) {
-                testList.push({
-                    id: rows[i].id,
-                    title: rows[i].title
-                });
-            }
-
+            //for (var i = 0; i < rows.length; i++) {
+            //    testList.push(<TestSummary>{
+            //        id: rows[i].id,
+            //        title: rows[i].title
+            //    });
+            //}
             onResult(null, testList);
         }
     });
@@ -116,7 +112,7 @@ exports.getTestListSummaryFromDb = getTestListSummaryFromDb;
 
 function getAllRandomTests(num, year, area, onResult) {
     //realiza a query
-    mysql.pool.query("SELECT * from tbl_EscolhaMultipla where area ='" + area + "' and ano='" + year + "';", function (err, rows, fields) {
+    pool.query("SELECT * from tbl_EscolhaMultipla where area ='" + area + "' and ano='" + year + "';", function (err, rows, fields) {
         if (err) {
             onResult(err, null);
         } else {

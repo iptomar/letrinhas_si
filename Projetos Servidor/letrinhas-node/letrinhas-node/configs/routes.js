@@ -1,4 +1,4 @@
-/// <reference path="../app.ts" />
+﻿/// <reference path="../app.ts" />
 /// <reference path="../Scripts/typings/express/express.d.ts" />
 var indexActions = require('../routes/index');
 var testActions = require('../routes/tests');
@@ -13,7 +13,6 @@ function mapRoutes(app) {
     mapGetRoutes(app);
     mapPostRoutes(app);
     mapSyncRoutes(app);
-    // POST Routes.
     // Probably unnecessary.
     // app.use(sendNotFound);
 }
@@ -27,7 +26,10 @@ function mapGetRoutes(app) {
 
     app.get('/image', testActions.getImage);
 
-    app.get('/getTest', testActions.getTest);
+    // app.get('/getTest', testActions.getTest);
+    app.get('/tests/:id?', testActions.getTest);
+
+    app.get('/testsSince', testActions.testsSince);
 
     //chama a nova rota para testes random. Forma da QueryString /getRandomTest?
     app.get('/getRandomTest', testActions.getRandomTest);

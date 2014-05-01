@@ -16,9 +16,6 @@ export function mapRoutes(app: express.Express) {
     mapPostRoutes(app);
     mapSyncRoutes(app);
 
-    // POST Routes.
-    
-
     // Probably unnecessary.
     // app.use(sendNotFound);
 }
@@ -30,10 +27,14 @@ function mapGetRoutes(app: express.Express) {
 
     app.get('/image', testActions.getImage);
 
-    app.get('/getTest', testActions.getTest);
-    //chama a nova rota para testes random. Forma da QueryString /getRandomTest?
-    app.get('/getRandomTest', testActions.getRandomTest);
+    // app.get('/getTest', testActions.getTest);
 
+    app.get('/tests/:id?', testActions.getTest);
+
+    app.get('/testsSince', testActions.testsSince);
+
+    //chama a nova rota para testes random. Forma da QueryString /getRandomTest?
+    app.get('/tests/random', testActions.getRandomTest);
 
     console.log("Successfully mapped GET routes.");
 }

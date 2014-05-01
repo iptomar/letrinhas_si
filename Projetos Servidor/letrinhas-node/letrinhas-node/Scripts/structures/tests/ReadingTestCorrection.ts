@@ -3,7 +3,7 @@
 class ReadingTestCorrection extends TestCorrection {
     soundFileUrl: string;
     professorObservations: string;
-    classification: string;
+    // classification: string;
 
     wordsPerMinute: number;
     correctWordCount: number;
@@ -13,6 +13,6 @@ class ReadingTestCorrection extends TestCorrection {
     expressiveness: number;
     rhythm: number;
 
-    incorrectWordCount: number;
+    details: string;
 }
 export = ReadingTestCorrection;

@@ -1,10 +1,11 @@
 ﻿var pool = require('../../configs/mysql');
-var app = require('../../app');
 
 var path = require('path');
 var fs = require('fs');
 var Q = require('q');
 var mkdirp = require('mkdirp');
+
+var TestType = require('../structures/tests/TestType');
 
 // TODO: Implement this.
 function sendBinaryDataToDb(binaryData, onDone) {
@@ -15,77 +16,72 @@ function sendBinaryDataToDb(binaryData, onDone) {
 }
 exports.sendBinaryDataToDb = sendBinaryDataToDb;
 
-function saveTestsToDb(request /*, onDone: (err: Error) => void*/ ) {
-    var deferred = Q.defer();
+function saveTestCorrection(c, uploadedFilePath, uploadedFileName) {
+    if (c === null) {
+        return Q.reject(new Error('correction cannot be null.'));
+    }
 
-    // TODO: Split into two, or figure out the type of resolution for each item.
-    //var list: any[] = jsonData.solvedTests;
-    //var insertData = [];
-    //for (var i = 0; i < list.length; i++) {
-    //    insertData.push(
-    //        [/*list[0].id, */list[i].testId, list[i].completionDate, list[i].studentName, new Buffer(list[i].voiceBase64, 'base64')]
-    //    );
-    //}
-    //console.log(insertData);
-    //var sql = 'INSERT INTO Resolucoes (testId, completionDate, studentName, voiceData) VALUES ?';
-    //var query = pool.query(sql, [insertData], (err, result) => {
-    //    onDone(err);
-    //});
-    var test = {
-        testId: request.body['testId'],
-        studentId: request.body['studentId'],
-        executionDate: request.body['executionDate']
-    };
+    switch (c.type) {
+        case 0 /* read */:
+            var filePath = path.join('appContent/tests/test-' + c.testId), fileName = path.join(filePath, uploadedFileName);
 
-    switch (request.body['type']) {
-        case 'read':
-            test.professorObservations = request.body['observations'];
-            test.wordsPerMinute = request.body['wpm'];
-            test.correctWordCount = request.body['correct'];
-            test.incorrectWordCount = request.body['incorrect'];
-            test.readingPrecision = request.body['precision'];
-            test.expressiveness = request.body['expressiveness'];
-            test.rhythm = request.body['rhythm'];
-            test.readingSpeed = request.body['speed'];
+            var args = [
+                c.testId,
+                c.studentId,
+                c.executionDate,
+                pool.escape(fileName.replace(/\\/g, '/')),
+                pool.escape(c.professorObservations),
+                c.wordsPerMinute,
+                c.correctWordCount,
+                c.readingPrecision,
+                c.readingSpeed,
+                c.expressiveness,
+                c.rhythm,
+                pool.escape(c.details)
+            ];
 
-            // TODO: Input sanitization.
-            var filePath = path.join('appContent/tests/test-' + test.testId);
+            var sql = "CALL insertReadingTestCorrection(" + args.toString() + ")";
 
-            mkdirp(filePath, { mode: '777' }, function (err, made) {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    console.log('Successfully created dir.');
+            console.log(sql);
 
-                    var fileInStream = fs.createReadStream(request.files['audio'].path, { bufferSize: 4096 });
-                    var fileOutStream = fs.createWriteStream(path.join(app.rootDir, filePath, request.files['audio'].originalname), { mode: '0666' });
-
-                    fileOutStream.on('close', function () {
-                        //mysqlAsync.insertQuery('', [])
-                        //    .then(() => {
-                        //    })
-                        //    .then(() => mysqlAsync.insertQuery('', []))
-                        //    .then(() => deferred.resolve(null));
-                        deferred.resolve(null);
-                    });
-                    fileOutStream.on('error', function (err) {
-                        return deferred.reject(err);
-                    });
-
-                    fileInStream.pipe(fileOutStream, { end: true });
-                }
+            return Q.nfcall(mkdirp, filePath, { mode: parseInt('777', 8) }).then(function (made) {
+                return _saveFile(uploadedFilePath, fileName);
+            }).then(function (_) {
+                return Q.ninvoke(pool, "query", sql);
             });
 
-            break;
-        case 'multimedia':
-            test.optionChosen = request.body['option'];
-            break;
+        case 1 /* multimedia */:
+            var args = [
+                c.testId,
+                c.studentId,
+                c.executionDate,
+                c.optionChosen,
+                c.isCorrect
+            ];
+
+            return Q.ninvoke(pool, "query", "CALL insertReadingTestCorrection(" + args.toString() + ")");
+
         default:
-            // Invalid!
-            deferred.reject(new Error('Invalid test type.'));
-            break;
+            return Q.reject('Unknown value for correction.type.');
     }
+}
+exports.saveTestCorrection = saveTestCorrection;
+
+function _saveFile(fileName, filePath) {
+    var deferred = Q.defer();
+
+    var fileInStream = fs.createReadStream(fileName, { bufferSize: 4096 });
+    var fileOutStream = fs.createWriteStream(filePath, { mode: parseInt('666', 8) });
+
+    fileOutStream.on('close', function () {
+        return deferred.resolve(null);
+    });
+    fileOutStream.on('error', function (err) {
+        return deferred.reject(err);
+    });
+
+    fileInStream.pipe(fileOutStream, { end: true });
+
     return deferred.promise;
 }
-exports.saveTestsToDb = saveTestsToDb;
 //# sourceMappingURL=appPostServices.js.map

@@ -11,6 +11,7 @@ import TestSummary = require('../structures/tests/TestSummary');
 import Test = require('../structures/tests/Test');
 import ReadingTest = require('../structures/tests/ReadingTest');
 import MultimediaTest = require('../structures/tests/MultimediaTest');
+import TestType = require('../structures/tests/TestType');
 
 
 export function getBinaryData(onResult: (err: Error, result: NodeBuffer) => void) {
@@ -28,82 +29,63 @@ export function getBinaryData(onResult: (err: Error, result: NodeBuffer) => void
 /**
  * Returns a list of tests which were created after a set date.
  */
-export function getTestsNewerThan(date: string): Q.Promise<Array<Test>> {
-
-    var deferred = Q.defer<Array<Test>>();
-
-    var tests = new Array<Test>();
-
-    // Get the reading tests...
-    mysqlAsync.selectQuery('SELECT * FROM ReadingTests WHERE creationDate > ' + date)
-        .then((readingTests) => {
-            var tests: Array<Test> = readingTests.rows;
-            var i;
-
-            for (i = 0; i < tests.length; i++) {
-                // Populate the reading tests...
-            }
-        })
-    // Get the multimedia tests...
-        .then(() => mysqlAsync.selectQuery('SELECT * FROM Tests WHERE creationDate > ' + date + '  JOIN ....'))
-        .then((multimediaTests) => {
-            // Populate the multimedia tests...
-        })
-    // All went well.
-        .then(() => deferred.resolve(tests))
-    // Something went wrong.
-        .fail((err) => {
-            deferred.reject(err);
+export function getTestsNewerThan(timestamp: number): Q.Promise<Array<Test>> {
+    return Q.ninvoke(pool, "query", "SELECT id, professorId, title, mainText, unix_timestamp(creationDate) as creationDate, grade, type, areaId FROM Tests WHERE creationDate > from_unixtime(?)", timestamp)
+        .then((result) => {
+            return <Array<Test>> result[0];
         });
-
-    return deferred.promise;
 }
 
-export function getTestById(idList: number[], onResult: (err: Error, result: Array<any>) => void) {
-    var sql = 'SELECT * FROM Testes WHERE id IN (' + idList.toString() + ')';
+export function getTestById(id: number): Q.Promise<Test> {
+    // Make use of stored procedures to clean up our code.
+    // The reason is because we need to determine the test type.
+    // It's much simpler to just use a stored procedure which
+    // handles all the logic for us in there.
+    var options = {
+        sql: 'CALL getTestById(?)',
+        nestTables: false
+    };
 
-    mysqlAsync.selectQuery(sql)
+    return Q.ninvoke(pool, "query", options, id)
         .then((result) => {
-            var rows = result.rows;
-
-            var data = [];
-
-            for (var i = 0; i < rows.length; i++) {
-                data.push({
-                    id: rows[i].id,
-                    title: rows[i].title,
-                    textContent: rows[i].textContent,
-                    professorName: rows[i].professorName,
-                    maxTries: rows[i].maxTries,
-                });
-            }
-
-            onResult(null, data);
+            return result[0][0].length === 0 ? null : result[0][0];
         })
-        .catch((err) => {
-            onResult(err, null);
-        });
+}
 
-    //pool.query(sql, (err, rows, fields) => {
-    //    if (err) {
-    //        onResult(err, null);
-    //    } else {
+export function getTests(options: { type: number; areaId?: number; grade?: number; professorId?: number; creationDate?: number }): Q.Promise<Array<Test>> {
 
-    //        var result = [];
+    if (typeof options.type === 'undefined') {
+        return Q.reject(new Error('No parameteres supplied!'));
+    }
 
-    //        for (var i = 0; i < rows.length; i++) {
-    //            result.push({
-    //                id: rows[i].id,
-    //                title: rows[i].title,
-    //                textContent: rows[i].textContent,
-    //                professorName: rows[i].professorName,
-    //                maxTries: rows[i].maxTries,
-    //            });
-    //        }
+    var parameters = [];
+    if (options.areaId !== undefined) { parameters.push({ name: 'areaId', value: options.areaId }); }
+    if (options.grade !== undefined) { parameters.push({ name: 'grade', value: options.grade }); }
+    if (options.professorId !== undefined) { parameters.push({ name: 'professorId', value: options.professorId }); }
 
-    //        onResult(null, result);
-    //    }
-    //});
+    // Build the sql query.
+    var where = 'WHERE t.type = ' + options.type;
+
+    for (var i = 0; i < parameters.length; i += 1) {
+        where += ' AND t.' + parameters[i].name + ' = ' + parameters[i].value;
+    }
+
+
+
+    if (options.creationDate) {
+        where += ' AND t.creationDate > from_unixtime(' + options.creationDate + ')';
+    }
+
+    switch (options.type) {
+        case TestType.read:
+            return Q.ninvoke(pool, "query", 'select t.id, t.type, t.professorId, t.title, t.mainText, unix_timestamp(t.creationDate) as creationDate, t.grade, t.areaId, rt.professorAudioUrl, rt.textContent from Tests as t join ReadingTests as rt on rt.id = t.id ' + where)
+                .then<Array<Test>>((result) => result[0]);
+        case TestType.multimedia:
+            return Q.ninvoke(pool, 'query', 'SELECT t.id, t.type, t.professorId, t.title, t.mainText, UNIX_TIMESTAMP(t.creationDate) AS creationDate, t.grade, t.areaId, mt.option1, mt.option1IsUrl, mt.option2, mt.option2IsUrl, mt.option3, mt.option3IsUrl, mt.correctOption FROM Tests AS t JOIN MultimediaTests AS mt ON mt.id = t.id ' + where)
+                .then<Array<Test>>((result) => result[0]);
+        default:
+            return Q.reject('Invalid test type');
+    }
 }
 
 /**
@@ -117,12 +99,12 @@ export function getTestListSummaryFromDb(max: number, onResult: (err: Error, sum
         } else {
             var testList: TestSummary[] = [];
 
-            for (var i = 0; i < rows.length; i++) {
-                testList.push(<TestSummary>{
-                    id: rows[i].id,
-                    title: rows[i].title
-                });
-            }
+            //for (var i = 0; i < rows.length; i++) {
+            //    testList.push(<TestSummary>{
+            //        id: rows[i].id,
+            //        title: rows[i].title
+            //    });
+            //}
 
             onResult(null, testList);
         }
@@ -132,7 +114,7 @@ export function getTestListSummaryFromDb(max: number, onResult: (err: Error, sum
 
 export function getAllRandomTests(num: number, year: number, area: String, onResult: (err: Error, result: Array<any>) => void) {
     //realiza a query
-    mysql.pool.query("SELECT * from tbl_EscolhaMultipla where area ='" + area + "' and ano='" + year + "';", (err, rows, fields) => {
+    pool.query("SELECT * from tbl_EscolhaMultipla where area ='" + area + "' and ano='" + year + "';", (err, rows, fields) => {
         if (err) {
             onResult(err, null);
         } else {
@@ -154,7 +136,7 @@ export function getAllRandomTests(num: number, year: number, area: String, onRes
                 }
             }
             else {
-                var aux = 0; 
+                var aux = 0;
                 //vamos criar um teste de num perguntas random. Basicamente estou a ver quantos registos o select devolveu
                 //Depois gero um numero random entre 1 e o numero de linhas
                 //e devolve a pergunta que tiver o id que o random gerou (não sei se é a melhor forma...mas funciona)
@@ -176,11 +158,11 @@ export function getAllRandomTests(num: number, year: number, area: String, onRes
                         });
                     }
                     else {
-                        i = i - 1;   
+                        i = i - 1;
                     }
-                }    
+                }
             }
-            
+
             onResult(null, result);
         }
     });

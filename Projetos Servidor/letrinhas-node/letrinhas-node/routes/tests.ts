@@ -10,6 +10,11 @@ import path = require('path');
 import appPostServices = require('../Scripts/services/appPostServices');
 import appGetServices = require('../Scripts/services/appGetServices');
 
+import TestType = require('../Scripts/structures/tests/TestType');
+import TestCorrection = require('../Scripts/structures/tests/TestCorrection');
+import ReadingTestCorrection = require('../Scripts/structures/tests/ReadingTestCorrection');
+import MultimediaTestCorrection = require('../Scripts/structures/tests/MultimediaTestCorrection');
+
 
 
 export function listSummary(request: express.Request, response: express.Response): void {
@@ -93,35 +98,39 @@ export function teste(request: express.Request, response: express.Response) {
 }
 
 export function getTest(request: express.Request, response: express.Response) {
+    var type: number;
 
-    if (request.query.hasOwnProperty('id')) {
-        var idListAsString: string[] = request.query['id'].split(',');
-        var idList = [];
-
-        for (var i = 0; i < idListAsString.length; i++) {
-            var id = parseInt(idListAsString[i]);
-
-            if (!isNaN(id)) {
-                idList.push(id);
-            }
-        }
-
-        if (idList.length == 0) {
-            response.statusCode = 400;
-            response.end('No valid id supplied.');
-        } else {
-            appGetServices.getTestById(idList, (err, testList) => {
-                response.json({
-                    tests: testList,
-                    success: 1
-                });
+    if (request.params.id && !isNaN(parseInt(request.params.id, 10))) {
+        // Get one, using its Id.
+        appGetServices.getTestById(request.params.id)
+            .then((test) => response.status(test === null ? 404 : 200).json(test))
+            .catch((err) => {
+                console.log(err.stack);
+                response.status(500).json(null);
             });
-        }
-    } else if (request.query.hasOwnProperty('lastSyncDate')) {
 
+    } else if (!isNaN(type = parseInt(request.query.type))) {
+        // Get all of a specific type. The type is needed,
+        // but area and grade are optional.
+        var areaId = parseInt(request.query.areaId, 10),
+            grade = parseInt(request.query.grade, 10),
+            professorId = parseInt(request.query.professorId, 10),
+            creationDate = parseInt(request.query.since, 10);
+
+        appGetServices.getTests({
+            type: type,
+            areaId: isNaN(areaId) ? undefined : areaId,
+            grade: isNaN(grade) ? undefined : grade,
+            professorId: isNaN(professorId) ? undefined : professorId,
+            creationDate: isNaN(creationDate) ? undefined : creationDate
+        })
+            .then((tests) => response.json(tests))
+            .catch((err) => {
+                console.log(err);
+                response.status(500).json(null);
+            });
     } else {
-        response.statusCode = 400;
-        response.end("No id supplied.");
+        response.status(400).json({});
     }
 }
 
@@ -130,7 +139,7 @@ export function getRandomTest(request: express.Request, response: express.Respon
     //em querystring vem o numero de perguntas que se pretende, o ano e a area
     var num: number = request.query['num'];
     var year: number = request.query['ano'];
-    var area: String = request.query['area']; 
+    var area: string = request.query['area'];
 
     if (isNaN(num) || isNaN(year)) {
         response.end("Number or Year invalid.");
@@ -146,20 +155,28 @@ export function getRandomTest(request: express.Request, response: express.Respon
         });
     }
 
-   
+
+}
+
+export function testsSince(request: express.Request, response: express.Response) {
+    var time: number;
+
+    if (request.query.hasOwnProperty('since') && !isNaN(time = parseInt(request.query.since, 10))) {
+        appGetServices.getTestsNewerThan(time)
+            .then((tests) => {
+                response.json(tests);
+            });
+    } else {
+        response.status(400).type('json').end('null');
+    }
 }
 
 
 export function postTestResults(request: express.Request, response: express.Response) {
-    // console.log(request.body);
-
-    // TODO: Figure out a structure for the POST. It could be done 1 by 1,
-    // or multiple at a time.
-
     // Fields:
-    // * execution-date: The date on which the test was done. String, formatted as dd-mm-yyyy (hh:mm ???)
-    // * test-id: The ID of the test. Integer, higher than 0.
-    // * student-id: The ID of the student. Integer, higher than 0.
+    // * executionDate: The unix timestamp on which the test was done.
+    // * testId: The ID of the test. Integer, higher than 0.
+    // * studentId: The ID of the student. Integer, higher than 0.
     // * type: String Enum, values: read, multimedia (? Could get the type from the DB)
 
     // * (If type is multimedia) 
@@ -176,12 +193,45 @@ export function postTestResults(request: express.Request, response: express.Resp
     //   * incorrect: Incorrect word count. Integer.
     //   * audio: The audio for the recording. File.
 
+    var type = parseInt(request.body.type, 10);
 
-    appPostServices.saveTestsToDb(request)
-        .then(() => response.json({ success: 1 }))
-        .catch((err) => {
-            response.statusCode = 500;
-            response.json({ success: 0, reason: err.toString() })
-        });
+    if (!isNaN(type)) {
+        switch (type) {
+            case TestType.read:
+                var body = request.body;
+
+                var correction = <ReadingTestCorrection> {
+                    testId: parseInt(body.testId, 10),
+                    studentId: parseInt(body.studentId, 10),
+                    executionDate: parseInt(body.executionDate, 10),
+                    type: TestType.read,
+
+                    correctWordCount: parseInt(body.correct, 10),
+                    readingPrecision: parseFloat(body.precision),
+                    expressiveness: parseFloat(body.expressiveness),
+                    rhythm: parseFloat(body.rhythm),
+                    readingSpeed: parseFloat(body.speed),
+                    wordsPerMinute: parseFloat(body.wpm),
+
+                    professorObservations: body.observations,
+                    details: body.details
+                };
+
+                appPostServices.saveTestCorrection(correction, request.files.audio.path, request.files.audio.originalname)
+                    .then((_) => response.json(null))
+                    .catch((err) => {
+                        console.error(err);
+                        response.status(500).json(null);
+                    });
+
+                break;
+            case TestType.multimedia:
+                response.status(500).end('NYI');
+                break;
+            default:
+                response.status(400).json(null);
+        }
+    } else {
+        response.status(400).json(null);
+    }
 }
-

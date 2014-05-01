@@ -1,9 +1,13 @@
 ﻿
 class Test {
     id: number;
+    areaId: number;
+    professorId: number;
     title: string;
     mainText: string;
-    creationDate: string;
-    year: number;
+    creationDate: number;
+    grade: number;
+    type: number;
+
 }
 export = Test;

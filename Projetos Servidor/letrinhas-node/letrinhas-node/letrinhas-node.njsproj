@@ -55,6 +55,8 @@
     <TypeScriptCompile Include="Scripts\structures\tests\Test.ts" />
     <TypeScriptCompile Include="Scripts\structures\tests\TestCorrection.ts" />
     <TypeScriptCompile Include="Scripts\structures\tests\TestSummary.ts" />
+    <TypeScriptCompile Include="Scripts\structures\tests\TestType.ts" />
+    <TypeScriptCompile Include="Scripts\typings\async\async.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\express\express.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\mkdirp\mkdirp.d.ts" />
@@ -82,6 +84,7 @@
     <Folder Include="configs\" />
     <Folder Include="Scripts\typings\jquery\" />
     <Folder Include="Scripts\typings\mkdirp\" />
+    <Folder Include="Scripts\typings\async\" />
     <Folder Include="Scripts\typings\q\" />
     <Folder Include="Scripts\utils\" />
     <Folder Include="Scripts\structures\" />

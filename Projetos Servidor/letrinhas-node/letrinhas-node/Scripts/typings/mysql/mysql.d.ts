@@ -11,6 +11,15 @@
 
         connect(onConnect: (err: Error) => void): void;
 
+        beginTransation(onStart: (err: Error) => void): void;
+
+        commit(onCommit: (err: Error) => void): void;
+
+        rollback(onRollback: (err: Error) => void): void;
+
+
+
+
         /**
          * Ends this connection and returns it to its pool.
          */

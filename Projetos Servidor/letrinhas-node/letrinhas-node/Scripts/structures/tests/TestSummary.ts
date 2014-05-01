@@ -1,7 +1,8 @@
-﻿class TestSummary {
-    id: number;
-    title: string;
-    text: string;
-    maxTries: number;
+﻿import Test = require('Test');
+
+/// <reference path="Test.ts" />
+class TestSummary {
+    type: number;
+    test: Test;
 }
 export = TestSummary;

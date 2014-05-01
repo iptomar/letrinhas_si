@@ -3,6 +3,8 @@
 var appPostServices = require('../Scripts/services/appPostServices');
 var appGetServices = require('../Scripts/services/appGetServices');
 
+var TestType = require('../Scripts/structures/tests/TestType');
+
 function listSummary(request, response) {
     var max = parseInt(request.param('max'));
 
@@ -80,33 +82,35 @@ function teste(request, response) {
 exports.teste = teste;
 
 function getTest(request, response) {
-    if (request.query.hasOwnProperty('id')) {
-        var idListAsString = request.query['id'].split(',');
-        var idList = [];
+    var type;
 
-        for (var i = 0; i < idListAsString.length; i++) {
-            var id = parseInt(idListAsString[i]);
+    if (request.params.id && !isNaN(parseInt(request.params.id, 10))) {
+        // Get one, using its Id.
+        appGetServices.getTestById(request.params.id).then(function (test) {
+            return response.status(test === null ? 404 : 200).json(test);
+        }).catch(function (err) {
+            console.log(err.stack);
+            response.status(500).json(null);
+        });
+    } else if (!isNaN(type = parseInt(request.query.type))) {
+        // Get all of a specific type. The type is needed,
+        // but area and grade are optional.
+        var areaId = parseInt(request.query.areaId, 10), grade = parseInt(request.query.grade, 10), professorId = parseInt(request.query.professorId, 10), creationDate = parseInt(request.query.since, 10);
 
-            if (!isNaN(id)) {
-                idList.push(id);
-            }
-        }
-
-        if (idList.length == 0) {
-            response.statusCode = 400;
-            response.end('No valid id supplied.');
-        } else {
-            appGetServices.getTestById(idList, function (err, testList) {
-                response.json({
-                    tests: testList,
-                    success: 1
-                });
-            });
-        }
-    } else if (request.query.hasOwnProperty('lastSyncDate')) {
+        appGetServices.getTests({
+            type: type,
+            areaId: isNaN(areaId) ? undefined : areaId,
+            grade: isNaN(grade) ? undefined : grade,
+            professorId: isNaN(professorId) ? undefined : professorId,
+            creationDate: isNaN(creationDate) ? undefined : creationDate
+        }).then(function (tests) {
+            return response.json(tests);
+        }).catch(function (err) {
+            console.log(err);
+            response.status(500).json(null);
+        });
     } else {
-        response.statusCode = 400;
-        response.end("No id supplied.");
+        response.status(400).json({});
     }
 }
 exports.getTest = getTest;
@@ -133,14 +137,24 @@ function getRandomTest(request, response) {
 }
 exports.getRandomTest = getRandomTest;
 
+function testsSince(request, response) {
+    var time;
+
+    if (request.query.hasOwnProperty('since') && !isNaN(time = parseInt(request.query.since, 10))) {
+        appGetServices.getTestsNewerThan(time).then(function (tests) {
+            response.json(tests);
+        });
+    } else {
+        response.status(400).type('json').end('null');
+    }
+}
+exports.testsSince = testsSince;
+
 function postTestResults(request, response) {
-    // console.log(request.body);
-    // TODO: Figure out a structure for the POST. It could be done 1 by 1,
-    // or multiple at a time.
     // Fields:
-    // * execution-date: The date on which the test was done. String, formatted as dd-mm-yyyy (hh:mm ???)
-    // * test-id: The ID of the test. Integer, higher than 0.
-    // * student-id: The ID of the student. Integer, higher than 0.
+    // * executionDate: The unix timestamp on which the test was done.
+    // * testId: The ID of the test. Integer, higher than 0.
+    // * studentId: The ID of the student. Integer, higher than 0.
     // * type: String Enum, values: read, multimedia (? Could get the type from the DB)
     // * (If type is multimedia)
     //   * option: The option which was chosen.Integer, values = 1, 2, or 3.
@@ -154,25 +168,45 @@ function postTestResults(request, response) {
     //   * rhythm: The student's rhythm. Number.
     //   * incorrect: Incorrect word count. Integer.
     //   * audio: The audio for the recording. File.
-    appPostServices.saveTestsToDb(request).then(function () {
-        return response.json({ success: 1 });
-    }).catch(function (err) {
-        response.statusCode = 500;
-        response.json({ success: 0, reason: err.toString() });
-    });
-    //appPostServices.saveTestsToDb(request, (err) => {
-    //    if (err) {
-    //        response.statusCode = 500;
-    //        console.log(err.message);
-    //        response.json({
-    //            success: 0
-    //        });
-    //    } else {
-    //        response.json({
-    //            success: 1
-    //        });
-    //    }
-    //});
+    var type = parseInt(request.body.type, 10);
+
+    if (!isNaN(type)) {
+        switch (type) {
+            case 0 /* read */:
+                var body = request.body;
+
+                var correction = {
+                    testId: parseInt(body.testId, 10),
+                    studentId: parseInt(body.studentId, 10),
+                    executionDate: parseInt(body.executionDate, 10),
+                    type: 0 /* read */,
+                    correctWordCount: parseInt(body.correct, 10),
+                    readingPrecision: parseFloat(body.precision),
+                    expressiveness: parseFloat(body.expressiveness),
+                    rhythm: parseFloat(body.rhythm),
+                    readingSpeed: parseFloat(body.speed),
+                    wordsPerMinute: parseFloat(body.wpm),
+                    professorObservations: body.observations,
+                    details: body.details
+                };
+
+                appPostServices.saveTestCorrection(correction, request.files.audio.path, request.files.audio.originalname).then(function (_) {
+                    return response.json(null);
+                }).catch(function (err) {
+                    console.error(err);
+                    response.status(500).json(null);
+                });
+
+                break;
+            case 1 /* multimedia */:
+                response.status(500).end('NYI');
+                break;
+            default:
+                response.status(400).json(null);
+        }
+    } else {
+        response.status(400).json(null);
+    }
 }
 exports.postTestResults = postTestResults;
 //# sourceMappingURL=tests.js.map

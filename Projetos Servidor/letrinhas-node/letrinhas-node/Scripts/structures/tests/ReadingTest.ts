@@ -3,6 +3,6 @@
 class ReadingTest extends Test {
     textContent: string;
     professorAudioUrl: string;
-    maxTimeSecs: number;
+    // maxTimeSecs: number;
 }
 export = ReadingTest;

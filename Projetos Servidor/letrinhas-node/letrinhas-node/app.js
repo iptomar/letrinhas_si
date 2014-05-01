@@ -12,7 +12,7 @@ var app = express();
 console.log('Setting the port...');
 
 // Define the port.
-app.set('port', process.env.PORT || 80);
+app.set('port', process.env.PORT || 8080);
 
 console.log('Defining the view engine...');
 

@@ -11,6 +11,10 @@ class MultimediaTest extends Test {
     option2IsUrl: boolean;
 
     option3: string;
+
+    /**
+     * Must be 1, 2, or 3
+     */
     option3IsUrl: boolean;
 
     correctOption: number;
