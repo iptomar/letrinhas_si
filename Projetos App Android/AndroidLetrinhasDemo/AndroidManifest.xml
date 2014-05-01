@@ -64,6 +64,8 @@
             android:name="com.example.letrinhas.MainBD"
             android:label="@string/title_activity_main_bd" >
         </activity>
+        <activity android:name="com.example.letrinhas.AllTestes"/>
+        <activity android:name="com.example.letrinhas.AllTestes"/>
     </application>
 
 

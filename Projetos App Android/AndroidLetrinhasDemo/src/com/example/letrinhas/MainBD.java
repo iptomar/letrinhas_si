@@ -5,21 +5,27 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import com.example.androidhive.R;
 import com.example.letrinhas.ClassesObjs.Escola;
 import com.example.letrinhas.ClassesObjs.Estudante;
 import com.example.letrinhas.ClassesObjs.Professor;
+import com.example.letrinhas.ClassesObjs.Sistema;
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MainBD extends Activity {
 
@@ -41,7 +47,12 @@ public class MainBD extends Activity {
         ip = i.getStringExtra("IP");
         porta = i.getStringExtra("PORTA");
         URlString = "http://" + ip + ":" + porta + "/";
+
         Button btnBD = (Button) findViewById(R.id.btnBdReceber);
+        Button btnSinc = (Button) findViewById(R.id.bntSinc);
+
+
+
         // view products click event
         btnBD.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +60,26 @@ public class MainBD extends Activity {
                 new ReceberDados().execute();
             }
         });
+
+        btnSinc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                Intent i = new Intent(getApplicationContext(), All_Tests.class);
+                //Enviar IP e Porta para outra janela
+                i.putExtra("IP", ip);
+                i.putExtra("PORTA", porta);
+                startActivity(i);
+
+
+            }
+        });
+
+
+
+
+
     }
 
     @Override
@@ -99,7 +130,7 @@ public class MainBD extends Activity {
         db.deleteAllItemsEscola();
         Log.d("DB", "Inserir Dados na base de dados das Escolas ..");
         for (int i = 0; i < escolas.length; i++) {
-            db.AddNewItemEscolas(escolas[i]);
+            db.addNewItemEscolas(escolas[i]);
         }
         db.close();
         Log.d("DB", "Tudo inserido nas Escolas");
@@ -126,7 +157,7 @@ public class MainBD extends Activity {
         db.deleteAllItemsEstudante();
         Log.d("DB", "Inserir Dados na base de dados dos Estudantes ..");
         for (int i = 0; i < estudantes.length; i++) {
-            db.AddNewItemEstudante(estudantes[i]);
+            db.addNewItemEstudante(estudantes[i]);
         }
         db.close();
         Log.d("DB", "Tudo inserido nas Estudantes");
@@ -157,7 +188,7 @@ public class MainBD extends Activity {
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(MainBD.this);
-            pDialog.setMessage("A Carregar Imagem. Por Favor aguarde...");
+            pDialog.setMessage("Por Favor aguarde...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
             pDialog.show();
@@ -296,4 +327,84 @@ public class MainBD extends Activity {
     }
 
 
-}
+    class SincBackground extends AsyncTask<String, String, String> {
+        protected static final String LETRINHAS_APP_TAG = "letrinhas-app";
+
+        /**
+         * Antes de iniciar a Thread Background aparece a progress Dialog
+         */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(MainBD.this);
+            pDialog.setMessage("Por Favor aguarde...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        /**
+         * getting All products from url
+         */
+        protected String doInBackground(String... args) {
+
+
+            test();
+
+            return null;
+        }
+
+        /**
+         * Depois de completar tarefa de background Fechar a Progress Dialog
+         * *
+         */
+        protected void onPostExecute(String file_url) {
+            // fechar a janela de Progress Dialog depois de receber todos os
+            // Tests
+            pDialog.dismiss();
+            // Actualizar a UI a partir da Background Thread
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    /////////nao faz nada ////
+                }
+            });
+
+        }
+    }
+
+    public void test()
+    {
+
+        SimpleDateFormat sdfDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        String newtime =  sdfDateTime.format(new Date(System.currentTimeMillis()));
+
+
+      LetrinhasDB db = new LetrinhasDB(this);
+        Sistema sist = new Sistema(1,
+                "horaConfig",
+                newtime );
+      //  db.AddNewItemSistema(sist);
+
+
+        /////PARA EFEITOS DE DEBUG E LOGO  O CODIGO A FRENTE APENAS MOSTRA O CONTEUDO DA TABELA//////////////
+        List<Sistema> dados = db.getAllSistema();
+        Log.d("BDDADOS: ", "*********Sistema********************");
+        for (Sistema cn : dados) {
+            String logs = "id:" + cn.getId() +
+                    ", nome: " + cn.getNome() +
+                    ", valor: " + cn.getValor();
+
+            // Writing Contacts to log
+            log += "\n" + logs;
+
+       //     Log.d("BDDADOS: ", logs);
+        }
+
+
+              Log.d("BDDADOS: ",  db.getSistemaByname("horaConfig").getValor());
+db.updateSistemaItem(sist);
+
+        Log.d("BDDADOS: ",  "Com Update: "+db.getSistemaByname("horaConfig").getValor());
+    }
+
+    }
