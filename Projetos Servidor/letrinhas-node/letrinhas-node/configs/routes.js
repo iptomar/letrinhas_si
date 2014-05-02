@@ -1,4 +1,4 @@
-﻿/// <reference path="../app.ts" />
+/// <reference path="../app.ts" />
 /// <reference path="../Scripts/typings/express/express.d.ts" />
 var indexActions = require('../routes/index');
 var testActions = require('../routes/tests');
@@ -32,7 +32,7 @@ function mapGetRoutes(app) {
     app.get('/testsSince', testActions.testsSince);
 
     //chama a nova rota para testes random. Forma da QueryString /getRandomTest?
-    app.get('/getRandomTest', testActions.getRandomTest);
+    app.get('/tests/random', testActions.getRandomTest);
 
     console.log("Successfully mapped GET routes.");
 }

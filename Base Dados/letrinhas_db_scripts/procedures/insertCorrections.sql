@@ -32,7 +32,7 @@ end $$
 
 delimiter ;
 
-call insertReadingTestCorrection(1, 1, 1234, '', '', 1.0, 1, 1.0, 1.0, 1.0, 1.0, '');
+-- call insertReadingTestCorrection(1, 1, 1234, '', '', 1.0, 1, 1.0, 1.0, 1.0, 1.0, '');
 
 delimiter $$
 
@@ -63,5 +63,5 @@ end $$
 
 delimiter ;
 
-call insertMultimediaTestCorrection(1, 1, 1234, 1, 0);
+-- call insertMultimediaTestCorrection(1, 1, 1234, 1, 0);
 
