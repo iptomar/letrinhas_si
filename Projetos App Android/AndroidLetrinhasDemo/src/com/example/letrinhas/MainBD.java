@@ -47,39 +47,27 @@ public class MainBD extends Activity {
         ip = i.getStringExtra("IP");
         porta = i.getStringExtra("PORTA");
         URlString = "http://" + ip + ":" + porta + "/";
-
+          //// DECLARACAO DOS BOTOES EXISTENTES NO FORM
         Button btnBD = (Button) findViewById(R.id.btnBdReceber);
         Button btnSinc = (Button) findViewById(R.id.bntSinc);
-
-
-
-        // view products click event
+        // botao 1
         btnBD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new ReceberDados().execute();
             }
         });
-
+        ////outro botao
         btnSinc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 Intent i = new Intent(getApplicationContext(), All_Tests.class);
                 //Enviar IP e Porta para outra janela
                 i.putExtra("IP", ip);
                 i.putExtra("PORTA", porta);
                 startActivity(i);
-
-
             }
         });
-
-
-
-
-
     }
 
     @Override
@@ -118,7 +106,6 @@ public class MainBD extends Activity {
             // Writing Contacts to log
             Log.d("BDDADOS: ", logs);
         }
-
     }
 
     /**
@@ -174,7 +161,6 @@ public class MainBD extends Activity {
             // Writing Contacts to log
             log += "\n" + logs;
             Log.d("BDDADOS: ", logs);
-
         }
     }
 
@@ -207,7 +193,6 @@ public class MainBD extends Activity {
         /**
          *  Vai por HTTP buscar toda a informacao sobre os Professor e no final
          *  chama  o metodo para guardar na base dados
-         *
          */
         protected void lerSynProfessores() {
 
@@ -243,15 +228,12 @@ public class MainBD extends Activity {
         /**
          *  Vai por HTTP buscar toda a informacao sobre os escolas e no final
          *  chama  o metodo para guardar na base de dados
-         *
          */
         protected void lerSynEscolas() {
             String url = URlString + "schools/";
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             JSONObject json = jParser.Get(url, params);
-
             try {
-
                 JSONArray escola = json.getJSONArray("schools");
                 Escola[] arrEscolas = new Escola[escola.length()];
 
@@ -270,25 +252,20 @@ public class MainBD extends Activity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
-
 
         /**
          *  Vai por HTTP buscar toda a informacao sobre os estudantes e no final
          *  chama  o metodo para guardar na base de dados
-         *
          */
         protected void lerSynEstudante() {
             String url = URlString + "students/";
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             JSONObject json = jParser.Get(url, params);
-
             try {
 
                 JSONArray estudante = json.getJSONArray("students");
                 Estudante[] arrEstudantes = new Estudante[estudante.length()];
-
                 // For (loop)looping
                 for (int i = 0; i < estudante.length(); i++) {
                     JSONObject c = estudante.getJSONObject(i);
@@ -305,7 +282,6 @@ public class MainBD extends Activity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
 
         /**
@@ -325,86 +301,4 @@ public class MainBD extends Activity {
 
         }
     }
-
-
-    class SincBackground extends AsyncTask<String, String, String> {
-        protected static final String LETRINHAS_APP_TAG = "letrinhas-app";
-
-        /**
-         * Antes de iniciar a Thread Background aparece a progress Dialog
-         */
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(MainBD.this);
-            pDialog.setMessage("Por Favor aguarde...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        /**
-         * getting All products from url
-         */
-        protected String doInBackground(String... args) {
-
-
-            test();
-
-            return null;
-        }
-
-        /**
-         * Depois de completar tarefa de background Fechar a Progress Dialog
-         * *
-         */
-        protected void onPostExecute(String file_url) {
-            // fechar a janela de Progress Dialog depois de receber todos os
-            // Tests
-            pDialog.dismiss();
-            // Actualizar a UI a partir da Background Thread
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    /////////nao faz nada ////
-                }
-            });
-
-        }
-    }
-
-    public void test()
-    {
-
-        SimpleDateFormat sdfDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-        String newtime =  sdfDateTime.format(new Date(System.currentTimeMillis()));
-
-
-      LetrinhasDB db = new LetrinhasDB(this);
-        Sistema sist = new Sistema(1,
-                "horaConfig",
-                newtime );
-      //  db.AddNewItemSistema(sist);
-
-
-        /////PARA EFEITOS DE DEBUG E LOGO  O CODIGO A FRENTE APENAS MOSTRA O CONTEUDO DA TABELA//////////////
-        List<Sistema> dados = db.getAllSistema();
-        Log.d("BDDADOS: ", "*********Sistema********************");
-        for (Sistema cn : dados) {
-            String logs = "id:" + cn.getId() +
-                    ", nome: " + cn.getNome() +
-                    ", valor: " + cn.getValor();
-
-            // Writing Contacts to log
-            log += "\n" + logs;
-
-       //     Log.d("BDDADOS: ", logs);
-        }
-
-
-              Log.d("BDDADOS: ",  db.getSistemaByname("horaConfig").getValor());
-db.updateSistemaItem(sist);
-
-        Log.d("BDDADOS: ",  "Com Update: "+db.getSistemaByname("horaConfig").getValor());
-    }
-
     }

@@ -78,12 +78,13 @@ public class NetworkUtils {
         if (correcaoTeste instanceof CorrecaoTesteLeitura) {
             CorrecaoTesteLeitura teste = (CorrecaoTesteLeitura) correcaoTeste;
 
-            builder.addTextBody("type", "read");
+            builder.addTextBody("type", "0");
             builder.addTextBody("observations", teste.getObservacoes());
             builder.addTextBody("wpm", teste.getNumPalavrasMin()+"");
             builder.addTextBody("correct", teste.getNumPalavCorretas()+"");
-            builder.addTextBody("incorrect", teste.getNumPalavIncorretas()+"");
+        //    builder.addTextBody("incorrect", teste.getNumPalavIncorretas()+"");
             builder.addTextBody("precision", teste.getPrecisao()+"");
+            builder.addTextBody("details", "");
             builder.addTextBody("expressiveness", teste.getExpressividade()+"");
             builder.addTextBody("rhythm", teste.getRitmo()+"");
             builder.addTextBody("speed", teste.getVelocidade()+"");

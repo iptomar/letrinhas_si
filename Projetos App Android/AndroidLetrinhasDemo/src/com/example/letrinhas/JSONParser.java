@@ -30,10 +30,9 @@ public class JSONParser {
 
     /**
      * Faz um HTTP request, envia um Http Get Returna um JSONObject
-     * Recebe:
-     * - String URL do servidor
-     * - Uma lista de Parametros possiveis
-     * *
+     * @param url - String URL do servidor
+     * @param params - Uma lista de Parametros possiveis
+     * @return UM JSONOBJECT
      */
     public JSONObject Get(String url, List<NameValuePair> params) {
         // Faz um HTTP request
@@ -51,7 +50,7 @@ public class JSONParser {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //Come�a a ler a resposta
+        //Começa a ler a resposta
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
             StringBuilder sb = new StringBuilder();
@@ -76,13 +75,11 @@ public class JSONParser {
     }
 
 
-
     /**
-     * Faz um HTTP request, envia um Http Get Returna um JSONObject
-     * Recebe:
-     * - String URL do servidor
-     * - Uma lista de Parametros possiveis
-     * *
+     * Faz um HTTP request, envia um Http Get Returna um JSONArray
+     * @param url - String URL do servidor
+     * @param params - Uma lista de Parametros possiveis
+     * @return UM JSONArray
      */
     public JSONArray getJSONArray(String url, List<NameValuePair> params) {
         JSONArray    jObjs = null;
@@ -102,7 +99,7 @@ public class JSONParser {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //Come�a a ler a resposta
+        //Começa a ler a resposta
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
             StringBuilder sb = new StringBuilder();
@@ -126,13 +123,11 @@ public class JSONParser {
         return jObjs;
     }
 
-
-
-
     /**
      * Faz um HTTP request, onde envia um Json em String para o servidor com a informacao
-     * Recebe como paramentros o URL do servidor e ficheiro de Json em String
-     * *
+     * Recebe como paramentros:
+     * @param url  String URL do servidor
+     * @param json ficheiro de Json que se quer fazer post para o servidor
      */
     public void Post(String url, JSONObject json) {        // Método utf-8
         try {

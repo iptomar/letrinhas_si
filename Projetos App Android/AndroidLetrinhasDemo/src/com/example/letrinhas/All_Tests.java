@@ -27,7 +27,6 @@ public class All_Tests extends Activity {
 
     ////////////////////////////////////////////////////////////////////////////////
     // JSON Nome dos campos
-    private static final String TAG_CABECALHO= "tests";
     private static final String TAG_ID = "id";
     private static final String TAG_AREAID = "areaId";
     private static final String TAG_PROFESSORID = "professorId";
@@ -57,30 +56,32 @@ public class All_Tests extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all__tests);
-        // Obtendo Detalhes dos Testes do intent
-
+        // Obtendo IP E PORTA
         Intent i = getIntent();
         ip = i.getStringExtra("IP");
         porta = i.getStringExtra("PORTA");
 
 
         Button btnSinAllTest = (Button) findViewById(R.id.btnSinAllTest);
-        // view products click event
+        // view Click no botao, vai chamar a thread de loadTests
         btnSinAllTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 EditText  txtano = (EditText) findViewById(R.id.txtAnoTestsSinc);
                 url_all_tests = "http://" + ip + ":" + porta + "/tests?grade="+txtano.getText()+ "&type=0";  //// type 0 - leitura !!  1 - multimedia
-
                 new LoadAllTests().execute();
             }
         });
     }
 
-
+    /**
+     * Faz up http request onde recebe um json com a informacao pedida
+     * e começa a inserir essa informacao nas tabelas sqlLite
+     */
     public void inserirNaBd()
     {
         LetrinhasDB db = new LetrinhasDB(this);
+        ////////////Apagar dados das tabelas //////////////////
         db.deleteAllItemsTests();
         db.deleteAllItemsTestsLeitura();
         Log.d("BDDADOS: ", "*********BUSCAR JSON********************");
@@ -103,13 +104,14 @@ public class All_Tests extends Activity {
                 testeleitura.setDataInsercaoTeste(c.getLong(TAG_CREATING_DATE));
                 testeleitura.setGrauEscolar(c.getInt(TAG_GRADE));
                 testeleitura.setTipos(0);
-                ////////////////////
+                //////////////////// inforamacao relativa aos testes de leitura que vai para outra tabela
                 testeleitura.setConteudoTexto(c.getString(TAG_TEXTCONTENT));
                 testeleitura.setProfessorAudioUrl(c.getString(TAG_PROFAUDIOURL));
+                //////INSERIR NA BASE DE DADOS OS CAMPOS RECEBIDOS
                 db.addNewItemTestesLeitura(testeleitura);
             }
 
-            /////PARA EFEITOS DE DEBUG E LOGO  O CODIGO A FRENTE APENAS MOSTRA O CONTEUDO DA TABELA//////////////
+            /////PARA EFEITOS DE DEBUG E LOGO  O CODIGO A FRENTE APENAS MOSTRA O CONTEUDO DA TABELA TESTES//////////////
             List<Teste> dados = db.getAllTeste();
             Log.d("BDDADOS: ", "*********Testes********************");
             for (Teste cn : dados) {
@@ -119,27 +121,20 @@ public class All_Tests extends Activity {
                         ", getDataInsercaoTeste:    " + cn.getDataInsercaoTeste() +
                         ", getGrauEscolar:    " + cn.getGrauEscolar() +
                         ", getTipo:    " + cn.getTipo();
-
-                // Writing Contacts to log
-
-                Log.d("BDDADOS: ", logs);
+                        Log.d("BDDADOS: ", logs);
             }
 
 
 
-            /////PARA EFEITOS DE DEBUG E LOGO  O CODIGO A FRENTE APENAS MOSTRA O CONTEUDO DA TABELA//////////////
+            /////PARA EFEITOS DE DEBUG E LOGO  O CODIGO A FRENTE APENAS MOSTRA O CONTEUDO DA TABELA TESTELEITURA//////////////
             List<TesteLeitura> dados2 = db.getAllTesteLeitura();
             Log.d("BDDADOS: ", "\n*********testesleitura********************");
             for (TesteLeitura cn : dados2) {
                 String cenas = "getIdTeste:" + cn.getIdTeste() +
                         ", getConteudoTexto: " + cn.getConteudoTexto() +
                         ", getProfessorAudioUrl: " + cn.getProfessorAudioUrl();
-                // Writing Contacts to log
                 Log.d("BDDADOS: ", cenas);
             }
-
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
