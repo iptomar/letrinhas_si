@@ -1,0 +1,32 @@
+﻿extends layout
+
+block content
+    form(id="test", method="POST", action="/postFiles" enctype="multipart/form-data")
+        
+        h1 Adicionar teste de leitura
+        | id do Teste:
+        input(type='text', name = "txtId")
+        br
+        | Titulo:
+        input(type='text', name = "txtTitle")
+        br
+        | Texto:
+        textarea(name="txtaText")
+        br
+        | Data de Inserção:
+        input(type='text', name = "txtInsertionDate")
+        br
+        | Grau Escolar:
+        input(type='text', name = "txtGrade")
+        br
+        | Tipo:
+        input(type="radio", name="type_filter", value="0")
+        | Texto
+        input(type="radio", name="type_filter", value="1")
+        | Poema
+        br
+        button(id="add-file") Adicionar Som
+        fieldset(id="file-input-container")
+
+        input(type="submit")
+        script(type="text/javascript", src="/scripts/formtest.js")

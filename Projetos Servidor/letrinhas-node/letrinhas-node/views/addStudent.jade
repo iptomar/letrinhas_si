@@ -1,0 +1,26 @@
+﻿extends layout
+
+block content
+    form(id="student", method="POST", action="/postFiles" enctype="multipart/form-data")
+    h1 Adicionar aluno
+    | Id do Aluno:
+    input(type='text', name = "txtId")
+    br
+    | Nome do Aluno:
+    input(type='text', name = "txtName")
+    br
+    | Estado:
+    input(type="radio", name="state_filter", value="0")
+    | Inativo
+    input(type="radio", name="state_filter", value="1")
+    | Ativo
+    br
+    | Id da Escola:
+    input(type='text', name = "txtIdEscola")
+    br
+    button(id="add-file") Adicionar Foto
+    fieldset(id="file-input-container")
+
+    input(type="submit")
+    script(type="text/javascript", src="/scripts/formtest.js")
+
