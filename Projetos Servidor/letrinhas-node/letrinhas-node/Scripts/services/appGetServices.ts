@@ -166,5 +166,5 @@ export function getAllRandomTests(num: number, year: number, area: String, onRes
             onResult(null, result);
         }
     });
-
+    
 }
