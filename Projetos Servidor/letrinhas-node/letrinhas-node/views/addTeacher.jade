@@ -1,0 +1,32 @@
+﻿extends layout
+
+block content
+    form(id="test", method="POST", action="/postFiles" enctype="multipart/form-data") 
+    h1 Adicionar Professor
+    | ID do Professor:
+    input(type='text', name = "txtId")
+    br
+    | Nome do Professor:
+    input(type='text', name = "txtName")
+    br
+    | Email:
+    input(type='text', name = "txtMail")
+    br
+    | Telefone:
+    input(type='text', name = "txtTelefone")
+    br
+    | Estado de Atividade:
+    input(type="radio", name="state_filter", value="0")
+    | Inativo
+    input(type="radio", name="state_filter", value="1")
+    | Ativo
+    
+    br
+    | ID Escola:
+    input(type='text', name = "txtEscola")
+    br
+    button(id="add-file") Adicionar foto
+    fieldset(id="file-input-container")
+    input(type="submit")
+    script(type="text/javascript", src="/scripts/formtest.js")
+

@@ -29,9 +29,13 @@ function mapGetRoutes(app: express.Express) {
 
     // app.get('/getTest', testActions.getTest);
 
+    app.all('/CreateTest', testActions.createTest);
+
     app.get('/tests/:id?', testActions.getTest);
 
     app.get('/testsSince', testActions.testsSince);
+
+    
 
     //chama a nova rota para testes random. Forma da QueryString /getRandomTest?
     app.get('/tests/random', testActions.getRandomTest);
@@ -53,6 +57,8 @@ function mapSyncRoutes(app: express.Express) {
     app.get('/students', syncActions.getStudents);
     app.get('/classes', syncActions.getClasses);
     app.get('/professorClasses', syncActions.getProfessorClasses);
+
+    // app.post('/Tests/Create', testActions.createTest);
 
     console.log('Successfully mapped GET and POST routes for sync.');
 }

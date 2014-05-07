@@ -235,3 +235,18 @@ export function postTestResults(request: express.Request, response: express.Resp
         response.status(400).json(null);
     }
 }
+
+export function createTest(req: express.Request, res: express.Response) {
+    console.log('Hmm...');
+    switch (req.method) {
+        case 'GET':
+            return res.render('addReadingTest');
+        case 'POST':
+            console.log(req.body.txtId);
+            console.log(req.body);
+            console.log(req.files);
+
+            // TODO: Meter dados na BD.
+            return res.status(500).end('NYI');
+    }
+}

@@ -27,6 +27,8 @@ function mapGetRoutes(app) {
     app.get('/image', testActions.getImage);
 
     // app.get('/getTest', testActions.getTest);
+    app.all('/CreateTest', testActions.createTest);
+
     app.get('/tests/:id?', testActions.getTest);
 
     app.get('/testsSince', testActions.testsSince);
@@ -52,6 +54,7 @@ function mapSyncRoutes(app) {
     app.get('/classes', syncActions.getClasses);
     app.get('/professorClasses', syncActions.getProfessorClasses);
 
+    // app.post('/Tests/Create', testActions.createTest);
     console.log('Successfully mapped GET and POST routes for sync.');
 }
 

@@ -62,17 +62,20 @@
     <TypeScriptCompile Include="Scripts\typings\mysql\mysql.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
     <TypeScriptCompile Include="configs\routes.ts" />
-    <Content Include="package.json" />
+    <TypeScriptCompile Include="Scripts\typings\mv\mv.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\q\q.d.ts" />
+    <TypeScriptCompile Include="Scripts\utils\promiseBasedMySql.ts" />
     <Content Include="public\scripts\formtest.ts" />
     <Content Include="public\stylesheets\style.css" />
-    <Content Include="README.md" />
-    <TypeScriptCompile Include="Scripts\typings\mv\mv.d.ts" />
+    <Content Include="views\addReadingTest.jade" />
+    <Content Include="views\addStudent.jade" />
+    <Content Include="views\addTeacher.jade" />
     <Content Include="views\formtest.jade" />
     <Content Include="views\index.jade" />
     <Content Include="views\teste.jade" />
     <Content Include="views\layout.jade" />
-    <TypeScriptCompile Include="Scripts\typings\q\q.d.ts" />
-    <TypeScriptCompile Include="Scripts\utils\promiseBasedMySql.ts" />
+    <Content Include="README.md" />
+    <Content Include="package.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="public\" />

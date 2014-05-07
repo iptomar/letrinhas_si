@@ -209,4 +209,20 @@ function postTestResults(request, response) {
     }
 }
 exports.postTestResults = postTestResults;
+
+function createTest(req, res) {
+    console.log('Hmm...');
+    switch (req.method) {
+        case 'GET':
+            return res.render('addReadingTest');
+        case 'POST':
+            console.log(req.body.txtId);
+            console.log(req.body);
+            console.log(req.files);
+
+            // TODO: Meter dados na BD.
+            return res.status(500).end('NYI');
+    }
+}
+exports.createTest = createTest;
 //# sourceMappingURL=tests.js.map
