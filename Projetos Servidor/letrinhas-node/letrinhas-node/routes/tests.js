@@ -221,8 +221,36 @@ function createTest(req, res) {
             console.log(req.files);
 
             // TODO: Meter dados na BD.
+            var title;
+            title = req.body.txtTitle;
+            console.log(title);
+
             return res.status(500).end('NYI');
     }
 }
 exports.createTest = createTest;
+
+function createTeacher(req, res) {
+    switch (req.method) {
+        case 'GET':
+            return res.render('addTeacher');
+        case 'POST':
+            // TODO: Meter dados na BD.
+            var body = req.body;
+            var teacher = {
+                schoolId: parseInt(body.schoolId),
+                name: body.name,
+                username: body.username,
+                password: body.password,
+                emailAddress: body.mail,
+                telephoneNumber: body.phone,
+                isActive: body.state_filter
+            };
+
+            appPostServices.addTeacher(teacher, req.files.photo.path, req.files.photo.originalname);
+
+            return res.status(500).end('NYIMY');
+    }
+}
+exports.createTeacher = createTeacher;
 //# sourceMappingURL=tests.js.map

@@ -2,7 +2,7 @@ var pool = require('../../configs/mysql');
 var app = require('../../app');
 
 var path = require('path');
-var fs = require('fs');
+
 var Q = require('q');
 
 var mv = require('mv');
@@ -66,24 +66,20 @@ function saveTestCorrection(c, uploadedFilePath, uploadedFileName) {
 }
 exports.saveTestCorrection = saveTestCorrection;
 
-/**
-* @{deprecated} Pointless.
-*/
-function _saveFile(fileName, filePath) {
-    var deferred = Q.defer();
+function addTeacher(p, uploadedFilePath, uploadedFileName) {
+    if (p === null) {
+        return Q.reject(new Error('correction cannot be null.'));
+    }
 
-    var fileInStream = fs.createReadStream(fileName, { bufferSize: 4096 });
-    var fileOutStream = fs.createWriteStream(filePath, { mode: parseInt('666', 8) });
+    var filePath = path.join('appContent/professors/professor-' + p.name), fileName = path.join(filePath, uploadedFileName);
 
-    fileOutStream.on('close', function () {
-        return deferred.resolve(null);
+    var sql = "Insert Into Professors(`schoolId`,`name`,`username`,`password`,`emailAddress`,`telephoneNumber`,`isActive`,`photoUrl`) VALUES(" + p.schoolId + ",'" + p.name + "','" + p.username + "','" + p.password + "','" + p.emailAddress + "','" + p.telephoneNumber + "'," + p.isActive + ",'" + filePath + "')";
+
+    console.log(sql);
+
+    return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, fileName), { mkdirp: true }).then(function (_) {
+        return poolQuery(sql);
     });
-    fileOutStream.on('error', function (err) {
-        return deferred.reject(err);
-    });
-
-    fileInStream.pipe(fileOutStream, { end: true });
-
-    return deferred.promise;
 }
+exports.addTeacher = addTeacher;
 //# sourceMappingURL=appPostServices.js.map

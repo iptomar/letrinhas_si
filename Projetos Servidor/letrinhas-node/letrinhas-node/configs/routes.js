@@ -29,6 +29,8 @@ function mapGetRoutes(app) {
     // app.get('/getTest', testActions.getTest);
     app.all('/CreateTest', testActions.createTest);
 
+    app.all('/CreateTeacher', testActions.createTeacher);
+
     app.get('/tests/:id?', testActions.getTest);
 
     app.get('/testsSince', testActions.testsSince);

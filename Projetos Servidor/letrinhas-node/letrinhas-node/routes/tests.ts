@@ -15,6 +15,8 @@ import TestCorrection = require('../Scripts/structures/tests/TestCorrection');
 import ReadingTestCorrection = require('../Scripts/structures/tests/ReadingTestCorrection');
 import MultimediaTestCorrection = require('../Scripts/structures/tests/MultimediaTestCorrection');
 
+import Teacher = require('../Scripts/structures/schools/Professor');
+
 
 
 export function listSummary(request: express.Request, response: express.Response): void {
@@ -247,6 +249,38 @@ export function createTest(req: express.Request, res: express.Response) {
             console.log(req.files);
 
             // TODO: Meter dados na BD.
+
+            var title: string;
+            title = req.body.txtTitle;
+            console.log(title);
+
+
             return res.status(500).end('NYI');
+    }
+}
+
+
+export function createTeacher(req: express.Request, res: express.Response) {
+    switch (req.method) {
+        case 'GET':
+            return res.render('addTeacher');
+        case 'POST':
+            // TODO: Meter dados na BD.
+            var body = req.body;
+            var teacher = <Teacher> {
+                schoolId: parseInt(body.schoolId),
+                name: body.name,
+                username: body.username,
+                password: body.password,
+                emailAddress: body.mail,
+                telephoneNumber: body.phone,
+                isActive: body.state_filter,          
+            };
+
+            appPostServices.addTeacher(teacher, req.files.photo.path, req.files.photo.originalname);
+            
+
+
+            return res.status(500).end('NYIMY');
     }
 }

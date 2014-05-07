@@ -4,5 +4,5 @@
 import express = require('express');
 
 export function index(req: express.Request, res: express.Response) {
-    res.render('formtest', { title: 'Express' });
+    res.render('index', { title: 'Express' });
 };

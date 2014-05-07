@@ -1,5 +1,5 @@
 ﻿function index(req, res) {
-    res.render('formtest', { title: 'Express' });
+    res.render('index', { title: 'Express' });
 }
 exports.index = index;
 ;

@@ -12,6 +12,8 @@ import mv = require('mv');
 import TestSummary = require('../structures/tests/TestSummary');
 import TestType = require('../structures/tests/TestType');
 
+import Professor = require('../structures/schools/Professor');
+
 import TestCorrection = require('../structures/tests/TestCorrection');
 import MultimediaTestCorrection = require('../structures/tests/MultimediaTestCorrection');
 import ReadingTestCorrection = require('../structures/tests/ReadingTestCorrection');
@@ -72,4 +74,22 @@ export function saveTestCorrection(c: TestCorrection, uploadedFilePath?: string,
         default:
             return Q.reject('Unknown value for correction.type.');
     }
+}
+
+export function addTeacher(p: Professor, uploadedFilePath?: string, uploadedFileName?: string): Q.Promise<any>{
+    if (p === null) {
+        return Q.reject(new Error('correction cannot be null.'));
+    }
+    
+    var filePath = path.join('appContent/professors/professor-' + p.name),
+        fileName = path.join(filePath, uploadedFileName);
+
+    var sql = "Insert Into Professors(`schoolId`,`name`,`username`,`password`,`emailAddress`,`telephoneNumber`,`isActive`,`photoUrl`) VALUES("+p.schoolId+",'"+p.name+"','"+p.username+"','"+p.password+"','"+p.emailAddress+"','"+p.telephoneNumber+"',"+p.isActive+",'"+filePath+"')";
+
+    console.log(sql);
+
+
+    return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, fileName), { mkdirp: true })
+        .then((_) => poolQuery(sql));
+
 }
