@@ -1,11 +1,9 @@
 /// <reference path="../typings/node/node.d.ts" />
 
-// import mysql = require('../../configs/mysql');
 import fs = require('fs');
 import Q = require('q');
 
 import pool = require('../../configs/mysql');
-import mysqlAsync = require('../utils/promiseBasedMySql');
 
 import TestSummary = require('../structures/tests/TestSummary');
 import Test = require('../structures/tests/Test');
@@ -13,27 +11,15 @@ import ReadingTest = require('../structures/tests/ReadingTest');
 import MultimediaTest = require('../structures/tests/MultimediaTest');
 import TestType = require('../structures/tests/TestType');
 
-
-export function getBinaryData(onResult: (err: Error, result: NodeBuffer) => void) {
-    //mysql.pool.query('SELECT binarydata FROM BinaryTest where id = 2', (err, rows, fields) => {
-    //    if (err) {
-    //        onResult(err, null);
-    //    } else {
-    //        onResult(null, rows[0].binarydata);
-    //    }
-    //});
-
-    fs.readFile('D:/z4.png', onResult);
-}
+var poolQuery = Q.nbind(pool.query, pool);
 
 /**
  * Returns a list of tests which were created after a set date.
  */
 export function getTestsNewerThan(timestamp: number): Q.Promise<Array<Test>> {
-    return Q.ninvoke(pool, "query", "SELECT id, professorId, title, mainText, unix_timestamp(creationDate) as creationDate, grade, type, areaId FROM Tests WHERE creationDate > from_unixtime(?)", timestamp)
-        .then((result) => {
-            return <Array<Test>> result[0];
-        });
+    // return Q.ninvoke(pool, "query", "SELECT id, professorId, title, mainText, unix_timestamp(creationDate) as creationDate, grade, type, areaId FROM Tests WHERE creationDate > from_unixtime(?)", timestamp)
+    return poolQuery("SELECT id, professorId, title, mainText, unix_timestamp(creationDate) as creationDate, grade, type, areaId FROM Tests WHERE creationDate > from_unixtime(?)", timestamp)
+        .then((result) => <Array<Test>> result[0]);
 }
 
 export function getTestById(id: number): Q.Promise<Test> {
@@ -46,10 +32,9 @@ export function getTestById(id: number): Q.Promise<Test> {
         nestTables: false
     };
 
-    return Q.ninvoke(pool, "query", options, id)
-        .then((result) => {
-            return result[0][0].length === 0 ? null : result[0][0];
-        })
+    // return Q.ninvoke(pool, "query", options, id)
+    return poolQuery(options, id)
+        .then((result) => result[0][0].length === 0 ? null : result[0][0])
 }
 
 export function getTests(options: { type: number; areaId?: number; grade?: number; professorId?: number; creationDate?: number }): Q.Promise<Array<Test>> {
@@ -70,18 +55,18 @@ export function getTests(options: { type: number; areaId?: number; grade?: numbe
         where += ' AND t.' + parameters[i].name + ' = ' + parameters[i].value;
     }
 
-
-
     if (options.creationDate) {
         where += ' AND t.creationDate > from_unixtime(' + options.creationDate + ')';
     }
 
     switch (options.type) {
         case TestType.read:
-            return Q.ninvoke(pool, "query", 'select t.id, t.type, t.professorId, t.title, t.mainText, unix_timestamp(t.creationDate) as creationDate, t.grade, t.areaId, rt.professorAudioUrl, rt.textContent from Tests as t join ReadingTests as rt on rt.id = t.id ' + where)
+            // return Q.ninvoke(pool, "query", 'select t.id, t.type, t.professorId, t.title, t.mainText, unix_timestamp(t.creationDate) as creationDate, t.grade, t.areaId, rt.professorAudioUrl, rt.textContent from Tests as t join ReadingTests as rt on rt.id = t.id ' + where)
+            return poolQuery('select t.id, t.type, t.professorId, t.title, t.mainText, unix_timestamp(t.creationDate) as creationDate, t.grade, t.areaId, rt.professorAudioUrl, rt.textContent from Tests as t join ReadingTests as rt on rt.id = t.id ' + where)
                 .then<Array<Test>>((result) => result[0]);
         case TestType.multimedia:
-            return Q.ninvoke(pool, 'query', 'SELECT t.id, t.type, t.professorId, t.title, t.mainText, UNIX_TIMESTAMP(t.creationDate) AS creationDate, t.grade, t.areaId, mt.option1, mt.option1IsUrl, mt.option2, mt.option2IsUrl, mt.option3, mt.option3IsUrl, mt.correctOption FROM Tests AS t JOIN MultimediaTests AS mt ON mt.id = t.id ' + where)
+            // return Q.ninvoke(pool, 'query', 'SELECT t.id, t.type, t.professorId, t.title, t.mainText, UNIX_TIMESTAMP(t.creationDate) AS creationDate, t.grade, t.areaId, mt.option1, mt.option1IsUrl, mt.option2, mt.option2IsUrl, mt.option3, mt.option3IsUrl, mt.correctOption FROM Tests AS t JOIN MultimediaTests AS mt ON mt.id = t.id ' + where)
+            return poolQuery('SELECT t.id, t.type, t.professorId, t.title, t.mainText, UNIX_TIMESTAMP(t.creationDate) AS creationDate, t.grade, t.areaId, mt.option1, mt.option1IsUrl, mt.option2, mt.option2IsUrl, mt.option3, mt.option3IsUrl, mt.correctOption FROM Tests AS t JOIN MultimediaTests AS mt ON mt.id = t.id ' + where)
                 .then<Array<Test>>((result) => result[0]);
         default:
             return Q.reject('Invalid test type');

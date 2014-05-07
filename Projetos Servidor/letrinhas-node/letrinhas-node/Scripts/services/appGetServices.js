@@ -1,29 +1,18 @@
 /// <reference path="../typings/node/node.d.ts" />
-// import mysql = require('../../configs/mysql');
-var fs = require('fs');
 var Q = require('q');
 
 var pool = require('../../configs/mysql');
 
 var TestType = require('../structures/tests/TestType');
 
-function getBinaryData(onResult) {
-    //mysql.pool.query('SELECT binarydata FROM BinaryTest where id = 2', (err, rows, fields) => {
-    //    if (err) {
-    //        onResult(err, null);
-    //    } else {
-    //        onResult(null, rows[0].binarydata);
-    //    }
-    //});
-    fs.readFile('D:/z4.png', onResult);
-}
-exports.getBinaryData = getBinaryData;
+var poolQuery = Q.nbind(pool.query, pool);
 
 /**
 * Returns a list of tests which were created after a set date.
 */
 function getTestsNewerThan(timestamp) {
-    return Q.ninvoke(pool, "query", "SELECT id, professorId, title, mainText, unix_timestamp(creationDate) as creationDate, grade, type, areaId FROM Tests WHERE creationDate > from_unixtime(?)", timestamp).then(function (result) {
+    // return Q.ninvoke(pool, "query", "SELECT id, professorId, title, mainText, unix_timestamp(creationDate) as creationDate, grade, type, areaId FROM Tests WHERE creationDate > from_unixtime(?)", timestamp)
+    return poolQuery("SELECT id, professorId, title, mainText, unix_timestamp(creationDate) as creationDate, grade, type, areaId FROM Tests WHERE creationDate > from_unixtime(?)", timestamp).then(function (result) {
         return result[0];
     });
 }
@@ -39,7 +28,8 @@ function getTestById(id) {
         nestTables: false
     };
 
-    return Q.ninvoke(pool, "query", options, id).then(function (result) {
+    // return Q.ninvoke(pool, "query", options, id)
+    return poolQuery(options, id).then(function (result) {
         return result[0][0].length === 0 ? null : result[0][0];
     });
 }
@@ -74,11 +64,13 @@ function getTests(options) {
 
     switch (options.type) {
         case 0 /* read */:
-            return Q.ninvoke(pool, "query", 'select t.id, t.type, t.professorId, t.title, t.mainText, unix_timestamp(t.creationDate) as creationDate, t.grade, t.areaId, rt.professorAudioUrl, rt.textContent from Tests as t join ReadingTests as rt on rt.id = t.id ' + where).then(function (result) {
+            // return Q.ninvoke(pool, "query", 'select t.id, t.type, t.professorId, t.title, t.mainText, unix_timestamp(t.creationDate) as creationDate, t.grade, t.areaId, rt.professorAudioUrl, rt.textContent from Tests as t join ReadingTests as rt on rt.id = t.id ' + where)
+            return poolQuery('select t.id, t.type, t.professorId, t.title, t.mainText, unix_timestamp(t.creationDate) as creationDate, t.grade, t.areaId, rt.professorAudioUrl, rt.textContent from Tests as t join ReadingTests as rt on rt.id = t.id ' + where).then(function (result) {
                 return result[0];
             });
         case 1 /* multimedia */:
-            return Q.ninvoke(pool, 'query', 'SELECT t.id, t.type, t.professorId, t.title, t.mainText, UNIX_TIMESTAMP(t.creationDate) AS creationDate, t.grade, t.areaId, mt.option1, mt.option1IsUrl, mt.option2, mt.option2IsUrl, mt.option3, mt.option3IsUrl, mt.correctOption FROM Tests AS t JOIN MultimediaTests AS mt ON mt.id = t.id ' + where).then(function (result) {
+            // return Q.ninvoke(pool, 'query', 'SELECT t.id, t.type, t.professorId, t.title, t.mainText, UNIX_TIMESTAMP(t.creationDate) AS creationDate, t.grade, t.areaId, mt.option1, mt.option1IsUrl, mt.option2, mt.option2IsUrl, mt.option3, mt.option3IsUrl, mt.correctOption FROM Tests AS t JOIN MultimediaTests AS mt ON mt.id = t.id ' + where)
+            return poolQuery('SELECT t.id, t.type, t.professorId, t.title, t.mainText, UNIX_TIMESTAMP(t.creationDate) AS creationDate, t.grade, t.areaId, mt.option1, mt.option1IsUrl, mt.option2, mt.option2IsUrl, mt.option3, mt.option3IsUrl, mt.correctOption FROM Tests AS t JOIN MultimediaTests AS mt ON mt.id = t.id ' + where).then(function (result) {
                 return result[0];
             });
         default:

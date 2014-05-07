@@ -1,4 +1,4 @@
-﻿import pool = require('../../configs/mysql');
+import pool = require('../../configs/mysql');
 import app = require('../../app');
 
 
@@ -6,8 +6,8 @@ import path = require('path');
 import fs = require('fs');
 import Q = require('q');
 import mkdirp = require('mkdirp');
-import async = require('async');
 import mysql = require('mysql');
+import mv = require('mv');
 
 import TestSummary = require('../structures/tests/TestSummary');
 import TestType = require('../structures/tests/TestType');
@@ -16,24 +16,28 @@ import TestCorrection = require('../structures/tests/TestCorrection');
 import MultimediaTestCorrection = require('../structures/tests/MultimediaTestCorrection');
 import ReadingTestCorrection = require('../structures/tests/ReadingTestCorrection');
 
-// TODO: Implement this.
-export function sendBinaryDataToDb(binaryData: NodeBuffer, onDone: (err: Error) => void) {
-    pool.query('INSERT INTO BinaryTest SET binarydata = ?', binaryData, (err, result) => {
-        console.log(result);
-        onDone(err);
-    });
-}
+var poolQuery = Q.nbind(pool.query, pool);
 
-export function saveTestCorrection(c: TestCorrection, uploadedFilePath?: string, uploadedFileName?: string): Q.Promise<void> {
+// TODO: Implement this.
+//export function sendBinaryDataToDb(binaryData: NodeBuffer, onDone: (err: Error) => void) {
+//    pool.query('INSERT INTO BinaryTest SET binarydata = ?', binaryData, (err, result) => {
+//        console.log(result);
+//        onDone(err);
+//    });
+//}
+
+export function saveTestCorrection(c: TestCorrection, uploadedFilePath?: string, uploadedFileName?: string): Q.Promise<any> {
     if (c === null) {
         return Q.reject(new Error('correction cannot be null.'));
     }
 
     switch (c.type) {
         case TestType.read:
-            var filePath = path.join('appContent/tests/test-' + c.testId),
-                fileName = path.join(filePath, uploadedFileName);
 
+            var filePath = path.join('appContent/tests/test-' + c.testId),
+                fileName = path.join(filePath, c.studentId + '-' + c.executionDate + uploadedFileName.substring(uploadedFileName.lastIndexOf('.')));
+
+            // I don't like this.
             var args = [
                 c.testId,
                 c.studentId,
@@ -51,11 +55,8 @@ export function saveTestCorrection(c: TestCorrection, uploadedFilePath?: string,
 
             var sql = "CALL insertReadingTestCorrection(" + args.toString() + ")";
 
-            console.log(sql);
-
-            return Q.nfcall<void>(mkdirp, filePath, { mode: parseInt('777', 8) })
-                .then((made) => _saveFile(uploadedFilePath, fileName))
-                .then((_) => Q.ninvoke<void>(pool, "query", sql));
+            return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, fileName), { mkdirp: true })
+                .then((_) => poolQuery(sql));
 
         case TestType.multimedia:
             var args = [
@@ -66,13 +67,16 @@ export function saveTestCorrection(c: TestCorrection, uploadedFilePath?: string,
                 (<MultimediaTestCorrection> c).isCorrect
             ];
 
-            return Q.ninvoke<void>(pool, "query", "CALL insertReadingTestCorrection(" + args.toString() + ")");
+            return poolQuery("CALL insertReadingTestCorrection(" + args.toString() + ")");
 
         default:
             return Q.reject('Unknown value for correction.type.');
     }
 }
 
+/**
+ * @{deprecated} Pointless.
+ */
 function _saveFile(fileName: string, filePath: string): Q.Promise<void> {
     var deferred = Q.defer<void>();
 

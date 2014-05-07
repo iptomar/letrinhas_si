@@ -1,6 +1,6 @@
 {
   "name": "letrinhas_node",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "description": "letrinhas-node",
   "main": "app.js",
   "author": {
@@ -16,6 +16,6 @@
     "multer": "0.0.5",
     "q": "^1.0.1",
     "mkdirp": "^0.4.0",
-    "async": "^0.8.0"
+    "mv": "^2.0.0"
   }
 }

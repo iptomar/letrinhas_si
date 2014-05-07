@@ -201,6 +201,9 @@ declare module Q {
     export function fbind<T>(method: (...args: any[]) => IPromise<T>, ...args: any[]): (...args: any[]) => Promise<T>;
     export function fbind<T>(method: (...args: any[]) => T, ...args: any[]): (...args: any[]) => Promise<T>;
 
+    export function nbind<T>(method: (...args: any[]) => IPromise<T>, ...args: any[]): (...args: any[]) => Promise<T>;
+    export function nbind<T>(method: (...args: any[]) => T, ...args: any[]): (...args: any[]) => Promise<T>;
+
     export function fcall<T>(method: (...args: any[]) => T, ...args: any[]): Promise<T>;
 
     export function send<T>(obj: any, functionName: string, ...args: any[]): Promise<T>;

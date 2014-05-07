@@ -1,21 +1,23 @@
-﻿var pool = require('../../configs/mysql');
+var pool = require('../../configs/mysql');
+var app = require('../../app');
 
 var path = require('path');
 var fs = require('fs');
 var Q = require('q');
-var mkdirp = require('mkdirp');
+
+var mv = require('mv');
 
 var TestType = require('../structures/tests/TestType');
 
-// TODO: Implement this.
-function sendBinaryDataToDb(binaryData, onDone) {
-    pool.query('INSERT INTO BinaryTest SET binarydata = ?', binaryData, function (err, result) {
-        console.log(result);
-        onDone(err);
-    });
-}
-exports.sendBinaryDataToDb = sendBinaryDataToDb;
+var poolQuery = Q.nbind(pool.query, pool);
 
+// TODO: Implement this.
+//export function sendBinaryDataToDb(binaryData: NodeBuffer, onDone: (err: Error) => void) {
+//    pool.query('INSERT INTO BinaryTest SET binarydata = ?', binaryData, (err, result) => {
+//        console.log(result);
+//        onDone(err);
+//    });
+//}
 function saveTestCorrection(c, uploadedFilePath, uploadedFileName) {
     if (c === null) {
         return Q.reject(new Error('correction cannot be null.'));
@@ -23,8 +25,9 @@ function saveTestCorrection(c, uploadedFilePath, uploadedFileName) {
 
     switch (c.type) {
         case 0 /* read */:
-            var filePath = path.join('appContent/tests/test-' + c.testId), fileName = path.join(filePath, uploadedFileName);
+            var filePath = path.join('appContent/tests/test-' + c.testId), fileName = path.join(filePath, c.studentId + '-' + c.executionDate + uploadedFileName.substring(uploadedFileName.lastIndexOf('.')));
 
+            // I don't like this.
             var args = [
                 c.testId,
                 c.studentId,
@@ -42,12 +45,8 @@ function saveTestCorrection(c, uploadedFilePath, uploadedFileName) {
 
             var sql = "CALL insertReadingTestCorrection(" + args.toString() + ")";
 
-            console.log(sql);
-
-            return Q.nfcall(mkdirp, filePath, { mode: parseInt('777', 8) }).then(function (made) {
-                return _saveFile(uploadedFilePath, fileName);
-            }).then(function (_) {
-                return Q.ninvoke(pool, "query", sql);
+            return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, fileName), { mkdirp: true }).then(function (_) {
+                return poolQuery(sql);
             });
 
         case 1 /* multimedia */:
@@ -59,7 +58,7 @@ function saveTestCorrection(c, uploadedFilePath, uploadedFileName) {
                 c.isCorrect
             ];
 
-            return Q.ninvoke(pool, "query", "CALL insertReadingTestCorrection(" + args.toString() + ")");
+            return poolQuery("CALL insertReadingTestCorrection(" + args.toString() + ")");
 
         default:
             return Q.reject('Unknown value for correction.type.');
@@ -67,6 +66,9 @@ function saveTestCorrection(c, uploadedFilePath, uploadedFileName) {
 }
 exports.saveTestCorrection = saveTestCorrection;
 
+/**
+* @{deprecated} Pointless.
+*/
 function _saveFile(fileName, filePath) {
     var deferred = Q.defer();
 

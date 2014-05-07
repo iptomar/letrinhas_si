@@ -42,7 +42,7 @@ export function listSummary(request: express.Request, response: express.Response
 }
 
 export function getImage(request: express.Request, response: express.Response) {
-    appGetServices.getBinaryData((err, result) => {
+    //appGetServices.getBinaryData((err, result) => {
         //response.type('json');
         //response.end(JSON.stringify({
         //    id: 1,
@@ -51,9 +51,9 @@ export function getImage(request: express.Request, response: express.Response) {
         //    success: 1
         //}));
 
-        response.end(result);
-    });
-    console.log("Hello");
+        response.end('');
+    //});
+    //console.log("Hello");
 }
 
 export function postImage(request: express.Request, response: express.Response) {
