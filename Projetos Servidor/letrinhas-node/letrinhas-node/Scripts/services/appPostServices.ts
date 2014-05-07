@@ -73,20 +73,3 @@ export function saveTestCorrection(c: TestCorrection, uploadedFilePath?: string,
             return Q.reject('Unknown value for correction.type.');
     }
 }
-
-/**
- * @{deprecated} Pointless.
- */
-function _saveFile(fileName: string, filePath: string): Q.Promise<void> {
-    var deferred = Q.defer<void>();
-
-    var fileInStream = fs.createReadStream(fileName, { bufferSize: 4096 });
-    var fileOutStream = fs.createWriteStream(filePath, { mode: parseInt('666', 8) });
-
-    fileOutStream.on('close', () => deferred.resolve(null));
-    fileOutStream.on('error', (err) => deferred.reject(err));
-
-    fileInStream.pipe(fileOutStream, { end: true });
-
-    return deferred.promise;
-}
