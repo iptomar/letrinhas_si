@@ -1,4 +1,4 @@
-var pool = require('../../configs/mysql');
+﻿var pool = require('../../configs/mysql');
 var app = require('../../app');
 
 var path = require('path');
@@ -111,7 +111,15 @@ function addReadingTest(t, uploadedFilePath, uploadedFileName) {
     console.log(filePath);
 
     var args = [
-        t.areaId
+        t.areaId,
+        t.professorId,
+        t.title,
+        t.mainText,
+        t.creationDate,
+        t.grade,
+        t.type,
+        t.textContent,
+        t.professorAudioUrl
     ];
 
     var sql = "CALL insertReadingTest(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -121,21 +129,9 @@ function addReadingTest(t, uploadedFilePath, uploadedFileName) {
     console.log(sql);
 
     //var sql = "Insert Into ReadingTests(`classId`,`name`,`photoUrl`,`isActive`) VALUES(" + t. + ",'" + t.name + "','" + t.isActive + "','" + filePath + "')";
-    //console.log(sql);
     return Q.resolve('');
     // return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, fileName), { mkdirp: true })
     // .then((_) => poolQuery(sql));
 }
 exports.addReadingTest = addReadingTest;
-
-function addClass(c) {
-    if (c === null) {
-        return Q.reject(new Error('correction cannot be null.'));
-    }
-
-    var sql = "Insert Into Classes(`schoolId`,`classLevel`,`className`,`classYear`) VALUES(" + c.schoolId + ",'" + c.classLevel + "','" + c.className + "','" + c.classYear + "')";
-
-    poolQuery(sql);
-}
-exports.addClass = addClass;
 //# sourceMappingURL=appPostServices.js.map
