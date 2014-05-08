@@ -221,11 +221,21 @@ function createTest(req, res) {
             console.log(req.files);
 
             // TODO: Meter dados na BD.
-            var title;
-            title = req.body.txtTitle;
-            console.log(title);
+            var body = req.body;
+            var teste = {
+                title: body.txtTitle,
+                grade: body.grau,
+                creationDate: Date.now(),
+                professorId: body.txtidprofessor,
+                areaId: body.areaid,
+                mainText: body.txtapergunta,
+                textContent: body.txtaText,
+                type: body.type_filter
+            };
 
-            return res.status(500).end('NYI');
+            appPostServices.addReadingTest(teste, req.files.audioprofessor.path, req.files.audioprofessor.originalname).then(function (_) {
+                return res.status(500).end('NYI');
+            });
     }
 }
 exports.createTest = createTest;
@@ -253,4 +263,25 @@ function createTeacher(req, res) {
     }
 }
 exports.createTeacher = createTeacher;
+
+function createAluno(req, res) {
+    console.log('Hmm...');
+    switch (req.method) {
+        case 'GET':
+            return res.render('addStudent');
+        case 'POST':
+            // TODO: Meter dados na BD.
+            var body = req.body;
+            var aluno = {
+                classId: parseInt(body.txtIdEscola),
+                name: body.txtname,
+                isActive: body.state_filter
+            };
+
+            appPostServices.addStudent(aluno, req.files.photo.path, req.files.photo.originalname);
+
+            return res.status(500).end('NYI');
+    }
+}
+exports.createAluno = createAluno;
 //# sourceMappingURL=tests.js.map

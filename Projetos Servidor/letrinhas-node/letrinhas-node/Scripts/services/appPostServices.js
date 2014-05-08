@@ -5,6 +5,7 @@ var path = require('path');
 
 var Q = require('q');
 
+var mysql = require('mysql');
 var mv = require('mv');
 
 var TestType = require('../structures/tests/TestType');
@@ -82,4 +83,48 @@ function addTeacher(p, uploadedFilePath, uploadedFileName) {
     });
 }
 exports.addTeacher = addTeacher;
+
+function addStudent(p, uploadedFilePath, uploadedFileName) {
+    if (p === null) {
+        return Q.reject(new Error('correction cannot be null.'));
+    }
+
+    var filePath = path.join('appContent/students/student-' + p.name), fileName = path.join(filePath, uploadedFileName);
+
+    var sql = "Insert Into Students(`classId`,`name`,`photoUrl`,`isActive`) VALUES(" + p.classId + ",'" + p.name + "','" + p.isActive + "','" + filePath + "')";
+
+    console.log(sql);
+
+    return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, fileName), { mkdirp: true }).then(function (_) {
+        return poolQuery(sql);
+    });
+}
+exports.addStudent = addStudent;
+
+function addReadingTest(t, uploadedFilePath, uploadedFileName) {
+    if (t === null) {
+        return Q.reject(new Error('correction cannot be null.'));
+    }
+
+    var filePath = path.join('appContent/tests/test-' + t.title + '-' + Math.floor(Math.random() * 100)), fileName = path.join(filePath, uploadedFileName);
+
+    console.log(filePath);
+
+    var args = [
+        t.areaId
+    ];
+
+    var sql = "CALL insertReadingTest(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    sql = mysql.format(sql, args);
+
+    console.log(sql);
+
+    //var sql = "Insert Into ReadingTests(`classId`,`name`,`photoUrl`,`isActive`) VALUES(" + t. + ",'" + t.name + "','" + t.isActive + "','" + filePath + "')";
+    //console.log(sql);
+    return Q.resolve('');
+    // return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, fileName), { mkdirp: true })
+    // .then((_) => poolQuery(sql));
+}
+exports.addReadingTest = addReadingTest;
 //# sourceMappingURL=appPostServices.js.map

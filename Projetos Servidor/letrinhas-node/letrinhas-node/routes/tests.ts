@@ -16,7 +16,8 @@ import ReadingTestCorrection = require('../Scripts/structures/tests/ReadingTestC
 import MultimediaTestCorrection = require('../Scripts/structures/tests/MultimediaTestCorrection');
 
 import Teacher = require('../Scripts/structures/schools/Professor');
-
+import Aluno = require('../Scripts/structures/schools/Student');
+import ReadingTest = require('../Scripts/structures/tests/ReadingTest');
 
 
 export function listSummary(request: express.Request, response: express.Response): void {
@@ -250,12 +251,22 @@ export function createTest(req: express.Request, res: express.Response) {
 
             // TODO: Meter dados na BD.
 
-            var title: string;
-            title = req.body.txtTitle;
-            console.log(title);
+            var body = req.body;
+            var teste = <ReadingTest> {
+                title: body.txtTitle,
+                grade: body.grau,
+                creationDate: Date.now(),
+                professorId: body.txtidprofessor,
+                areaId: body.areaid,
+                mainText: body.txtapergunta, 
+                textContent: body.txtaText,
+                type: body.type_filter,
+            };
 
+            appPostServices.addReadingTest(teste, req.files.audioprofessor.path, req.files.audioprofessor.originalname)
+                .then((_) => res.status(500).end('NYI'));
 
-            return res.status(500).end('NYI');
+            //return ;
     }
 }
 
@@ -284,3 +295,29 @@ export function createTeacher(req: express.Request, res: express.Response) {
             return res.status(500).end('NYIMY');
     }
 }
+
+    export function createAluno(req: express.Request, res: express.Response) {
+        console.log('Hmm...');
+        switch (req.method) {
+            case 'GET':
+                return res.render('addStudent');
+            case 'POST':
+
+                 // TODO: Meter dados na BD.
+                var body = req.body;
+                var aluno = <Aluno> {
+                    classId: parseInt(body.txtIdEscola),
+                    name: body.txtname,
+                    isActive: body.state_filter,
+                };
+
+                appPostServices.addStudent(aluno, req.files.photo.path, req.files.photo.originalname);
+
+
+               
+                return res.status(500).end('NYI');
+
+        }
+}
+
+

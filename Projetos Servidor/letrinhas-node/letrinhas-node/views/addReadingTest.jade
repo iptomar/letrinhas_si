@@ -15,16 +15,35 @@ block content
         input(type='text', name = "txtInsertionDate")
         br
         | Grau Escolar:
-        input(type='text', name = "txtGrade")
+        select(name="grau")
+            option(value="1") 1º Ano
+            option(value="2") 2º Ano
+            option(value="3") 3º Ano
+            option(value="4") 4º Ano
+        br
+        | Pergunta:
+        textarea(name="txtapergunta")
         br
         | Tipo:
         input(type="radio", name="type_filter", value="0")
         | Texto
-        input(type="radio", name="type_filter", value="1")
+        input(type="radio", name="type_filter", value="3")
         | Poema
+        input(type="radio", name="type_filter", value="2")
+        | Lista
         br
-        button(id="add-file") Adicionar Som
-        fieldset(id="file-input-container")
-
+        | Professor Id:
+        textarea(name="txtidprofessor")
+        br
+        | Área:
+        select(name="areaid")
+            option(value="1") Português
+            option(value="2") Inglês
+            option(value="3") Estudo do Meio
+            option(value="4") Matemática
+        
+        br
+        input(type="file" accept="audio/*" name="audioprofessor")
+        br
         input(type="submit")
-        script(type="text/javascript", src="/scripts/formtest.js")
+        

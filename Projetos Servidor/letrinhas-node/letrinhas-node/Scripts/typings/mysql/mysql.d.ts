@@ -41,4 +41,6 @@
         getConnection(onConnection: (err: Error, connection: Connection) => void);
         escape(sql: string): string;
     }
+
+    function format(sql: string, values: any[]): string;
 }

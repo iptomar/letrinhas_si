@@ -13,6 +13,9 @@ import TestSummary = require('../structures/tests/TestSummary');
 import TestType = require('../structures/tests/TestType');
 
 import Professor = require('../structures/schools/Professor');
+import Aluno = require('../structures/schools/Student');
+import ReadingTest = require('../structures/tests/ReadingTest');
+
 
 import TestCorrection = require('../structures/tests/TestCorrection');
 import MultimediaTestCorrection = require('../structures/tests/MultimediaTestCorrection');
@@ -91,5 +94,56 @@ export function addTeacher(p: Professor, uploadedFilePath?: string, uploadedFile
 
     return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, fileName), { mkdirp: true })
         .then((_) => poolQuery(sql));
+
+}
+
+export function addStudent(p: Aluno, uploadedFilePath?: string, uploadedFileName?: string): Q.Promise<any> {
+    if (p === null) {
+        return Q.reject(new Error('correction cannot be null.'));
+    }
+
+    var filePath = path.join('appContent/students/student-' + p.name),
+        fileName = path.join(filePath, uploadedFileName);
+
+    var sql = "Insert Into Students(`classId`,`name`,`photoUrl`,`isActive`) VALUES(" + p.classId + ",'" + p.name + "','" + p.isActive + "','" + filePath + "')";
+
+    console.log(sql);
+
+
+    return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, fileName), { mkdirp: true })
+        .then((_) => poolQuery(sql));
+
+}
+
+export function addReadingTest(t: ReadingTest, uploadedFilePath?: string, uploadedFileName?: string): Q.Promise<any> {
+    if (t === null) {
+        return Q.reject(new Error('correction cannot be null.'));
+    }
+
+    var filePath = path.join('appContent/tests/test-' + t.title + '-' +  Math.floor(Math.random() * 100)),
+        fileName = path.join(filePath, uploadedFileName);
+
+    console.log(filePath);
+
+    var args = [
+        t.areaId,
+        // Repete para os outros
+
+    ];
+
+    var sql = "CALL insertReadingTest(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    sql = mysql.format(sql, args);
+
+    console.log(sql);
+
+    //var sql = "Insert Into ReadingTests(`classId`,`name`,`photoUrl`,`isActive`) VALUES(" + t. + ",'" + t.name + "','" + t.isActive + "','" + filePath + "')";
+
+    //console.log(sql);
+
+    return Q.resolve('');
+
+    // return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, fileName), { mkdirp: true })
+       // .then((_) => poolQuery(sql));
 
 }

@@ -33,6 +33,8 @@ function mapGetRoutes(app: express.Express) {
 
     app.all('/CreateTeacher', testActions.createTeacher);
 
+    app.all('/CreateAluno', testActions.createAluno);
+
     app.get('/tests/:id?', testActions.getTest);
 
     app.get('/testsSince', testActions.testsSince);
