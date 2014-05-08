@@ -1,4 +1,4 @@
-﻿var pool = require('../../configs/mysql');
+var pool = require('../../configs/mysql');
 var app = require('../../app');
 
 var path = require('path');
@@ -127,6 +127,10 @@ function addReadingTest(t, uploadedFilePath, uploadedFileName) {
     sql = mysql.format(sql, args);
 
     console.log(sql);
+
+    return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, fileName), { mkdirp: true }).then(function (_) {
+        return poolQuery(sql);
+    });
 
     //var sql = "Insert Into ReadingTests(`classId`,`name`,`photoUrl`,`isActive`) VALUES(" + t. + ",'" + t.name + "','" + t.isActive + "','" + filePath + "')";
     return Q.resolve('');
