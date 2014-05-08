@@ -20,6 +20,8 @@ import ReadingTest = require('../structures/tests/ReadingTest');
 import TestCorrection = require('../structures/tests/TestCorrection');
 import MultimediaTestCorrection = require('../structures/tests/MultimediaTestCorrection');
 import ReadingTestCorrection = require('../structures/tests/ReadingTestCorrection');
+import SchoolClass = require('../Scripts/structures/schools/Class');
+
 
 var poolQuery = Q.nbind(pool.query, pool);
 
@@ -145,5 +147,17 @@ export function addReadingTest(t: ReadingTest, uploadedFilePath?: string, upload
 
     // return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, fileName), { mkdirp: true })
        // .then((_) => poolQuery(sql));
+
+}
+
+
+export function addClass(c: SchoolClass): Q.Promise<any> {
+    if (c === null) {
+        return Q.reject(new Error('correction cannot be null.'));
+    }
+
+    var sql = "Insert Into Classes(`schoolId`,`classLevel`,`className`,`classYear`) VALUES(" + c.schoolId + ",'" + c.classLevel + "','" + c.className + "','" + c.classYear + "')";
+
+    poolQuery(sql);
 
 }

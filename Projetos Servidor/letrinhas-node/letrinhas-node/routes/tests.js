@@ -284,4 +284,25 @@ function createAluno(req, res) {
     }
 }
 exports.createAluno = createAluno;
+
+function createClass(req, res) {
+    switch (req.method) {
+        case 'GET':
+            return res.render('addClass');
+        case 'POST':
+            // TODO: Meter dados na BD.
+            var body = req.body;
+            var sClass = {
+                schoolId: body.schoolId,
+                classLevel: body.year_filter,
+                className: body.className,
+                classYear: body.classYear
+            };
+
+            appPostServices.addClass(sClass);
+
+            return res.status(500).end('NYIMY');
+    }
+}
+exports.createClass = createClass;
 //# sourceMappingURL=tests.js.map

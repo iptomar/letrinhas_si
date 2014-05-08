@@ -18,6 +18,7 @@ import MultimediaTestCorrection = require('../Scripts/structures/tests/Multimedi
 import Teacher = require('../Scripts/structures/schools/Professor');
 import Aluno = require('../Scripts/structures/schools/Student');
 import ReadingTest = require('../Scripts/structures/tests/ReadingTest');
+import SchoolClass = require('../Scripts/structures/schools/Class');
 
 
 export function listSummary(request: express.Request, response: express.Response): void {
@@ -320,4 +321,24 @@ export function createTeacher(req: express.Request, res: express.Response) {
         }
 }
 
+export function createClass(req: express.Request, res: express.Response) {
+    switch (req.method) {
+        case 'GET':
+            return res.render('addClass');
+        case 'POST':
+            // TODO: Meter dados na BD.
+            var body = req.body;
+            var sClass = <SchoolClass> {
+                schoolId : body.schoolId,
+                classLevel: body.year_filter,
+                className: body.className,
+                classYear: body.classYear
+            };
 
+            appPostServices.addClass(sClass);
+
+
+
+            return res.status(500).end('NYIMY');
+    }
+}

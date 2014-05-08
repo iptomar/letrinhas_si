@@ -127,4 +127,15 @@ function addReadingTest(t, uploadedFilePath, uploadedFileName) {
     // .then((_) => poolQuery(sql));
 }
 exports.addReadingTest = addReadingTest;
+
+function addClass(c) {
+    if (c === null) {
+        return Q.reject(new Error('correction cannot be null.'));
+    }
+
+    var sql = "Insert Into Classes(`schoolId`,`classLevel`,`className`,`classYear`) VALUES(" + c.schoolId + ",'" + c.classLevel + "','" + c.className + "','" + c.classYear + "')";
+
+    poolQuery(sql);
+}
+exports.addClass = addClass;
 //# sourceMappingURL=appPostServices.js.map
