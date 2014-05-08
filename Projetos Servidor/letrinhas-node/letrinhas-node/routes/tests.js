@@ -274,7 +274,7 @@ function createAluno(req, res) {
             var body = req.body;
             var aluno = {
                 classId: parseInt(body.txtIdEscola),
-                name: body.txtname,
+                name: body.txtName,
                 isActive: body.state_filter
             };
 

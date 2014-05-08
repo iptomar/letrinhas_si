@@ -308,7 +308,7 @@ export function createTeacher(req: express.Request, res: express.Response) {
                 var body = req.body;
                 var aluno = <Aluno> {
                     classId: parseInt(body.txtIdEscola),
-                    name: body.txtname,
+                    name: body.txtName,
                     isActive: body.state_filter,
                 };
 

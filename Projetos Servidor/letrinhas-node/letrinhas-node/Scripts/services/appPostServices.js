@@ -91,7 +91,7 @@ function addStudent(p, uploadedFilePath, uploadedFileName) {
 
     var filePath = path.join('appContent/students/student-' + p.name), fileName = path.join(filePath, uploadedFileName);
 
-    var sql = "Insert Into Students(`classId`,`name`,`photoUrl`,`isActive`) VALUES(" + p.classId + ",'" + p.name + "','" + p.isActive + "','" + filePath + "')";
+    var sql = "Insert Into Students(`classId`,`name`,`photoUrl`,`isActive`) VALUES(" + p.classId + ",'" + p.name + "','" + filePath + "','" + p.isActive + "')";
 
     console.log(sql);
 
