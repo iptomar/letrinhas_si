@@ -20,7 +20,7 @@ import ReadingTest = require('../structures/tests/ReadingTest');
 import TestCorrection = require('../structures/tests/TestCorrection');
 import MultimediaTestCorrection = require('../structures/tests/MultimediaTestCorrection');
 import ReadingTestCorrection = require('../structures/tests/ReadingTestCorrection');
-import SchoolClass = require('../Scripts/structures/schools/Class');
+import SchoolClass = require('../structures/schools/Class');
 
 
 var poolQuery = Q.nbind(pool.query, pool);
@@ -107,7 +107,7 @@ export function addStudent(p: Aluno, uploadedFilePath?: string, uploadedFileName
     var filePath = path.join('appContent/students/student-' + p.name),
         fileName = path.join(filePath, uploadedFileName);
 
-    var sql = "Insert Into Students(`classId`,`name`,`photoUrl`,`isActive`) VALUES(" + p.classId + ",'" + p.name + "','" + p.isActive + "','" + filePath + "')";
+    var sql = "Insert Into Students(`classId`,`name`,`photoUrl`,`isActive`) VALUES(" + p.classId + ",'" + p.name + "','" + filePath +  "','"  + p.isActive + "')";
 
     console.log(sql);
 
