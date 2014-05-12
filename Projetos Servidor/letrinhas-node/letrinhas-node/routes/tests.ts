@@ -246,10 +246,7 @@ export function createTest(req: express.Request, res: express.Response) {
         case 'GET':
             return res.render('addReadingTest');
         case 'POST':
-            console.log(req.body.txtId);
-            console.log(req.body);
-            console.log(req.files);
-
+            
             // TODO: Meter dados na BD.
 
             var body = req.body;
@@ -265,7 +262,8 @@ export function createTest(req: express.Request, res: express.Response) {
             };
 
             appPostServices.addReadingTest(teste, req.files.audioprofessor.path, req.files.audioprofessor.originalname)
-                .then((_) => res.status(500).end('NYI'));
+                .then((_) => res.end('success'))
+                .catch((err) => res.end('error: ' + err.toString()));
 
             //return ;
     }
