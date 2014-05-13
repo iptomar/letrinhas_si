@@ -11,7 +11,7 @@ import ReadingTest = require('../structures/tests/ReadingTest');
 import MultimediaTest = require('../structures/tests/MultimediaTest');
 import TestType = require('../structures/tests/TestType');
 
-var poolQuery = Q.nbind(pool.query, pool);
+var poolQuery = Q.nbind<any>(pool.query, pool);
 
 /**
  * Returns a list of tests which were created after a set date.
@@ -66,7 +66,7 @@ export function getTests(options: { type: number; areaId?: number; grade?: numbe
                 .then<Array<Test>>((result) => result[0]);
         case TestType.multimedia:
             // return Q.ninvoke(pool, 'query', 'SELECT t.id, t.type, t.professorId, t.title, t.mainText, UNIX_TIMESTAMP(t.creationDate) AS creationDate, t.grade, t.areaId, mt.option1, mt.option1IsUrl, mt.option2, mt.option2IsUrl, mt.option3, mt.option3IsUrl, mt.correctOption FROM Tests AS t JOIN MultimediaTests AS mt ON mt.id = t.id ' + where)
-            return poolQuery('SELECT t.id, t.type, t.professorId, t.title, t.mainText, UNIX_TIMESTAMP(t.creationDate) AS creationDate, t.grade, t.areaId, mt.option1, mt.option1IsUrl, mt.option2, mt.option2IsUrl, mt.option3, mt.option3IsUrl, mt.correctOption FROM Tests AS t JOIN MultimediaTests AS mt ON mt.id = t.id ' + where)
+            return poolQuery('SELECT t.id, t.type, t.professorId, t.title, t.mainText, UNIX_TIMESTAMP(t.creationDate) AS creationDate, t.grade, t.areaId, mt.questionContent, mt.contentIsUrl, mt.option1, mt.option1IsUrl, mt.option2, mt.option2IsUrl, mt.option3, mt.option3IsUrl, mt.correctOption FROM Tests AS t JOIN MultimediaTests AS mt ON mt.id = t.id ' + where)
                 .then<Array<Test>>((result) => result[0]);
         default:
             return Q.reject('Invalid test type');

@@ -23,7 +23,7 @@ import ReadingTestCorrection = require('../structures/tests/ReadingTestCorrectio
 import SchoolClass = require('../structures/schools/Class');
 
 
-var poolQuery = Q.nbind(pool.query, pool);
+var poolQuery = Q.nbind<any>(pool.query, pool);
 
 // TODO: Implement this.
 //export function sendBinaryDataToDb(binaryData: NodeBuffer, onDone: (err: Error) => void) {
@@ -40,6 +40,10 @@ export function saveTestCorrection(c: TestCorrection, uploadedFilePath?: string,
 
     switch (c.type) {
         case TestType.read:
+        // Falls through
+        case TestType.list:
+        // Falls through
+        case TestType.poem:
 
             var filePath = path.join('appContent/tests/test-' + c.testId),
                 fileName = path.join(filePath, c.studentId + '-' + c.executionDate + uploadedFileName.substring(uploadedFileName.lastIndexOf('.')));

@@ -26,6 +26,10 @@ function saveTestCorrection(c, uploadedFilePath, uploadedFileName) {
 
     switch (c.type) {
         case 0 /* read */:
+
+        case 2 /* list */:
+
+        case 3 /* poem */:
             var filePath = path.join('appContent/tests/test-' + c.testId), fileName = path.join(filePath, c.studentId + '-' + c.executionDate + uploadedFileName.substring(uploadedFileName.lastIndexOf('.')));
 
             // I don't like this.
