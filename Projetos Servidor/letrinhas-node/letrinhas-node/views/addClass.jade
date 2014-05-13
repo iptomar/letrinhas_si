@@ -1,0 +1,28 @@
+﻿extends layout
+
+block content
+    form(id="test", method="POST", action="/CreateClass" enctype="multipart/form-data") 
+        h1 Adicionar Turma
+        | IdEscola:
+        input(type='text', name = "schoolId")
+        br
+        | Ano:
+        br
+        | 1º
+        input(type="radio", name="year_filter", value="1")
+        | 2º 
+        input(type="radio", name="year_filter", value="2")
+        | 3º 
+        input(type="radio", name="year_filter", value="3")
+        | 4º 
+        input(type="radio", name="year_filter", value="4")
+        br
+        | Nome:
+        input(type='text', name = "className")
+        br
+        | Ano Letivo:
+        input(type='text', name = "classYear")
+        input(type="submit")
+    script(type="text/javascript", src="/scripts/formtest.js")
+
+ 
