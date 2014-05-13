@@ -5,7 +5,6 @@ var path = require('path');
 
 var Q = require('q');
 
-var mysql = require('mysql');
 var mv = require('mv');
 
 var TestType = require('../structures/tests/TestType');
@@ -78,9 +77,7 @@ function addTeacher(p, uploadedFilePath, uploadedFileName) {
 
     var filePath = path.join('appContent/professors/professor-' + p.name), fileName = path.join(filePath, uploadedFileName);
 
-    var sql = "Insert Into Professors(`schoolId`,`name`,`username`,`password`,`emailAddress`,`telephoneNumber`,`isActive`,`photoUrl`) VALUES(" + p.schoolId + ",'" + p.name + "','" + p.username + "','" + p.password + "','" + p.emailAddress + "','" + p.telephoneNumber + "'," + p.isActive + ",'" + filePath + "')";
-
-    console.log(sql);
+    var sql = "Insert Into Professors(`schoolId`,`name`,`username`,`password`,`emailAddress`,`telephoneNumber`,`isActive`,`photoUrl`) VALUES(" + p.schoolId + ",'" + p.name + "','" + p.username + "','" + p.password + "','" + p.emailAddress + "','" + p.telephoneNumber + "'," + p.isActive + ",'" + fileName.replace(/\\/g, '/') + "')";
 
     return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, fileName), { mkdirp: true }).then(function (_) {
         return poolQuery(sql);
@@ -95,7 +92,7 @@ function addStudent(p, uploadedFilePath, uploadedFileName) {
 
     var filePath = path.join('appContent/students/student-' + p.name), fileName = path.join(filePath, uploadedFileName);
 
-    var sql = "Insert Into Students(`classId`,`name`,`photoUrl`,`isActive`) VALUES(" + p.classId + ",'" + p.name + "','" + filePath + "','" + p.isActive + "')";
+    var sql = "Insert Into Students(`classId`,`name`,`photoUrl`,`isActive`) VALUES(" + p.classId + ",'" + p.name + "','" + fileName.replace(/\\/g, '/') + "','" + p.isActive + "')";
 
     console.log(sql);
 
@@ -112,23 +109,11 @@ function addReadingTest(t, uploadedFilePath, uploadedFileName) {
 
     var filePath = path.join('appContent/tests/test-' + t.title + '-' + Math.floor(Math.random() * 100)), fileName = path.join(filePath, uploadedFileName);
 
-    console.log(filePath);
-
-    var args = [
-        t.areaId
-    ];
-
-    var sql = "CALL insertReadingTest(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-    sql = mysql.format(sql, args);
-
+    var sql = "CALL insertReadingTest(" + t.areaId + ", " + t.professorId + ", '" + t.title + "', '" + t.mainText + "', " + Date.now() + ", " + t.grade + ", " + t.type + ", '" + t.textContent + "', '" + fileName.replace(/\\/g, '/') + "')";
     console.log(sql);
-
-    //var sql = "Insert Into ReadingTests(`classId`,`name`,`photoUrl`,`isActive`) VALUES(" + t. + ",'" + t.name + "','" + t.isActive + "','" + filePath + "')";
-    //console.log(sql);
-    return Q.resolve('');
-    // return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, fileName), { mkdirp: true })
-    // .then((_) => poolQuery(sql));
+    return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, fileName), { mkdirp: true }).then(function (_) {
+        return poolQuery(sql);
+    });
 }
 exports.addReadingTest = addReadingTest;
 
