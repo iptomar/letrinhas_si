@@ -3,6 +3,7 @@
 var indexActions = require('../routes/index');
 var testActions = require('../routes/tests');
 var syncActions = require('../routes/sync');
+var Classes = require('../routes/Classes');
 
 /**
 * Maps routes to the server.
@@ -13,6 +14,8 @@ function mapRoutes(app) {
     mapGetRoutes(app);
     mapPostRoutes(app);
     mapSyncRoutes(app);
+
+    mapClassRoutes(app);
     // Probably unnecessary.
     // app.use(sendNotFound);
 }
@@ -47,6 +50,14 @@ function mapGetRoutes(app) {
     console.log("Successfully mapped GET routes.");
 }
 
+function mapClassRoutes(app) {
+    app.get('/Classes/', Classes.listAll);
+    app.get('/Class/:id', Classes.details);
+    app.get('/Class/:id/Students', Classes.students);
+    app.get('/Classes/Create/', Classes.create);
+    app.get('/Classes/Relationships', Classes.classRelationships);
+}
+
 function mapPostRoutes(app) {
     app.post('/postTestResults', testActions.postTestResults);
     app.post('/postFiles', testActions.postImage);
@@ -59,7 +70,8 @@ function mapSyncRoutes(app) {
     app.get('/professors', syncActions.getProfessors);
     app.get('/schools', syncActions.getSchools);
     app.get('/students', syncActions.getStudents);
-    app.get('/classes', syncActions.getClasses);
+
+    // app.get('/classes', syncActions.getClasses);
     app.get('/professorClasses', syncActions.getProfessorClasses);
 
     // app.post('/Tests/Create', testActions.createTest);

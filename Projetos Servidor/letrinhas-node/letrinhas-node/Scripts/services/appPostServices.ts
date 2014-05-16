@@ -58,12 +58,12 @@ export function saveTestCorrection(c: TestCorrection, uploadedFilePath?: string,
                 c.executionDate,
                 pool.escape(fileName.replace(/\\/g, '/')),
                 pool.escape((<ReadingTestCorrection>c).professorObservations),
-                (<ReadingTestCorrection>c).wordsPerMinute,
-                (<ReadingTestCorrection>c).correctWordCount,
-                (<ReadingTestCorrection>c).readingPrecision,
-                (<ReadingTestCorrection>c).readingSpeed,
-                (<ReadingTestCorrection>c).expressiveness,
-                (<ReadingTestCorrection>c).rhythm,
+                (<ReadingTestCorrection> c).wordsPerMinute,
+                (<ReadingTestCorrection> c).correctWordCount,
+                (<ReadingTestCorrection> c).readingPrecision,
+                (<ReadingTestCorrection> c).readingSpeed,
+                (<ReadingTestCorrection> c).expressiveness,
+                (<ReadingTestCorrection> c).rhythm,
                 pool.escape((<ReadingTestCorrection>c).details)
             ];
 

@@ -59,29 +59,6 @@ exports.getProfessors = getProfessors;
 /**
 * Gets a list of classes for the current year.
 */
-function getClasses(onDone) {
-    pool.query('SELECT * FROM Classes', function (err, rows, fields) {
-        if (err) {
-            return onDone(err, null);
-        }
-
-        var classes = new Array(rows.length);
-
-        for (var i = 0; i < rows.length; i++) {
-            classes[i] = {
-                id: rows[i].id,
-                schoolId: rows[i].schoolId,
-                classLevel: rows[i].classLevel,
-                className: rows[i].className,
-                classYear: rows[i].classYear
-            };
-        }
-
-        onDone(null, classes);
-    });
-}
-exports.getClasses = getClasses;
-
 /**
 * Gets a list of students which are currently active.
 */

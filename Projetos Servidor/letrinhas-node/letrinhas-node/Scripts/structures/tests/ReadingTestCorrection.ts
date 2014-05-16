@@ -14,5 +14,7 @@ class ReadingTestCorrection extends TestCorrection {
     rhythm: number;
 
     details: string;
+
+    isPartial: boolean;
 }
 export = ReadingTestCorrection;

@@ -66,27 +66,6 @@ export function getProfessors(onDone: (err: Error, data: Array<Professor>) => vo
 /**
  * Gets a list of classes for the current year.
  */
-export function getClasses(onDone: (err: Error, data: Array<Class>) => void) {
-    pool.query('SELECT * FROM Classes', (err, rows: Array<Class>, fields) => {
-        if (err) {
-            return onDone(err, null);
-        }
-
-        var classes = new Array<Class>(rows.length);
-
-        for (var i = 0; i < rows.length; i++) {
-            classes[i] = <Class> {
-                id: rows[i].id,
-                schoolId: rows[i].schoolId,
-                classLevel: rows[i].classLevel,
-                className: rows[i].className,
-                classYear: rows[i].classYear
-            };
-        }
-
-        onDone(null, classes);
-    });
-}
 
 /**
  * Gets a list of students which are currently active.

@@ -45,23 +45,6 @@ export function getSchools(request: express.Request, response: express.Response)
     });
 }
 
-export function getClasses(request: express.Request, response: express.Response) {
-    syncServices.getClasses((err, classes) => {
-        if (err) {
-            response.statusCode = 500;
-
-            response.json({
-                classes: []
-            });
-            return;
-        }
-
-        response.json({
-            classes: classes
-        });
-    });
-}
-
 export function getStudents(request: express.Request, response: express.Response) {
     syncServices.getStudents((err, students) => {
         if (err) {

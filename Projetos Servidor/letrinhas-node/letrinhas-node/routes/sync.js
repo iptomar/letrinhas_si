@@ -46,24 +46,6 @@ function getSchools(request, response) {
 }
 exports.getSchools = getSchools;
 
-function getClasses(request, response) {
-    syncServices.getClasses(function (err, classes) {
-        if (err) {
-            response.statusCode = 500;
-
-            response.json({
-                classes: []
-            });
-            return;
-        }
-
-        response.json({
-            classes: classes
-        });
-    });
-}
-exports.getClasses = getClasses;
-
 function getStudents(request, response) {
     syncServices.getStudents(function (err, students) {
         if (err) {
