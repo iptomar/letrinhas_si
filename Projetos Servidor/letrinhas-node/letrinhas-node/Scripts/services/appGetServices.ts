@@ -16,85 +16,85 @@ var poolQuery = Q.nbind<any>(pool.query, pool);
 /**
  * Returns a list of tests which were created after a set date.
  */
-export function getTestsNewerThan(timestamp: number): Q.Promise<Array<Test>> {
-    // return Q.ninvoke(pool, "query", "SELECT id, professorId, title, mainText, unix_timestamp(creationDate) as creationDate, grade, type, areaId FROM Tests WHERE creationDate > from_unixtime(?)", timestamp)
-    return poolQuery("SELECT id, professorId, title, mainText, unix_timestamp(creationDate) as creationDate, grade, type, areaId FROM Tests WHERE creationDate > from_unixtime(?)", timestamp)
-        .then((result) => <Array<Test>> result[0]);
-}
+//export function getTestsNewerThan(timestamp: number): Q.Promise<Array<Test>> {
+//    // return Q.ninvoke(pool, "query", "SELECT id, professorId, title, mainText, unix_timestamp(creationDate) as creationDate, grade, type, areaId FROM Tests WHERE creationDate > from_unixtime(?)", timestamp)
+//    return poolQuery("SELECT id, professorId, title, mainText, unix_timestamp(creationDate) as creationDate, grade, type, areaId FROM Tests WHERE creationDate > from_unixtime(?)", timestamp)
+//        .then((result) => <Array<Test>> result[0]);
+//}
 
-export function getTestById(id: number): Q.Promise<Test> {
-    // Make use of stored procedures to clean up our code.
-    // The reason is because we need to determine the test type.
-    // It's much simpler to just use a stored procedure which
-    // handles all the logic for us in there.
-    var options = {
-        sql: 'CALL getTestById(?)',
-        nestTables: false
-    };
+//export function getTestById(id: number): Q.Promise<Test> {
+//    // Make use of stored procedures to clean up our code.
+//    // The reason is because we need to determine the test type.
+//    // It's much simpler to just use a stored procedure which
+//    // handles all the logic for us in there.
+//    var options = {
+//        sql: 'CALL getTestById(?)',
+//        nestTables: false
+//    };
 
-    // return Q.ninvoke(pool, "query", options, id)
-    return poolQuery(options, id)
-        .then((result) => result[0][0].length === 0 ? null : result[0][0])
-}
+//    // return Q.ninvoke(pool, "query", options, id)
+//    return poolQuery(options, id)
+//        .then((result) => result[0][0].length === 0 ? null : result[0][0])
+//}
 
-export function getTests(options: { type: number; areaId?: number; grade?: number; professorId?: number; creationDate?: number }): Q.Promise<Array<Test>> {
+//export function getTests(options: { type: number; areaId?: number; grade?: number; professorId?: number; creationDate?: number }): Q.Promise<Array<Test>> {
 
-    if (typeof options.type === 'undefined') {
-        return Q.reject(new Error('No parameteres supplied!'));
-    }
+//    if (typeof options.type === 'undefined') {
+//        return Q.reject(new Error('No parameteres supplied!'));
+//    }
 
-    var parameters = [];
-    if (options.areaId !== undefined) { parameters.push({ name: 'areaId', value: options.areaId }); }
-    if (options.grade !== undefined) { parameters.push({ name: 'grade', value: options.grade }); }
-    if (options.professorId !== undefined) { parameters.push({ name: 'professorId', value: options.professorId }); }
+//    var parameters = [];
+//    if (options.areaId !== undefined) { parameters.push({ name: 'areaId', value: options.areaId }); }
+//    if (options.grade !== undefined) { parameters.push({ name: 'grade', value: options.grade }); }
+//    if (options.professorId !== undefined) { parameters.push({ name: 'professorId', value: options.professorId }); }
 
-    // Build the sql query.
-    var where = 'WHERE t.type = ' + options.type;
+//    // Build the sql query.
+//    var where = 'WHERE t.type = ' + options.type;
 
-    for (var i = 0; i < parameters.length; i += 1) {
-        where += ' AND t.' + parameters[i].name + ' = ' + parameters[i].value;
-    }
+//    for (var i = 0; i < parameters.length; i += 1) {
+//        where += ' AND t.' + parameters[i].name + ' = ' + parameters[i].value;
+//    }
 
-    if (options.creationDate) {
-        where += ' AND t.creationDate > from_unixtime(' + options.creationDate + ')';
-    }
+//    if (options.creationDate) {
+//        where += ' AND t.creationDate > from_unixtime(' + options.creationDate + ')';
+//    }
 
-    switch (options.type) {
-        case TestType.read:
-            // return Q.ninvoke(pool, "query", 'select t.id, t.type, t.professorId, t.title, t.mainText, unix_timestamp(t.creationDate) as creationDate, t.grade, t.areaId, rt.professorAudioUrl, rt.textContent from Tests as t join ReadingTests as rt on rt.id = t.id ' + where)
-            return poolQuery('select t.id, t.type, t.professorId, t.title, t.mainText, unix_timestamp(t.creationDate) as creationDate, t.grade, t.areaId, rt.professorAudioUrl, rt.textContent from Tests as t join ReadingTests as rt on rt.id = t.id ' + where)
-                .then<Array<Test>>((result) => result[0]);
-        case TestType.multimedia:
-            // return Q.ninvoke(pool, 'query', 'SELECT t.id, t.type, t.professorId, t.title, t.mainText, UNIX_TIMESTAMP(t.creationDate) AS creationDate, t.grade, t.areaId, mt.option1, mt.option1IsUrl, mt.option2, mt.option2IsUrl, mt.option3, mt.option3IsUrl, mt.correctOption FROM Tests AS t JOIN MultimediaTests AS mt ON mt.id = t.id ' + where)
-            return poolQuery('SELECT t.id, t.type, t.professorId, t.title, t.mainText, UNIX_TIMESTAMP(t.creationDate) AS creationDate, t.grade, t.areaId, mt.questionContent, mt.contentIsUrl, mt.option1, mt.option1IsUrl, mt.option2, mt.option2IsUrl, mt.option3, mt.option3IsUrl, mt.correctOption FROM Tests AS t JOIN MultimediaTests AS mt ON mt.id = t.id ' + where)
-                .then<Array<Test>>((result) => result[0]);
-        default:
-            return Q.reject('Invalid test type');
-    }
-}
+//    switch (options.type) {
+//        case TestType.read:
+//            // return Q.ninvoke(pool, "query", 'select t.id, t.type, t.professorId, t.title, t.mainText, unix_timestamp(t.creationDate) as creationDate, t.grade, t.areaId, rt.professorAudioUrl, rt.textContent from Tests as t join ReadingTests as rt on rt.id = t.id ' + where)
+//            return poolQuery('select t.id, t.type, t.professorId, t.title, t.mainText, unix_timestamp(t.creationDate) as creationDate, t.grade, t.areaId, rt.professorAudioUrl, rt.textContent from Tests as t join ReadingTests as rt on rt.id = t.id ' + where)
+//                .then<Array<Test>>((result) => result[0]);
+//        case TestType.multimedia:
+//            // return Q.ninvoke(pool, 'query', 'SELECT t.id, t.type, t.professorId, t.title, t.mainText, UNIX_TIMESTAMP(t.creationDate) AS creationDate, t.grade, t.areaId, mt.option1, mt.option1IsUrl, mt.option2, mt.option2IsUrl, mt.option3, mt.option3IsUrl, mt.correctOption FROM Tests AS t JOIN MultimediaTests AS mt ON mt.id = t.id ' + where)
+//            return poolQuery('SELECT t.id, t.type, t.professorId, t.title, t.mainText, UNIX_TIMESTAMP(t.creationDate) AS creationDate, t.grade, t.areaId, mt.questionContent, mt.contentIsUrl, mt.option1, mt.option1IsUrl, mt.option2, mt.option2IsUrl, mt.option3, mt.option3IsUrl, mt.correctOption FROM Tests AS t JOIN MultimediaTests AS mt ON mt.id = t.id ' + where)
+//                .then<Array<Test>>((result) => result[0]);
+//        default:
+//            return Q.reject('Invalid test type');
+//    }
+//}
 
 /**
  * Gets tests from a database, and returns an array of TestSummary.
  * 
  */
-export function getTestListSummaryFromDb(max: number, onResult: (err: Error, summaryList: TestSummary[]) => void) {
-    pool.query('SELECT * FROM Testes' + (max === null ? '' : ' LIMIT ' + max), (err, rows, fields) => {
-        if (err) {
-            onResult(err, null);
-        } else {
-            var testList: TestSummary[] = [];
+//export function getTestListSummaryFromDb(max: number, onResult: (err: Error, summaryList: TestSummary[]) => void) {
+//    pool.query('SELECT * FROM Testes' + (max === null ? '' : ' LIMIT ' + max), (err, rows, fields) => {
+//        if (err) {
+//            onResult(err, null);
+//        } else {
+//            var testList: TestSummary[] = [];
 
-            //for (var i = 0; i < rows.length; i++) {
-            //    testList.push(<TestSummary>{
-            //        id: rows[i].id,
-            //        title: rows[i].title
-            //    });
-            //}
+//            //for (var i = 0; i < rows.length; i++) {
+//            //    testList.push(<TestSummary>{
+//            //        id: rows[i].id,
+//            //        title: rows[i].title
+//            //    });
+//            //}
 
-            onResult(null, testList);
-        }
-    });
-}
+//            onResult(null, testList);
+//        }
+//    });
+//}
 
 
 export function getAllRandomTests(num: number, year: number, area: String, onResult: (err: Error, result: Array<any>) => void) {

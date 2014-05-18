@@ -1,11 +1,14 @@
 /// <reference path="../app.ts" />
 /// <reference path="../Scripts/typings/express/express.d.ts" />
 
+
 import indexActions = require('../routes/index');
 import testActions = require('../routes/tests');
 import syncActions = require('../routes/sync');
 import Classes = require('../routes/Classes');
 import TestService = require('../routes/Tests2');
+import ReadingTest = require('../Scripts/structures/tests/ReadingTest');
+
 import express = require('express');
 
 /**
@@ -20,6 +23,8 @@ export function mapRoutes(app: express.Express) {
 
     mapClassRoutes(app);
 
+    mapTestRoutes(app);
+
     // Probably unnecessary.
     // app.use(sendNotFound);
 }
@@ -27,13 +32,13 @@ export function mapRoutes(app: express.Express) {
 function mapGetRoutes(app: express.Express) {
     app.get('/', indexActions.index);
     // app.get('/users', user.list);
-    app.get('/testSummary', testActions.listSummary);
+    //app.get('/testSummary', testActions.listSummary);
 
     app.get('/image', testActions.getImage);
 
     // app.get('/getTest', testActions.getTest);
 
-    app.all('/CreateTest', testActions.createTest);
+    // app.all('/CreateTest', testActions.createTest);
 
     app.all('/CreateTeacher', testActions.createTeacher);
 
@@ -43,9 +48,9 @@ function mapGetRoutes(app: express.Express) {
 
     app.all('/CreateSchool', testActions.createSchool);
 
-    app.get('/tests/:id?', testActions.getTest);
+    //app.get('/tests/:id?', testActions.getTest);
 
-    app.get('/testsSince', testActions.testsSince);
+    //app.get('/testsSince', testActions.testsSince);
 
 
 
@@ -64,8 +69,8 @@ function mapClassRoutes(app: express.Express) {
 }
 
 function mapPostRoutes(app: express.Express) {
-    app.post('/postTestResults', testActions.postTestResults);
-    app.post('/postFiles', testActions.postImage);
+    //app.post('/postTestResults', testActions.postTestResults);
+    //app.post('/postFiles', testActions.postImage);
 
     console.log('Successfully mapped POST routes.');
 }
@@ -83,7 +88,7 @@ function mapSyncRoutes(app: express.Express) {
     console.log('Successfully mapped GET and POST routes for sync.');
 }
 
-function mapTestsRoutes(app: express.Express) {
+function mapTestRoutes(app: express.Express) {
 
     // GET: /Tests/All/
     // Params: 
@@ -92,7 +97,7 @@ function mapTestsRoutes(app: express.Express) {
     // -grade
     // -professorId
     // -creationDate
-    app.get('/Tests/All', function (req: express.Request, res: express.Response) {
+    app.get('/Tests/All', function (req, res) {
         var type = parseInt(req.params.type),
             options = Object.create(null),
             areaId = parseInt(req.params.areaId),
@@ -112,7 +117,7 @@ function mapTestsRoutes(app: express.Express) {
             .catch((_) => res.status(500).end({ error: 500 }));
     });
 
-    app.get('/Tests/Details/:id', function (req: express.Request, res: express.Response) {
+    app.get('/Tests/Details/:id', function (req, res) {
         var id = parseInt(req.params.id);
 
         if (isNaN(id)) { return res.status(400).json({ error: 400 }); }
@@ -125,4 +130,34 @@ function mapTestsRoutes(app: express.Express) {
             })
             .catch((err) => res.status(500).json({ error: 500 }));
     });
+
+    app.all('/Tests/Create/Read', function (req, res) {
+        switch (req.method) {
+            case 'GET':
+                return res.render('addReadingTest');
+            case 'POST':
+                var body = req.body;
+
+                var teste = <ReadingTest> {
+                    title: body.title,
+                    grade: body.grade,
+                    creationDate: Date.now(),
+                    professorId: body.professorId,
+                    areaId: body.areaId,
+                    mainText: body.mainText,
+                    textContent: body.textContent,
+                    type: body.type,
+                };
+
+                TestService.createReadTest(teste, req.files.audio.path)
+                // TODO: Talvez fazer redirect para a lista.
+                    .then((_) => res.redirect('/'))
+                    .catch((err) => res.status(500).json({ error: 500 }));
+            default:
+                // TODO: Talvez fazer uma view para 404, 500, etc.?
+                return res.status(404).json({ error: 404 });
+        }
+    });
+
+
 }

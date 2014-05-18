@@ -17,6 +17,8 @@ function mapRoutes(app) {
     mapSyncRoutes(app);
 
     mapClassRoutes(app);
+
+    mapTestRoutes(app);
     // Probably unnecessary.
     // app.use(sendNotFound);
 }
@@ -26,13 +28,11 @@ function mapGetRoutes(app) {
     app.get('/', indexActions.index);
 
     // app.get('/users', user.list);
-    app.get('/testSummary', testActions.listSummary);
-
+    //app.get('/testSummary', testActions.listSummary);
     app.get('/image', testActions.getImage);
 
     // app.get('/getTest', testActions.getTest);
-    app.all('/CreateTest', testActions.createTest);
-
+    // app.all('/CreateTest', testActions.createTest);
     app.all('/CreateTeacher', testActions.createTeacher);
 
     app.all('/CreateAluno', testActions.createAluno);
@@ -41,10 +41,8 @@ function mapGetRoutes(app) {
 
     app.all('/CreateSchool', testActions.createSchool);
 
-    app.get('/tests/:id?', testActions.getTest);
-
-    app.get('/testsSince', testActions.testsSince);
-
+    //app.get('/tests/:id?', testActions.getTest);
+    //app.get('/testsSince', testActions.testsSince);
     //chama a nova rota para testes random. Forma da QueryString /getRandomTest?
     app.get('/tests/random', testActions.getRandomTest);
 
@@ -60,9 +58,8 @@ function mapClassRoutes(app) {
 }
 
 function mapPostRoutes(app) {
-    app.post('/postTestResults', testActions.postTestResults);
-    app.post('/postFiles', testActions.postImage);
-
+    //app.post('/postTestResults', testActions.postTestResults);
+    //app.post('/postFiles', testActions.postImage);
     console.log('Successfully mapped POST routes.');
 }
 
@@ -79,7 +76,7 @@ function mapSyncRoutes(app) {
     console.log('Successfully mapped GET and POST routes for sync.');
 }
 
-function mapTestsRoutes(app) {
+function mapTestRoutes(app) {
     // GET: /Tests/All/
     // Params:
     // -ofType=[0, 1, 2, 3]
@@ -130,6 +127,35 @@ function mapTestsRoutes(app) {
         }).catch(function (err) {
             return res.status(500).json({ error: 500 });
         });
+    });
+
+    app.all('/Tests/Create/Read', function (req, res) {
+        switch (req.method) {
+            case 'GET':
+                return res.render('addReadingTest');
+            case 'POST':
+                var body = req.body;
+
+                var teste = {
+                    title: body.title,
+                    grade: body.grade,
+                    creationDate: Date.now(),
+                    professorId: body.professorId,
+                    areaId: body.areaId,
+                    mainText: body.mainText,
+                    textContent: body.textContent,
+                    type: body.type
+                };
+
+                TestService.createReadTest(teste, req.files.audio.path).then(function (_) {
+                    return res.redirect('/');
+                }).catch(function (err) {
+                    return res.status(500).json({ error: 500 });
+                });
+            default:
+                // TODO: Talvez fazer uma view para 404, 500, etc.?
+                return res.status(404).json({ error: 404 });
+        }
     });
 }
 //# sourceMappingURL=routes.js.map

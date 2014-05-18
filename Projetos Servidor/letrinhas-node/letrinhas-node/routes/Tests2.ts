@@ -4,10 +4,16 @@
 import pool = require('../configs/mysql');
 import Q = require('q');
 import mysql = require('mysql');
+import path = require('path');
+import uuid = require('node-uuid');
+import app = require('../app');
+import mv = require('mv');
 
 var poolQuery = Q.nbind<any>(pool.query, pool);
 
 import Test = require('../Scripts/structures/tests/Test');
+import ReadingTest = require('../Scripts/structures/tests/ReadingTest');
+
 import TestType = require('../Scripts/structures/tests/TestType');
 import TestCorrection = require('../Scripts/structures/tests/TestCorrection');
 import ReadingTestCorrection = require('../Scripts/structures/tests/ReadingTestCorrection');
@@ -72,14 +78,14 @@ export function details(id: number): Q.Promise<Test> {
         });
 }
 
-// GET: /Tests/Create/
-export function createGet() {
-    throw 'NYI';
-}
+// POST: /Tests/Create/Read
+export function createReadTest(t: ReadingTest, uploadedFilePath: string): Q.Promise<void> {
+    var filePath = path.join('appContent/tests', uuid.v4(), 'professor' + path.extname(uploadedFilePath)).replace(/\\/g, '/');
 
-// POST: /Tests/Create/
-export function createPost(t: Test) {
-    throw 'NYI';
+    var sql = mysql.format("CALL insertReadingTest(?,?,?,?,?,?,?,?,?)", [t.areaId, t.professorId, t.title, t.mainText, t.creationDate, t.grade, t.type, t.textContent, filePath]);
+
+    return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, filePath), { mkdirp: true })
+        .then((_) => poolQuery(sql));
 }
 
 // GET + POST: /Tests/Edit/:id
@@ -102,10 +108,15 @@ export function submitResult(tc: TestCorrection, filePath?: string): Q.Promise<v
         case TestType.list:
         /* falls through */
         case TestType.poem:
-            var rtc = <ReadingTestCorrection> tc;
+            var rtc = <ReadingTestCorrection> tc,
+                // eg: appContent/Tests/1/Submissions/2/timestamp.mp3
+                newPath = path.join('appContent', 'Tests',
+                    tc.testId, 'Submissions',
+                    tc.studentId,
+                    tc.executionDate + path.extname(filePath)).replace(/\\/g, '/');
 
             args.concat([
-                // TODO file name here!!
+                newPath,
                 rtc.professorObservations,
                 rtc.wordsPerMinute,
                 rtc.correctWordCount,
@@ -114,16 +125,26 @@ export function submitResult(tc: TestCorrection, filePath?: string): Q.Promise<v
                 rtc.expressiveness,
                 rtc.rhythm,
                 rtc.details,
-                rtc.wasCorrected
+                rtc.wasCorrected,
+                rtc.type
             ]);
 
-            break;
+            var sql = mysql.format('CALL insertReadingTestCorrection(?,?,?,?,?,?,?,?,?,?,?,?,?,?)', args);
+
+            return Q.nfcall(mv, path.join(app.rootDir, newPath), { mkdirp: true })
+                .then((_) => poolQuery(sql));
         case TestType.multimedia:
-            break;
+            var mtc = <MultimediaTestCorrection> tc;
+
+            args.concat([
+                mtc.optionChosen,
+                mtc.isCorrect
+            ]);
+
+            var sql = mysql.format('CALL insertMultimediaTestCorrection(?,?,?,?,?)', args);
+
+            return poolQuery(sql);
         default:
             return Q.reject('Unknown type.');
     }
-
-
-    throw 'NYI';
 }

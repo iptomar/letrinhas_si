@@ -3,6 +3,11 @@
 */
 var pool = require('../configs/mysql');
 var Q = require('q');
+var mysql = require('mysql');
+var path = require('path');
+var uuid = require('node-uuid');
+var app = require('../app');
+var mv = require('mv');
 
 var poolQuery = Q.nbind(pool.query, pool);
 
@@ -73,17 +78,17 @@ function details(id) {
 }
 exports.details = details;
 
-// GET: /Tests/Create/
-function createGet() {
-    throw 'NYI';
-}
-exports.createGet = createGet;
+// POST: /Tests/Create/Read
+function createReadTest(t, uploadedFilePath) {
+    var filePath = path.join('appContent/tests', uuid.v4(), 'professor' + path.extname(uploadedFilePath)).replace(/\\/g, '/');
 
-// POST: /Tests/Create/
-function createPost(t) {
-    throw 'NYI';
+    var sql = mysql.format("CALL insertReadingTest(?,?,?,?,?,?,?,?,?)", [t.areaId, t.professorId, t.title, t.mainText, t.creationDate, t.grade, t.type, t.textContent, filePath]);
+
+    return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, filePath), { mkdirp: true }).then(function (_) {
+        return poolQuery(sql);
+    });
 }
-exports.createPost = createPost;
+exports.createReadTest = createReadTest;
 
 // GET + POST: /Tests/Edit/:id
 function edit() {
@@ -105,9 +110,10 @@ function submitResult(tc, filePath) {
         case 2 /* list */:
 
         case 3 /* poem */:
-            var rtc = tc;
+            var rtc = tc, newPath = path.join('appContent', 'Tests', tc.testId, 'Submissions', tc.studentId, tc.executionDate + path.extname(filePath)).replace(/\\/g, '/');
 
             args.concat([
+                newPath,
                 rtc.professorObservations,
                 rtc.wordsPerMinute,
                 rtc.correctWordCount,
@@ -116,17 +122,29 @@ function submitResult(tc, filePath) {
                 rtc.expressiveness,
                 rtc.rhythm,
                 rtc.details,
-                rtc.wasCorrected
+                rtc.wasCorrected,
+                rtc.type
             ]);
 
-            break;
+            var sql = mysql.format('CALL insertReadingTestCorrection(?,?,?,?,?,?,?,?,?,?,?,?,?,?)', args);
+
+            return Q.nfcall(mv, path.join(app.rootDir, newPath), { mkdirp: true }).then(function (_) {
+                return poolQuery(sql);
+            });
         case 1 /* multimedia */:
-            break;
+            var mtc = tc;
+
+            args.concat([
+                mtc.optionChosen,
+                mtc.isCorrect
+            ]);
+
+            var sql = mysql.format('CALL insertMultimediaTestCorrection(?,?,?,?,?)', args);
+
+            return poolQuery(sql);
         default:
             return Q.reject('Unknown type.');
     }
-
-    throw 'NYI';
 }
 exports.submitResult = submitResult;
 //# sourceMappingURL=Tests2.js.map
