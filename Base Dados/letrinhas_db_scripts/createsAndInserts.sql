@@ -40,7 +40,7 @@ CREATE TABLE Tests (
   professorId INT,
   title VARCHAR(50),
   mainText VARCHAR(80),
-  creationDate timestamp DEFAULT current_timestamp,
+  creationDate int,
   grade INT(1),
   type int,
 
@@ -174,10 +174,10 @@ CREATE TABLE ProfessorClass(
 
 INSERT INTO `Areas` (`id`, `description`) VALUES (1, 'Português');
 
-INSERT INTO `Tests` (`id`,`areaId`,`professorId`,`title`,`mainText`,`grade`, `type`) VALUES (1,1,1,'Lorem Ipsum 1','Lorem ipsum dolor sit amet, consectetur adipiscing elit.',1, 0);
-INSERT INTO `Tests` (`id`,`areaId`,`professorId`,`title`,`mainText`,`grade`, `type`) VALUES (2,1,1,'Lorem Ipsum 2','Lorem ipsum dolor sit amet, consectetur adipiscing elit.',2, 1);
-INSERT INTO `Tests` (`id`,`areaId`,`professorId`,`title`,`mainText`,`grade`, `type`) VALUES (3,1,1,'Lorem Ipsum 3','Lorem ipsum dolor sit amet, consectetur adipiscing elit.',1, 1);
-INSERT INTO `Tests` (`id`,`areaId`,`professorId`,`title`,`mainText`,`grade`, `type`) VALUES (4,1,1,'Lorem Ipsum 4','Lorem ipsum dolor sit amet, consectetur adipiscing elit.',2, 0);
+INSERT INTO `Tests` (`id`,`areaId`,`professorId`,`title`,`mainText`,`grade`, `type`, `creationDate`) VALUES (1,1,1,'Lorem Ipsum 1','Lorem ipsum dolor sit amet, consectetur adipiscing elit.',1, 0, unix_timestamp() * 1000);
+INSERT INTO `Tests` (`id`,`areaId`,`professorId`,`title`,`mainText`,`grade`, `type`, `creationDate`) VALUES (2,1,1,'Lorem Ipsum 2','Lorem ipsum dolor sit amet, consectetur adipiscing elit.',2, 1, unix_timestamp() * 1000);
+INSERT INTO `Tests` (`id`,`areaId`,`professorId`,`title`,`mainText`,`grade`, `type`, `creationDate`) VALUES (3,1,1,'Lorem Ipsum 3','Lorem ipsum dolor sit amet, consectetur adipiscing elit.',1, 1, unix_timestamp() * 1000);
+INSERT INTO `Tests` (`id`,`areaId`,`professorId`,`title`,`mainText`,`grade`, `type`, `creationDate`) VALUES (4,1,1,'Lorem Ipsum 4','Lorem ipsum dolor sit amet, consectetur adipiscing elit.',2, 0, unix_timestamp() * 1000);
 
 INSERT INTO `MultimediaTests` (`id`,`questionContent`,`contentIsUrl`,`option1`,`option1IsUrl`,`option2`,`option2IsUrl`,`option3`,`option3IsUrl`,`correctOption`) VALUES (2,'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',0,'a',0,'b',0,'c',0,1);
 INSERT INTO `MultimediaTests` (`id`,`questionContent`,`contentIsUrl`,`option1`,`option1IsUrl`,`option2`,`option2IsUrl`,`option3`,`option3IsUrl`,`correctOption`) VALUES (3,'Aenean in velit sodales, tempor erat id, egestas sapien.',0,'d',0,'e',0,'c',0,2);

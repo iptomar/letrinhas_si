@@ -18,7 +18,7 @@ BEGIN
 
 	-- Insert common data.
 	insert into Tests(areaId, professorId, title, mainText, creationDate, grade, type) VALUES
-				(areaid, professorId, title, mainText, from_unixtime(creationDate), grade, type);
+				(areaid, professorId, title, mainText, creationDate, grade, type);
 	
 	#select last_insert_id();
 
