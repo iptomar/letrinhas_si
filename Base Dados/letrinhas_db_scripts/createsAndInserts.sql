@@ -40,12 +40,13 @@ CREATE TABLE Tests (
   professorId INT,
   title VARCHAR(50),
   mainText VARCHAR(80),
-  creationDate int default unix_timestamp(),
+  creationDate timestamp DEFAULT current_timestamp,
   grade INT(1),
   type int,
 
-  CONSTRAINT Tests_FK_Professors FOREIGN KEY (professorId) REFERENCES Professors (id),
   CONSTRAINT Tests_FK_Areas FOREIGN KEY (areaId) REFERENCES Areas (id)
+  CONSTRAINT Tests_FK_Professors FOREIGN KEY (professorId) REFERENCES Professors (id)
+
 ) ENGINE = INNODB DEFAULT CHARSET = UTF8;
 
 DROP TABLE IF EXISTS ReadingTests;
@@ -79,40 +80,42 @@ DROP TABLE IF EXISTS TestCorrections;
 
 CREATE TABLE TestCorrections (
 
-	testId INT,
-	studentId INT,
-	executionDate INT,
-	type INT,
+  testId INT,
+  studentId INT,
+  executionDate INT,
+  type INT,
 
   PRIMARY KEY (testId, studentId, executionDate),
-	
-	FOREIGN KEY(testId) REFERENCES Tests(id),
-	FOREIGN KEY(studentId) REFERENCES Students(id)
+  
+  FOREIGN KEY(testId) REFERENCES Tests(id),
+  FOREIGN KEY(studentId) REFERENCES Students(id)
 ) ENGINE = INNODB DEFAULT CHARSET = UTF8;
 
 DROP TABLE IF EXISTS ReadingTestCorrections;
 
 CREATE TABLE ReadingTestCorrections (
 
-	testId INT,
+  testId INT,
   studentId INT,
   executionDate INT,
 
-	soundFileUrl VARCHAR(100),
-	professorObservations TEXT,
-	
-	wordsPerMinute FLOAT,
-	correctWordCount INT,
-	readingPrecision FLOAT,
-	readingSpeed FLOAT,
-	expressiveness FLOAT,
-	rhythm FLOAT,
+  soundFileUrl VARCHAR(100),
+  professorObservations TEXT,
+  
+  wordsPerMinute FLOAT,
+  correctWordCount INT,
+  readingPrecision FLOAT,
+  readingSpeed FLOAT,
+  expressiveness FLOAT,
+  rhythm FLOAT,
 
-	details TEXT,
+  details TEXT,
+
+  wasCorrected BOOLEAN,
 
   PRIMARY KEY (testId, studentId, executionDate),
 
-	foreign key (testId, studentId, executionDate) references TestCorrections (testId, studentId, executionDate) on delete cascade
+  foreign key (testId, studentId, executionDate) references TestCorrections (testId, studentId, executionDate) on delete cascade
 
 ) ENGINE = INNODB DEFAULT CHARSET = UTF8;
 
@@ -122,9 +125,9 @@ CREATE TABLE MultimediaTestCorrections(
   testId INT,
   studentId INT,
   executionDate INT,
-	
-	optionChosen INT,
-	isCorrect BOOLEAN,
+  
+  optionChosen INT,
+  isCorrect BOOLEAN,
 
   PRIMARY KEY (testId, studentId, executionDate),
 
