@@ -10,9 +10,8 @@ var poolQuery = Q.nbind<any>(pool.query, pool);
 
 import Class = require('../Scripts/structures/schools/Class');
 
-
-// GET: /Classes/
-export function listAll(req: express.Request, res: express.Response) {
+// GET: /Classes/All/
+export function all(req: express.Request, res: express.Response) {
     poolQuery('SELECT * FROM Classes')
         .then((classes) => res.json(classes[0]))
         .catch((err) => res.status(500).end({ error: 500 }));

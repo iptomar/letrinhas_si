@@ -4,6 +4,7 @@ var indexActions = require('../routes/index');
 var testActions = require('../routes/tests');
 var syncActions = require('../routes/sync');
 var Classes = require('../routes/Classes');
+var TestService = require('../routes/Tests2');
 
 /**
 * Maps routes to the server.
@@ -51,7 +52,7 @@ function mapGetRoutes(app) {
 }
 
 function mapClassRoutes(app) {
-    app.get('/Classes/', Classes.listAll);
+    app.get('/Classes/', Classes.all);
     app.get('/Class/:id', Classes.details);
     app.get('/Class/:id/Students', Classes.students);
     app.get('/Classes/Create/', Classes.create);
@@ -78,22 +79,57 @@ function mapSyncRoutes(app) {
     console.log('Successfully mapped GET and POST routes for sync.');
 }
 
-/**
-* @deprecated
-*/
-function sendNotFound(req, res, next) {
-    res.status(404);
+function mapTestsRoutes(app) {
+    // GET: /Tests/All/
+    // Params:
+    // -ofType=[0, 1, 2, 3]
+    // -areaId
+    // -grade
+    // -professorId
+    // -creationDate
+    app.get('/Tests/All', function (req, res) {
+        var type = parseInt(req.params.type), options = Object.create(null), areaId = parseInt(req.params.areaId), grade = parseInt(req.params.grade), professorId = parseInt(req.params.professorId), creationDate = parseInt(req.params.creationDate);
 
-    if (req.accepts('html')) {
-        // TODO: Make this render a view if the request accepts HTML.
-        res.type('html');
-        res.send('<h1>Sorry, that doesn\'t exist...</h1>');
-    } else if (req.accepts('json')) {
-        res.type('json');
-        res.send({ error: 'Sorry, that doesn\'t exist...' });
-    } else {
-        res.type('txt');
-        res.send('Sorry, that doesn\'t exist...');
-    }
+        if (isNaN(type)) {
+            return res.status(400).json({ error: 400 });
+        }
+
+        if (!isNaN(areaId)) {
+            options.areaId = areaId;
+        }
+        if (!isNaN(grade)) {
+            options.grade = grade;
+        }
+        if (!isNaN(professorId)) {
+            options.professorId = professorId;
+        }
+        if (!isNaN(creationDate)) {
+            options.creationDate = creationDate;
+        }
+
+        TestService.all(type, options).then(function (tests) {
+            return res.json(tests);
+        }).catch(function (_) {
+            return res.status(500).end({ error: 500 });
+        });
+    });
+
+    app.get('/Tests/Details/:id', function (req, res) {
+        var id = parseInt(req.params.id);
+
+        if (isNaN(id)) {
+            return res.status(400).json({ error: 400 });
+        }
+
+        TestService.details(id).then(function (test) {
+            if (test === null) {
+                return res.status(404).json({ error: 404 });
+            }
+
+            return res.json(test);
+        }).catch(function (err) {
+            return res.status(500).json({ error: 500 });
+        });
+    });
 }
 //# sourceMappingURL=routes.js.map

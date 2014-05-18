@@ -69,6 +69,8 @@
     <TypeScriptCompile Include="Scripts\utils\promiseBasedMySql.ts" />
     <Content Include="public\scripts\formtest.ts" />
     <Content Include="public\stylesheets\style.css" />
+    <TypeScriptCompile Include="routes\Tests2.ts" />
+    <TypeScriptCompile Include="routes\Students.ts" />
     <Content Include="views\addReadingTest.jade" />
     <Content Include="views\addSchool.jade" />
     <Content Include="views\addStudent.jade" />

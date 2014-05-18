@@ -15,6 +15,6 @@ class ReadingTestCorrection extends TestCorrection {
 
     details: string;
 
-    isPartial: boolean;
+    wasCorrected: boolean;
 }
 export = ReadingTestCorrection;

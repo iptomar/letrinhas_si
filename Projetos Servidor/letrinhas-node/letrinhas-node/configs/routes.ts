@@ -5,6 +5,7 @@ import indexActions = require('../routes/index');
 import testActions = require('../routes/tests');
 import syncActions = require('../routes/sync');
 import Classes = require('../routes/Classes');
+import TestService = require('../routes/Tests2');
 import express = require('express');
 
 /**
@@ -46,7 +47,7 @@ function mapGetRoutes(app: express.Express) {
 
     app.get('/testsSince', testActions.testsSince);
 
-    
+
 
     //chama a nova rota para testes random. Forma da QueryString /getRandomTest?
     app.get('/tests/random', testActions.getRandomTest);
@@ -55,7 +56,7 @@ function mapGetRoutes(app: express.Express) {
 }
 
 function mapClassRoutes(app: express.Express) {
-    app.get('/Classes/', Classes.listAll);
+    app.get('/Classes/', Classes.all);
     app.get('/Class/:id', Classes.details);
     app.get('/Class/:id/Students', Classes.students);
     app.get('/Classes/Create/', Classes.create);
@@ -82,21 +83,46 @@ function mapSyncRoutes(app: express.Express) {
     console.log('Successfully mapped GET and POST routes for sync.');
 }
 
-/**
- * @deprecated
- */
-function sendNotFound(req: express.Request, res: express.Response, next) {
-    res.status(404);
+function mapTestsRoutes(app: express.Express) {
 
-    if (req.accepts('html')) {
-        // TODO: Make this render a view if the request accepts HTML.
-        res.type('html');
-        res.send('<h1>Sorry, that doesn\'t exist...</h1>');
-    } else if (req.accepts('json')) {
-        res.type('json');
-        res.send({ error: 'Sorry, that doesn\'t exist...' });
-    } else {
-        res.type('txt');
-        res.send('Sorry, that doesn\'t exist...');
-    }
+    // GET: /Tests/All/
+    // Params: 
+    // -ofType=[0, 1, 2, 3]
+    // -areaId
+    // -grade
+    // -professorId
+    // -creationDate
+    app.get('/Tests/All', function (req: express.Request, res: express.Response) {
+        var type = parseInt(req.params.type),
+            options = Object.create(null),
+            areaId = parseInt(req.params.areaId),
+            grade = parseInt(req.params.grade),
+            professorId = parseInt(req.params.professorId),
+            creationDate = parseInt(req.params.creationDate);
+
+        if (isNaN(type)) { return res.status(400).json({ error: 400 }); }
+
+        if (!isNaN(areaId)) { options.areaId = areaId; }
+        if (!isNaN(grade)) { options.grade = grade; }
+        if (!isNaN(professorId)) { options.professorId = professorId; }
+        if (!isNaN(creationDate)) { options.creationDate = creationDate; }
+
+        TestService.all(type, options)
+            .then((tests) => res.json(tests))
+            .catch((_) => res.status(500).end({ error: 500 }));
+    });
+
+    app.get('/Tests/Details/:id', function (req: express.Request, res: express.Response) {
+        var id = parseInt(req.params.id);
+
+        if (isNaN(id)) { return res.status(400).json({ error: 400 }); }
+
+        TestService.details(id)
+            .then((test) => {
+                if (test === null) { return res.status(404).json({ error: 404 }) }
+
+                return res.json(test);
+            })
+            .catch((err) => res.status(500).json({ error: 500 }));
+    });
 }
