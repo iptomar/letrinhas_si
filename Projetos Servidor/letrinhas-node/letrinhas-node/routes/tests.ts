@@ -19,6 +19,8 @@ import Teacher = require('../Scripts/structures/schools/Professor');
 import Aluno = require('../Scripts/structures/schools/Student');
 import ReadingTest = require('../Scripts/structures/tests/ReadingTest');
 import SchoolClass = require('../Scripts/structures/schools/Class');
+import School = require('../Scripts/structures/schools/School');
+
 
 
 export function listSummary(request: express.Request, response: express.Response): void {
@@ -241,7 +243,6 @@ export function postTestResults(request: express.Request, response: express.Resp
 }
 
 export function createTest(req: express.Request, res: express.Response) {
-    console.log('Hmm...');
     switch (req.method) {
         case 'GET':
             return res.render('addReadingTest');
@@ -251,18 +252,18 @@ export function createTest(req: express.Request, res: express.Response) {
 
             var body = req.body;
             var teste = <ReadingTest> {
-                title: body.txtTitle,
-                grade: body.grau,
+                title: body.title,
+                grade: body.grade,
                 creationDate: Date.now(),
-                professorId: body.txtidprofessor,
-                areaId: body.areaid,
-                mainText: body.txtapergunta, 
-                textContent: body.txtaText,
-                type: body.type_filter,
+                professorId: body.professorId,
+                areaId: body.areaId,
+                mainText: body.mainText, 
+                textContent: body.textContent,
+                type: body.type,
             };
 
-            appPostServices.addReadingTest(teste, req.files.audioprofessor.path, req.files.audioprofessor.originalname)
-                .then((_) => res.end('success'))
+            appPostServices.addReadingTest(teste, req.files.audio.path, req.files.audio.originalname)
+                .then((_) => res.end('Dados inseridos com sucesso!'))
                 .catch((err) => res.end('error: ' + err.toString()));
 
             //return ;
@@ -287,16 +288,14 @@ export function createTeacher(req: express.Request, res: express.Response) {
                 isActive: body.state_filter,          
             };
 
-            appPostServices.addTeacher(teacher, req.files.photo.path, req.files.photo.originalname);
-            
+            appPostServices.addTeacher(teacher, req.files.photo.path, req.files.photo.originalname)
+                .then((_) => res.end('Dados inseridos com sucesso!'))
+                .catch((err) => res.end('error: ' + err.toString()));
 
-
-            return res.status(500).end('NYIMY');
     }
 }
 
     export function createAluno(req: express.Request, res: express.Response) {
-        console.log('Hmm...');
         switch (req.method) {
             case 'GET':
                 return res.render('addStudent');
@@ -310,11 +309,10 @@ export function createTeacher(req: express.Request, res: express.Response) {
                     isActive: body.state_filter,
                 };
 
-                appPostServices.addStudent(aluno, req.files.photo.path, req.files.photo.originalname);
+                appPostServices.addStudent(aluno, req.files.photo.path, req.files.photo.originalname)
+                .then((_) => res.end('Dados inseridos com sucesso!'))
+                    .catch((err) => res.end('error: ' + err.toString()));
 
-
-               
-                return res.status(500).end('NYI');
 
         }
 }
@@ -334,9 +332,28 @@ export function createClass(req: express.Request, res: express.Response) {
             };
 
             appPostServices.addClass(sClass);
+            res.end('Dados inseridos com sucesso!');
+                //.catch((err) => res.end('error: ' + err.toString()));
 
+    }
+}
 
+export function createSchool(req: express.Request, res: express.Response) {
+    switch (req.method) {
+        case 'GET':
+            return res.render('addSchool');
+        case 'POST':
+            // TODO: Meter dados na BD.
+            var body = req.body;
+            var school = <School> {
+                schoolName: body.schoolName,
+                schoolAddress: body.schoolAddress,
+                schoolLogoUrl: body.photo
+            };
 
-            return res.status(500).end('NYIMY');
+            appPostServices.addSchool(school, req.files.photo.path, req.files.photo.originalname)
+                .then((_) => res.end('Dados inseridos com sucesso!'))
+                .catch((err) => res.end('error: ' + err.toString()));
+
     }
 }

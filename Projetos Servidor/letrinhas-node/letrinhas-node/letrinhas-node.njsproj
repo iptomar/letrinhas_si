@@ -60,6 +60,7 @@
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\mkdirp\mkdirp.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\mysql\mysql.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\node-uuid\node-uuid.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
     <TypeScriptCompile Include="configs\routes.ts" />
     <TypeScriptCompile Include="Scripts\typings\mv\mv.d.ts" />
@@ -68,6 +69,7 @@
     <Content Include="public\scripts\formtest.ts" />
     <Content Include="public\stylesheets\style.css" />
     <Content Include="views\addReadingTest.jade" />
+    <Content Include="views\addSchool.jade" />
     <Content Include="views\addStudent.jade" />
     <Content Include="views\addTeacher.jade" />
     <Content Include="views\formtest.jade" />
@@ -88,6 +90,7 @@
     <Folder Include="Scripts\typings\jquery\" />
     <Folder Include="Scripts\typings\mkdirp\" />
     <Folder Include="Scripts\typings\mv\" />
+    <Folder Include="Scripts\typings\node-uuid\" />
     <Folder Include="Scripts\typings\q\" />
     <Folder Include="Scripts\utils\" />
     <Folder Include="Scripts\structures\" />

@@ -1,0 +1,16 @@
+﻿extends layout
+
+block content
+    form(id="test", method="POST", action="/CreateSchool" enctype="multipart/form-data") 
+        h1 Adicionar Escola
+        | Nome da Escola:
+        input(type='text', name = "schoolName")
+        br
+        | Endereço:
+        input(type='text', name = "schoolAddress")
+        br
+        | Logotipo da Escola:
+        input(type="file" name="photo")
+        br
+        input(type="submit")
+      

@@ -8,6 +8,8 @@ import Q = require('q');
 import mkdirp = require('mkdirp');
 import mysql = require('mysql');
 import mv = require('mv');
+import uuid = require('node-uuid');
+
 
 import TestSummary = require('../structures/tests/TestSummary');
 import TestType = require('../structures/tests/TestType');
@@ -21,6 +23,7 @@ import TestCorrection = require('../structures/tests/TestCorrection');
 import MultimediaTestCorrection = require('../structures/tests/MultimediaTestCorrection');
 import ReadingTestCorrection = require('../structures/tests/ReadingTestCorrection');
 import SchoolClass = require('../structures/schools/Class');
+import School = require('../structures/schools/School');
 
 
 var poolQuery = Q.nbind<any>(pool.query, pool);
@@ -90,14 +93,10 @@ export function addTeacher(p: Professor, uploadedFilePath?: string, uploadedFile
         return Q.reject(new Error('correction cannot be null.'));
     }
     
-    var filePath = path.join('appContent/professors/professor-' + p.name),
-        fileName = path.join(filePath, uploadedFileName);
-       
-    var sql = "Insert Into Professors(`schoolId`,`name`,`username`,`password`,`emailAddress`,`telephoneNumber`,`isActive`,`photoUrl`) VALUES(" + p.schoolId + ",'" + p.name + "','" + p.username + "','" + p.password + "','" + p.emailAddress + "','" + p.telephoneNumber + "'," + p.isActive + ",'" + fileName.replace(/\\/g, '/')+"')";
-
-   
-
-    return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, fileName), { mkdirp: true })
+    var filePath = path.join('appContent/professors/' + uuid.v4()),
+        fileName = path.join(filePath, 'professor' + uploadedFileName.substring(uploadedFileName.lastIndexOf('.', uploadedFileName.length)));
+    var sql = mysql.format("Insert Into Professors(`schoolId`,`name`,`username`,`password`,`emailAddress`,`telephoneNumber`,`isActive`,`photoUrl`) VALUES(?,?,?,?,?,?,?,?)", [p.schoolId, p.name, p.username, p.password, p.emailAddress, p.telephoneNumber, p.isActive, fileName.replace(/\\/g, '/')]);
+   return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, fileName), { mkdirp: true })
         .then((_) => poolQuery(sql));
 
 }
@@ -107,14 +106,10 @@ export function addStudent(p: Aluno, uploadedFilePath?: string, uploadedFileName
         return Q.reject(new Error('correction cannot be null.'));
     }
 
-    var filePath = path.join('appContent/students/student-' + p.name),
-        fileName = path.join(filePath, uploadedFileName);
-     
-    var sql = "Insert Into Students(`classId`,`name`,`photoUrl`,`isActive`) VALUES(" + p.classId + ",'" + p.name + "','" + fileName.replace(/\\/g, '/') +  "','"  + p.isActive + "')";
+    var filePath = path.join('appContent/students/' + uuid.v4()),
+        fileName = path.join(filePath, 'student' + uploadedFileName.substring(uploadedFileName.lastIndexOf('.', uploadedFileName.length)));
 
-    console.log(sql);
-
-
+    var sql = mysql.format("Insert Into Students(`classId`,`name`,`photoUrl`,`isActive`) VALUES(?,?,?,?)", [p.classId, p.name, fileName.replace(/\\/g, '/'),p.isActive]);
     return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, fileName), { mkdirp: true })
         .then((_) => poolQuery(sql));
 
@@ -125,10 +120,9 @@ export function addReadingTest(t: ReadingTest, uploadedFilePath?: string, upload
         return Q.reject(new Error('correction cannot be null.'));
     }
 
-    var filePath = path.join('appContent/tests/test-' + t.title + '-' +  Math.floor(Math.random() * 100)),
-        fileName = path.join(filePath, uploadedFileName);
-   
-    var sql = "CALL insertReadingTest(" + t.areaId + ", " + t.professorId + ", '" + t.title + "', '" + t.mainText + "', " + Date.now ()+ ", " + t.grade + ", " + t.type + ", '" + t.textContent + "', '" + fileName.replace(/\\/g, '/')+"')";
+    var filePath = path.join('appContent/tests/' + uuid.v4()),
+        fileName = path.join(filePath, 'test' + uploadedFileName.substring(uploadedFileName.lastIndexOf('.', uploadedFileName.length)));
+    var sql = mysql.format("CALL insertReadingTest(?,?,?,?,?,?,?,?)", [t.areaId, t.professorId, t.title, t.mainText, t.grade, t.type, t.textContent, fileName.replace(/\\/g, '/')]);
     console.log(sql);
     return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, fileName), { mkdirp: true })
         .then((_) => poolQuery(sql));    
@@ -139,9 +133,22 @@ export function addClass(c: SchoolClass): Q.Promise<any> {
     if (c === null) {
         return Q.reject(new Error('correction cannot be null.'));
     }
-
-    var sql = "Insert Into Classes(`schoolId`,`classLevel`,`className`,`classYear`) VALUES(" + c.schoolId + ",'" + c.classLevel + "','" + c.className + "','" + c.classYear + "')";
-
+    var sql = mysql.format("Insert into Classes(`schoolId`,`classLevel`,`className`,`classYear`) VALUES(?,?,?,?)", [c.schoolId, c.classLevel, c.className, c.classYear]);
     poolQuery(sql);
+
+}
+
+export function addSchool(s: School, uploadedFilePath?: string, uploadedFileName?: string): Q.Promise<any> {
+    if (s === null) {
+        return Q.reject(new Error('correction cannot be null.'));
+    }
+
+  
+    var filePath = path.join('appContent/schools/'+ uuid.v4()),
+        fileName = path.join(filePath, 'logo' + uploadedFileName.substring(uploadedFileName.lastIndexOf('.',uploadedFileName.length)));
+    var sql = mysql.format("Insert Into Schools(`schoolAddress`,`schoolLogoUrl`,`schoolName`) VALUES(?,?,?)", [s.schoolAddress, fileName.replace(/\\/g, '/'), s.schoolName]);
+    console.log(sql);
+    return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, fileName), { mkdirp: true })
+        .then((_) => poolQuery(sql));
 
 }

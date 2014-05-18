@@ -6,44 +6,41 @@ block content
         h1 Adicionar teste de leitura
 
         | Titulo:
-        input(type='text', name = "txtTitle")
+        input(type='text', name = "title")
+        br
+        | Pergunta:
+        input(type='text', name = "title")
         br
         | Texto:
-        textarea(name="txtaText")
-        br
-        | Data de Inserção:
-        input(type='text', name = "txtInsertionDate")
+        textarea(name="textContent")
         br
         | Grau Escolar:
-        select(name="grau")
+        select(name="grade")
             option(value="1") 1º Ano
             option(value="2") 2º Ano
             option(value="3") 3º Ano
             option(value="4") 4º Ano
         br
-        | Pergunta:
-        textarea(name="txtapergunta")
-        br
         | Tipo:
-        input(type="radio", name="type_filter", value="0")
+        input(type="radio", name="type", value="0")
         | Texto
-        input(type="radio", name="type_filter", value="3")
+        input(type="radio", name="type", value="3")
         | Poema
-        input(type="radio", name="type_filter", value="2")
+        input(type="radio", name="type", value="2")
         | Lista
         br
         | Professor Id:
-        input(type='text', name = "txtidprofessor")
+        input(type='text', name = "professorId")
         br
         | Área:
-        select(name="areaid")
+        select(name="areaId")
             option(value="1") Português
             option(value="2") Inglês
             option(value="3") Estudo do Meio
             option(value="4") Matemática
         
         br
-        input(type="file" accept="audio/*" name="audioprofessor")
+        input(type="file" accept="audio/*" name="audio")
         br
         input(type="submit")
         

@@ -211,7 +211,6 @@ function postTestResults(request, response) {
 exports.postTestResults = postTestResults;
 
 function createTest(req, res) {
-    console.log('Hmm...');
     switch (req.method) {
         case 'GET':
             return res.render('addReadingTest');
@@ -219,18 +218,18 @@ function createTest(req, res) {
             // TODO: Meter dados na BD.
             var body = req.body;
             var teste = {
-                title: body.txtTitle,
-                grade: body.grau,
+                title: body.title,
+                grade: body.grade,
                 creationDate: Date.now(),
-                professorId: body.txtidprofessor,
-                areaId: body.areaid,
-                mainText: body.txtapergunta,
-                textContent: body.txtaText,
-                type: body.type_filter
+                professorId: body.professorId,
+                areaId: body.areaId,
+                mainText: body.mainText,
+                textContent: body.textContent,
+                type: body.type
             };
 
-            appPostServices.addReadingTest(teste, req.files.audioprofessor.path, req.files.audioprofessor.originalname).then(function (_) {
-                return res.end('success');
+            appPostServices.addReadingTest(teste, req.files.audio.path, req.files.audio.originalname).then(function (_) {
+                return res.end('Dados inseridos com sucesso!');
             }).catch(function (err) {
                 return res.end('error: ' + err.toString());
             });
@@ -255,15 +254,16 @@ function createTeacher(req, res) {
                 isActive: body.state_filter
             };
 
-            appPostServices.addTeacher(teacher, req.files.photo.path, req.files.photo.originalname);
-
-            return res.status(500).end('NYIMY');
+            appPostServices.addTeacher(teacher, req.files.photo.path, req.files.photo.originalname).then(function (_) {
+                return res.end('Dados inseridos com sucesso!');
+            }).catch(function (err) {
+                return res.end('error: ' + err.toString());
+            });
     }
 }
 exports.createTeacher = createTeacher;
 
 function createAluno(req, res) {
-    console.log('Hmm...');
     switch (req.method) {
         case 'GET':
             return res.render('addStudent');
@@ -276,9 +276,11 @@ function createAluno(req, res) {
                 isActive: body.state_filter
             };
 
-            appPostServices.addStudent(aluno, req.files.photo.path, req.files.photo.originalname);
-
-            return res.status(500).end('NYI');
+            appPostServices.addStudent(aluno, req.files.photo.path, req.files.photo.originalname).then(function (_) {
+                return res.end('Dados inseridos com sucesso!');
+            }).catch(function (err) {
+                return res.end('error: ' + err.toString());
+            });
     }
 }
 exports.createAluno = createAluno;
@@ -298,9 +300,30 @@ function createClass(req, res) {
             };
 
             appPostServices.addClass(sClass);
-
-            return res.status(500).end('NYIMY');
+            res.end('Dados inseridos com sucesso!');
     }
 }
 exports.createClass = createClass;
+
+function createSchool(req, res) {
+    switch (req.method) {
+        case 'GET':
+            return res.render('addSchool');
+        case 'POST':
+            // TODO: Meter dados na BD.
+            var body = req.body;
+            var school = {
+                schoolName: body.schoolName,
+                schoolAddress: body.schoolAddress,
+                schoolLogoUrl: body.photo
+            };
+
+            appPostServices.addSchool(school, req.files.photo.path, req.files.photo.originalname).then(function (_) {
+                return res.end('Dados inseridos com sucesso!');
+            }).catch(function (err) {
+                return res.end('error: ' + err.toString());
+            });
+    }
+}
+exports.createSchool = createSchool;
 //# sourceMappingURL=tests.js.map
