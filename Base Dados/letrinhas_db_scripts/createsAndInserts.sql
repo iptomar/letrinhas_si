@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS Schools;
 CREATE TABLE Schools(
   id INT PRIMARY KEY AUTO_INCREMENT,
   schoolAddress VARCHAR(100),
-  schoolLogoUrl VARCHAR(50),
+  schoolLogoUrl VARCHAR(255),
   schoolName VARCHAR(50)
 )ENGINE = INNODB DEFAULT CHARSET = UTF8;
 
@@ -20,7 +20,7 @@ CREATE TABLE Professors(
   emailAddress VARCHAR(50),
   telephoneNumber VARCHAR(10),
   isActive BOOLEAN,
-  photoUrl VARCHAR(50),
+  photoUrl VARCHAR(255),
 
   CONSTRAINT Professors_FK_Schools FOREIGN KEY(schoolId) REFERENCES Schools(id)
 )ENGINE = INNODB DEFAULT CHARSET = UTF8;
@@ -54,7 +54,7 @@ DROP TABLE IF EXISTS ReadingTests;
 CREATE TABLE ReadingTests (
   id INT PRIMARY KEY,
   textContent TEXT,
-  professorAudioUrl VARCHAR(100),
+  professorAudioUrl VARCHAR(255),
 
   CONSTRAINT ReadingTests_FK_Tests FOREIGN KEY (id) REFERENCES Tests (id)
 ) ENGINE = INNODB DEFAULT CHARSET = UTF8;
@@ -63,7 +63,7 @@ DROP TABLE IF EXISTS MultimediaTests;
 
 CREATE TABLE MultimediaTests (
   id INT PRIMARY KEY,
-  questionContent VARCHAR(200),
+  questionContent VARCHAR(255),
   contentIsUrl BOOLEAN,
   option1 VARCHAR(255),
   option1IsUrl BOOLEAN,
@@ -99,7 +99,7 @@ CREATE TABLE ReadingTestCorrections (
   studentId INT,
   executionDate INT,
 
-  soundFileUrl VARCHAR(100),
+  soundFileUrl VARCHAR(255),
   professorObservations TEXT,
   
   wordsPerMinute FLOAT,
@@ -131,7 +131,7 @@ CREATE TABLE MultimediaTestCorrections(
 
   PRIMARY KEY (testId, studentId, executionDate),
 
-foreign key (testId, studentId, executionDate) references TestCorrections (testId, studentId, executionDate) on delete cascade
+  foreign key (testId, studentId, executionDate) references TestCorrections (testId, studentId, executionDate) on delete cascade
 
 ) ENGINE = INNODB DEFAULT CHARSET = UTF8;
 
