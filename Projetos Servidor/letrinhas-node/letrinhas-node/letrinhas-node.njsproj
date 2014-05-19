@@ -34,15 +34,10 @@
   </PropertyGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
-    <TypeScriptCompile Include="configs\pathConfig.ts" />
     <TypeScriptCompile Include="routes\Classes.ts" />
     <TypeScriptCompile Include="routes\index.ts" />
     <TypeScriptCompile Include="routes\Tests.ts" />
-    <TypeScriptCompile Include="routes\user.ts" />
     <TypeScriptCompile Include="configs\mysql.ts" />
-    <TypeScriptCompile Include="configs\authConfig.ts" />
-    <TypeScriptCompile Include="Scripts\services\appPostServices_DEAD.ts" />
-    <TypeScriptCompile Include="Scripts\services\syncServices_DEAD.ts" />
     <TypeScriptCompile Include="Scripts\structures\schools\Class.ts" />
     <TypeScriptCompile Include="Scripts\structures\schools\Professor.ts" />
     <TypeScriptCompile Include="Scripts\structures\schools\ProfessorClass.ts" />
@@ -69,8 +64,6 @@
     <TypeScriptCompile Include="routes\Students.ts" />
     <TypeScriptCompile Include="routes\Schools.ts" />
     <TypeScriptCompile Include="routes\Professors.ts" />
-    <TypeScriptCompile Include="routes\sync_DEAD.ts" />
-    <TypeScriptCompile Include="Scripts\services\appGetServices_DEAD.ts" />
     <TypeScriptCompile Include="Scripts\services\classService.ts" />
     <TypeScriptCompile Include="Scripts\services\schoolService.ts" />
     <TypeScriptCompile Include="Scripts\services\studentService.ts" />
@@ -116,7 +109,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="public\scripts\formtest.js" />
-    <TypeScriptCompile Include="routes\Tests_DEAD.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
   <ProjectExtensions>

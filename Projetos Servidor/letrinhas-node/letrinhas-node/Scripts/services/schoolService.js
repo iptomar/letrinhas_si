@@ -15,6 +15,17 @@ function all() {
 }
 exports.all = all;
 
+function details(id) {
+    return poolQuery(mysql.format('SELECT * FROM Schools WHERE id = ?', [id])).then(function (results) {
+        if (results[0].length === 0) {
+            return Q.resolve(null);
+        }
+
+        return results[0][0];
+    });
+}
+exports.details = details;
+
 function createSchool(s, uploadedFilePath) {
     // eg: appContent/Schools/uuid/logo.jpg
     var filePath = path.join('appContent/Schools', uuid.v4(), 'logo' + path.extname(uploadedFilePath)).replace(/\\/g, '/');

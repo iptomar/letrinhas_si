@@ -1,7 +1,7 @@
 ﻿extends layout
 
 block content
-    form(id="test", method="POST", action="/CreateTest" enctype="multipart/form-data")
+    form(id="test", method="POST", action="/Tests/Create/Read" enctype="multipart/form-data")
         
         h1 Adicionar teste de leitura
 
@@ -9,7 +9,7 @@ block content
         input(type='text', name = "title")
         br
         | Pergunta:
-        input(type='text', name = "title")
+        input(type='text', name = "mainText")
         br
         | Texto:
         textarea(name="textContent")

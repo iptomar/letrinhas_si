@@ -50,11 +50,11 @@ function all(ofType, options) {
         case 2 /* list */:
 
         case 3 /* poem */:
-            return poolQuery('select t.id, t.type, t.professorId, t.title, t.mainText, unix_timestamp(t.creationDate) as creationDate, t.grade, t.areaId, rt.professorAudioUrl, rt.textContent from Tests as t join ReadingTests as rt on rt.id = t.id ' + where).then(function (result) {
+            return poolQuery('select t.id, t.type, t.professorId, t.title, t.mainText, t.creationDate, t.grade, t.areaId, rt.professorAudioUrl, rt.textContent from Tests as t join ReadingTests as rt on rt.id = t.id ' + where).then(function (result) {
                 return result[0];
             });
         case 1 /* multimedia */:
-            return poolQuery('SELECT t.id, t.type, t.professorId, t.title, t.mainText, UNIX_TIMESTAMP(t.creationDate) AS creationDate, t.grade, t.areaId, mt.questionContent, mt.contentIsUrl, mt.option1, mt.option1IsUrl, mt.option2, mt.option2IsUrl, mt.option3, mt.option3IsUrl, mt.correctOption FROM Tests AS t JOIN MultimediaTests AS mt ON mt.id = t.id ' + where).then(function (result) {
+            return poolQuery('SELECT t.id, t.type, t.professorId, t.title, t.mainText, t.creationDate, t.grade, t.areaId, mt.questionContent, mt.contentIsUrl, mt.option1, mt.option1IsUrl, mt.option2, mt.option2IsUrl, mt.option3, mt.option3IsUrl, mt.correctOption FROM Tests AS t JOIN MultimediaTests AS mt ON mt.id = t.id ' + where).then(function (result) {
                 return result[0];
             });
             break;
@@ -63,6 +63,48 @@ function all(ofType, options) {
     }
 }
 exports.all = all;
+
+/**
+* Devolve uma lista de testes multimédia, escolhidos aleatóriamente a partir da db.
+* Portado por @redroserade para usar promises.
+*
+* @author luisfmoliveira
+*/
+function random(options) {
+    if (isNaN(options.area) || isNaN(options.year)) {
+        return Q.reject('Invalid area or grade. They must be numbers.');
+    }
+
+    var sql = 'SELECT t.id, t.type, t.professorId, t.title, t.mainText, t.creationDate, t.grade, t.areaId, mt.questionContent, mt.contentIsUrl, mt.option1, mt.option1IsUrl, mt.option2, mt.option2IsUrl, mt.option3, mt.option3IsUrl, mt.correctOption FROM Tests AS t JOIN MultimediaTests AS mt ON mt.id = t.id WHERE t.areaId = ' + options.area + ' AND t.grade = ' + options.year;
+
+    console.log(sql);
+
+    return poolQuery(sql).then(function (results) {
+        var tests = results[0], aux, i, rnd, result = new Array();
+
+        //Caso o numero de perguntas que o professor quer, sobre um tema, seja igual ou superior as que existem na BD, devolve todas. Pode-se alterar por uma
+        //mensagem de erro. Fica para se decidir
+        if (options.num >= tests.length) {
+            return tests;
+        }
+
+        aux = 0;
+
+        for (i = 1; i <= options.num; i += 1) {
+            rnd = Math.floor((Math.random() * tests.length) + 1);
+
+            if (rnd !== aux) {
+                result.push(tests[rnd - 1]);
+                aux = rnd;
+            } else {
+                i = i - 1;
+            }
+        }
+
+        return result;
+    });
+}
+exports.random = random;
 
 // GET: /Tests/Details/:id
 function details(id) {
@@ -84,6 +126,8 @@ function createReadTest(t, uploadedFilePath) {
     var filePath = path.join('appContent/Tests', uuid.v4(), 'demo' + path.extname(uploadedFilePath)).replace(/\\/g, '/');
 
     var sql = mysql.format("CALL insertReadingTest(?,?,?,?,?,?,?,?,?)", [t.areaId, t.professorId, t.title, t.mainText, t.creationDate, t.grade, t.type, t.textContent, filePath]);
+
+    console.log(sql);
 
     return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, filePath), { mkdirp: true }).then(function (_) {
         return poolQuery(sql);

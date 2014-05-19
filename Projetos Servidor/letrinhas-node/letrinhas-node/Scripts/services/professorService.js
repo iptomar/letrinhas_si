@@ -8,12 +8,24 @@ var app = require('../../app');
 
 var poolQuery = Q.nbind(pool.query, pool);
 
-function all() {
-    return poolQuery('SELECT * FROM Professors WHERE isActive = true').then(function (results) {
+function all(isActive) {
+    if (typeof isActive === "undefined") { isActive = true; }
+    return poolQuery('SELECT * FROM Professors WHERE isActive = ' + isActive).then(function (results) {
         return results[0];
     });
 }
 exports.all = all;
+
+function details(id) {
+    return poolQuery(mysql.format('SELECT * FROM Professors WHERE id = ?', [id])).then(function (results) {
+        if (results[0].length === 0) {
+            return Q.resolve(null);
+        }
+
+        return Q.resolve(results[0][0]);
+    });
+}
+exports.details = details;
 
 function createProfessor(p, uploadedFilePath) {
     // eg: appContent/Professors/uuid/picture.jpg

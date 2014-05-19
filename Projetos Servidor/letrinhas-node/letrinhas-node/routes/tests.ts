@@ -12,7 +12,8 @@ export function mapRoutes(app: express.Express) {
     app.all('/Tests/Create/Read', function (req, res) {
         switch (req.method) {
             case 'GET':
-                return res.render('addReadingTest');
+                res.render('addReadingTest');
+                break;
             case 'POST':
                 var body = req.body;
 
@@ -27,10 +28,31 @@ export function mapRoutes(app: express.Express) {
                     type: body.type,
                 };
 
+                console.log(teste);
+
                 service.createReadTest(teste, req.files.audio.path)
                 // TODO: Talvez fazer redirect para a lista.
                     .then((_) => res.redirect('/'))
-                    .catch((err) => res.status(500).json({ error: 500 }));
+                    .catch((err) => {
+                        console.error(err);
+                        res.status(500).json({ error: 500 })
+                });
+                break;
+            default:
+                // TODO: Talvez fazer uma view para 404, 500, etc.?
+                res.status(404).json({ error: 404 });
+        }
+    });
+
+    app.all('/Tests/Create/Multimedia', function (req, res) {
+        // TODO
+        throw 'NYI';
+
+        switch (req.method) {
+            case 'GET':
+                break;
+            case 'POST':
+                break;
             default:
                 // TODO: Talvez fazer uma view para 404, 500, etc.?
                 res.status(404).json({ error: 404 });
@@ -47,10 +69,10 @@ export function mapRoutes(app: express.Express) {
     app.get('/Tests/All', function (req, res) {
         var type = parseInt(req.query.type),
             options = Object.create(null),
-            areaId = parseInt(req.params.areaId),
-            grade = parseInt(req.params.grade),
-            professorId = parseInt(req.params.professorId),
-            creationDate = parseInt(req.params.creationDate);
+            areaId = parseInt(req.query.areaId),
+            grade = parseInt(req.query.grade),
+            professorId = parseInt(req.query.professorId),
+            creationDate = parseInt(req.query.creationDate);
 
         if (isNaN(type)) { return res.status(400).json({ error: 400 }); }
 
@@ -61,7 +83,40 @@ export function mapRoutes(app: express.Express) {
 
         service.all(type, options)
             .then((tests) => res.json(tests))
-            .catch((_) => res.status(500).json({ error: 500 }));
+            .catch((err) => {
+                console.error(err);
+                res.status(500).json({ error: 500 })
+            });
+    });
+
+    /**
+     * GET /Tests/Random
+     * 
+     * Params:
+     * areaId: number
+     * grade: number
+     * count: number (optional)
+     * 
+     * @author luisfmoliveira
+     */
+    app.get('/Tests/Random', function (req, res) {
+        var num = parseInt(req.query.count),
+            year = parseInt(req.query.grade),
+            area = parseInt(req.query.areaId),
+            options = Object.create(null);
+
+        if (isNaN(area) || isNaN(year)) { return res.status(400).json({ error: 400 }); }
+
+        if (!isNaN(num)) { options.num = num; }
+        if (!isNaN(area)) { options.area = area; }
+        if (!isNaN(year)) { options.year = year; }
+
+        service.random(options)
+            .then((tests) => res.json(tests))
+            .catch((err) => {
+                console.error(err);
+                res.status(500).json({ error: 500 })
+            });
     });
 
     // GET: /Tests/Details/5
@@ -76,6 +131,14 @@ export function mapRoutes(app: express.Express) {
 
                 return res.json(test);
             })
-            .catch((err) => res.status(500).json({ error: 500 }));
+            .catch((err) => {
+                console.error(err);
+                res.status(500).json({ error: 500 })
+            });
+    });
+
+    app.post('/Tests/Submit/:id', function (req, res) {
+        // TODO
+        throw 'NYI';
     });
 }

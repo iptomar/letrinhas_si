@@ -14,6 +14,15 @@ export function all(): Q.Promise<Array<School>> {
         .then((results) => results[0]);
 }
 
+export function details(id: number): Q.Promise<School> {
+    return poolQuery(mysql.format('SELECT * FROM Schools WHERE id = ?', [id]))
+        .then((results) => {
+            if (results[0].length === 0) { return Q.resolve(null); }
+
+            return results[0][0];
+        });
+}
+
 export function createSchool(s: School, uploadedFilePath: string): Q.Promise<void> {
     // eg: appContent/Schools/uuid/logo.jpg
     var filePath = path.join('appContent/Schools', uuid.v4(), 'logo' + path.extname(uploadedFilePath)).replace(/\\/g, '/');

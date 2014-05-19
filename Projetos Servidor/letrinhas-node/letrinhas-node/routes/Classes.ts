@@ -11,16 +11,21 @@ export function mapRoutes(app: express.Express) {
     app.get('/Classes/All', function (req, res) {
         service.all()
             .then((classes) => res.json(classes))
-            .catch((_) => res.status(500).json({ error: 500 }));
+            .catch((err) => {
+                console.error(err);
+                res.status(500).json({ error: 500 })
+            });
     });
 
     console.log('GET /Classes/All ->', service.all);
 
     app.get('/Classes/Details/:id', function (req, res) {
+        throw 'NYI';
         // TODO
     });
 
     app.get('/Classes/Students/:id', function (req, res) {
+        throw 'NYI';
         // TODO
     });
 
@@ -40,9 +45,13 @@ export function mapRoutes(app: express.Express) {
 
                 service.createClass(sClass)
                     .then((_) => res.end('Dados inseridos com sucesso!'))
-                    .catch((_) => res.status(500).json({ error: 500 }));
+                    .catch((err) => {
+                        console.error(err);
+                        res.status(500).json({ error: 500 })
+                    });
+                break;
             default:
-                res.status(500).json({ error: 500 });
+                res.status(404).json({ error: 404 });
         }
     });
 
@@ -59,7 +68,10 @@ export function mapRoutes(app: express.Express) {
 
         service.professors(id)
             .then((professors) => res.json(professors))
-            .catch((_) => res.status(500).json({ error: 500 }));
+            .catch((err) => {
+                console.error(err);
+                res.status(500).json({ error: 500 })
+            });
     });
 
     console.log('GET /Classes/Professors ->', service.professors);

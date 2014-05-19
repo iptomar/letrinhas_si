@@ -7,18 +7,21 @@ function mapRoutes(app) {
     app.get('/Classes/All', function (req, res) {
         service.all().then(function (classes) {
             return res.json(classes);
-        }).catch(function (_) {
-            return res.status(500).json({ error: 500 });
+        }).catch(function (err) {
+            console.error(err);
+            res.status(500).json({ error: 500 });
         });
     });
 
     console.log('GET /Classes/All ->', service.all);
 
     app.get('/Classes/Details/:id', function (req, res) {
+        throw 'NYI';
         // TODO
     });
 
     app.get('/Classes/Students/:id', function (req, res) {
+        throw 'NYI';
         // TODO
     });
 
@@ -38,11 +41,13 @@ function mapRoutes(app) {
 
                 service.createClass(sClass).then(function (_) {
                     return res.end('Dados inseridos com sucesso!');
-                }).catch(function (_) {
-                    return res.status(500).json({ error: 500 });
+                }).catch(function (err) {
+                    console.error(err);
+                    res.status(500).json({ error: 500 });
                 });
+                break;
             default:
-                res.status(500).json({ error: 500 });
+                res.status(404).json({ error: 404 });
         }
     });
 
@@ -61,8 +66,9 @@ function mapRoutes(app) {
 
         service.professors(id).then(function (professors) {
             return res.json(professors);
-        }).catch(function (_) {
-            return res.status(500).json({ error: 500 });
+        }).catch(function (err) {
+            console.error(err);
+            res.status(500).json({ error: 500 });
         });
     });
 

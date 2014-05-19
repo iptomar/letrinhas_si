@@ -13,7 +13,8 @@ function all() {
 exports.all = all;
 
 function professors(classId) {
-    return poolQuery('SELECT * FROM ProfessorClass' + (typeof classId !== 'undefined') ? ' WHERE classId = ' + classId : '').then(function (results) {
+    var sql = 'SELECT * FROM ProfessorClass' + (!isNaN(classId) ? ' WHERE classId = ' + classId : '');
+    return poolQuery(sql).then(function (results) {
         return results[0];
     });
 }

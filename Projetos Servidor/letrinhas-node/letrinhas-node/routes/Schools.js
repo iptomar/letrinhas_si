@@ -4,8 +4,28 @@ function mapRoutes(app) {
     app.get('/Schools/All', function (req, res) {
         service.all().then(function (schools) {
             return res.json(schools);
-        }).catch(function (_) {
-            return res.status(500).json({ error: 500 });
+        }).catch(function (err) {
+            console.error(err);
+            res.status(500).json({ error: 500 });
+        });
+    });
+
+    app.get('/Schools/Details/:id', function (req, res) {
+        var id = parseInt(req.params.id);
+
+        if (isNaN(id)) {
+            res.status(400).json({ error: 400 });
+        }
+
+        service.details(id).then(function (school) {
+            if (school === null) {
+                return res.status(404).json({ error: 404 });
+            }
+
+            res.json(school);
+        }).catch(function (err) {
+            console.error(err);
+            res.status(500).json({ error: 500 });
         });
     });
 
@@ -24,8 +44,10 @@ function mapRoutes(app) {
                 service.createSchool(school, req.files.photo.path).then(function (_) {
                     return res.end('Dados inseridos com sucesso!');
                 }).catch(function (err) {
-                    return res.end('error: ' + err.toString());
+                    console.error(err);
+                    res.status(500).json({ error: 500 });
                 });
+                break;
             default:
                 res.status(404).json({ error: 404 });
         }
@@ -36,20 +58,9 @@ function mapRoutes(app) {
 
         switch (req.method) {
             case 'GET':
-                return res.render('addSchool');
+                break;
             case 'POST':
-                var body = req.body;
-                var school = {
-                    schoolName: body.schoolName,
-                    schoolAddress: body.schoolAddress,
-                    schoolLogoUrl: body.photo
-                };
-
-                service.createSchool(school, req.files.photo.path).then(function (_) {
-                    return res.end('Dados inseridos com sucesso!');
-                }).catch(function (err) {
-                    return res.end('error: ' + err.toString());
-                });
+                break;
             default:
                 res.status(404).json({ error: 404 });
         }

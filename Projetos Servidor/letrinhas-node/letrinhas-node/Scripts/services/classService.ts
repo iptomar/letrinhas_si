@@ -15,7 +15,8 @@ export function all(): Q.Promise<Array<Class>> {
 }
 
 export function professors(classId?: number): Q.Promise<Array<ProfessorClass>>  {
-    return poolQuery('SELECT * FROM ProfessorClass' + (typeof classId !== 'undefined') ? ' WHERE classId = ' + classId : '')
+    var sql = 'SELECT * FROM ProfessorClass' + (!isNaN(classId) ? ' WHERE classId = ' + classId : '');
+    return poolQuery(sql)
         .then((results) => results[0]);
 }
 

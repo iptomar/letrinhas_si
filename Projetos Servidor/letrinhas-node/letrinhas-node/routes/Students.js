@@ -4,10 +4,13 @@ function mapRoutes(app) {
     app.get('/Students/All', function (req, res) {
         service.all().then(function (students) {
             return res.json(students);
-        }).catch(function (_) {
-            return res.status(500).end({ error: 500 });
+        }).catch(function (err) {
+            console.error(err);
+            res.status(500).json({ error: 500 });
         });
     });
+
+    console.log('GET /Students/All ->', service.all.toString());
 
     app.get('/Students/Details/:id', function (req, res) {
         var id = parseInt(req.params.id);
@@ -22,17 +25,19 @@ function mapRoutes(app) {
             }
 
             res.json(student);
-        }).catch(function (_) {
-            return res.status(500).json({ error: 400 });
+        }).catch(function (err) {
+            console.error(err);
+            res.status(500).json({ error: 500 });
         });
     });
 
-    console.log('GET /Students/All ->', service.details);
+    console.log('GET /Students/All ->', service.details.toString());
 
     app.all('/Students/Create', function (req, res) {
         switch (req.method) {
             case 'GET':
-                return res.render('addStudent');
+                res.render('addStudent');
+                break;
             case 'POST':
                 // TODO: Meter dados na BD.
                 var body = req.body;
@@ -46,15 +51,16 @@ function mapRoutes(app) {
                 service.create(aluno, req.files.photo.path).then(function (_) {
                     return res.end('Dados inseridos com sucesso!');
                 }).catch(function (err) {
-                    return res.end('error: ' + err.toString());
+                    console.error(err);
+                    res.status(500).json({ error: 500 });
                 });
-
+                break;
             default:
                 res.status(404).json({ error: 404 });
         }
     });
 
-    console.log('GET + POST /Students/Create ->', service.create);
+    console.log('GET + POST /Students/Create ->', service.create.toString());
 
     app.all('/Students/Edit/:id', function (req, res) {
         throw 'NYI';
