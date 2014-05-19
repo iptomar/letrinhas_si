@@ -35,7 +35,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="routes\Classes.ts" />
-    <TypeScriptCompile Include="routes\index.ts" />
+    <TypeScriptCompile Include="routes\Index.ts" />
     <TypeScriptCompile Include="routes\Tests.ts" />
     <TypeScriptCompile Include="configs\mysql.ts" />
     <TypeScriptCompile Include="Scripts\structures\schools\Class.ts" />
@@ -60,7 +60,6 @@
     <TypeScriptCompile Include="configs\routes.ts" />
     <TypeScriptCompile Include="Scripts\typings\mv\mv.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\q\q.d.ts" />
-    <TypeScriptCompile Include="Scripts\utils\promiseBasedMySql.ts" />
     <TypeScriptCompile Include="routes\Students.ts" />
     <TypeScriptCompile Include="routes\Schools.ts" />
     <TypeScriptCompile Include="routes\Professors.ts" />
@@ -96,7 +95,6 @@
     <Folder Include="Scripts\typings\mv\" />
     <Folder Include="Scripts\typings\node-uuid\" />
     <Folder Include="Scripts\typings\q\" />
-    <Folder Include="Scripts\utils\" />
     <Folder Include="Scripts\structures\" />
     <Folder Include="Scripts\services\" />
     <Folder Include="Scripts\structures\tests\" />

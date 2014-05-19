@@ -12,6 +12,13 @@ function all() {
 }
 exports.all = all;
 
+function details(id) {
+    return poolQuery(mysql.format('SELECT * FROM Classes WHERE id = ?', [id])).then(function (results) {
+        return Q.resolve(results[0].length === 0 ? null : results[0][0]);
+    });
+}
+exports.details = details;
+
 function professors(classId) {
     var sql = 'SELECT * FROM ProfessorClass' + (!isNaN(classId) ? ' WHERE classId = ' + classId : '');
     return poolQuery(sql).then(function (results) {

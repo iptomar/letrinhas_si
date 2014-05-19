@@ -16,8 +16,22 @@ function mapRoutes(app) {
     console.log('GET /Classes/All ->', service.all);
 
     app.get('/Classes/Details/:id', function (req, res) {
-        throw 'NYI';
-        // TODO
+        var id = parseInt(req.params.id);
+
+        if (isNaN(id)) {
+            res.status(400).json({ error: 400 });
+        }
+
+        service.details(id).then(function (classDetails) {
+            if (classDetails === null) {
+                return res.status(404).json({ error: 404 });
+            }
+
+            res.json(classDetails);
+        }).catch(function (err) {
+            console.error(err);
+            res.status(500).json({ error: 500 });
+        });
     });
 
     app.get('/Classes/Students/:id', function (req, res) {

@@ -1,4 +1,4 @@
-var indexActions = require('../routes/index');
+var indexRoutes = require('../routes/Index');
 
 var studentRoutes = require('../routes/Students');
 var classRoutes = require('../routes/Classes');
@@ -12,7 +12,7 @@ var schoolRoutes = require('../routes/Schools');
 * @param app The server which routes will be mapped to.
 */
 function mapRoutes(app) {
-    app.get('/', indexActions.index);
+    app.get('/', indexRoutes.index);
 
     // /Students
     studentRoutes.mapRoutes(app);

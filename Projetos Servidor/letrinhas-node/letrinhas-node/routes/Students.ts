@@ -32,7 +32,7 @@ export function mapRoutes(app: express.Express) {
             });
     });
 
-    console.log('GET /Students/All ->', service.details.toString());
+    console.log('GET /Students/All ->', 'service.details');
 
     app.all('/Students/Create', function (req, res) {
         switch (req.method) {
@@ -62,7 +62,7 @@ export function mapRoutes(app: express.Express) {
         }
     });
 
-    console.log('GET + POST /Students/Create ->', service.create.toString());
+    console.log('GET + POST /Students/Create ->', 'service.create');
 
     app.all('/Students/Edit/:id', function (req, res) {
         // TODO

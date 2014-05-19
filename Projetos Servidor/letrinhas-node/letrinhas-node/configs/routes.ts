@@ -1,4 +1,4 @@
-import indexActions = require('../routes/index');
+import indexRoutes = require('../routes/Index');
 
 import studentRoutes = require('../routes/Students');
 import classRoutes = require('../routes/Classes');
@@ -14,7 +14,7 @@ import express = require('express');
  * @param app The server which routes will be mapped to.
  */
 export function mapRoutes(app: express.Express) {
-    app.get('/', indexActions.index);
+    app.get('/', indexRoutes.index);
 
     // /Students
     studentRoutes.mapRoutes(app);
