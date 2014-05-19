@@ -3,38 +3,56 @@
  */
 
 import express = require('express');
-import pool = require('../configs/mysql');
-import Q = require('q');
 
-var poolQuery = Q.nbind<any>(pool.query, pool);
-
+import service = require('../Scripts/services/classService');
 import Class = require('../Scripts/structures/schools/Class');
 
-// GET: /Classes/All/
-export function all(req: express.Request, res: express.Response) {
-    poolQuery('SELECT * FROM Classes')
-        .then((classes) => res.json(classes[0]))
-        .catch((err) => res.status(500).end({ error: 500 }));
-}
+export function mapRoutes(app: express.Express) {
+    app.get('/Classes/All', function (req, res) {
+        service.all()
+            .then((classes) => res.json(classes))
+            .catch((_) => res.status(500).json({ error: 500 }));
+    });
 
-// GET: /Classes/:id/Students/
-export function students(req: express.Request, res: express.Response) {
-    res.end('/Classes/:id/Students');
-}
+    app.get('/Classes/Details/:id', function (req, res) {
+        // TODO
+    });
 
-// GET: /Classes/Create/
-export function create(req: express.Request, res: express.Response) {
-    res.end('/Classes/Create');
-}
+    app.get('/Classes/Students/:id', function (req, res) {
+        // TODO
+    });
 
-// GET: /Classes/:id/
-export function details(req: express.Request, res: express.Response) {
-    res.end('/Classes/:id');
-}
+    app.all('/Classes/Create', function (req, res) {
+        switch (req.method) {
+            case 'GET':
+                return res.render('addClass');
+            case 'POST':
+                // TODO: Meter dados na BD.
+                var body = req.body;
+                var sClass = <Class> {
+                    schoolId: body.schoolId,
+                    classLevel: body.year_filter,
+                    className: body.className,
+                    classYear: body.classYear
+                };
 
-// GET: /Classes/Relationships/
-export function classRelationships(req: express.Request, res: express.Response) {
-    poolQuery('SELECT * FROM ProfessorClass')
-        .then((relation) => res.json(relation[0]))
-        .catch((err) => res.status(500).json({ error: 500 }))
+                service.createClass(sClass)
+                    .then((_) => res.end('Dados inseridos com sucesso!'))
+                    .catch((_) => res.status(500).json({ error: 500 }));
+        }
+    });
+
+    app.get('/Classes/Professors/:id?', function (req, res) {
+        var id;
+
+        if (typeof req.params.id !== 'undefined') {
+            id = parseInt(req.params.id);
+
+            if (isNaN(id)) { return res.status(400).end({ error: 400 }); }
+        }
+
+        service.professors(id)
+            .then((professors) => res.json(professors))
+            .catch((_) => res.status(500).json({ error: 500 }));
+    });
 }

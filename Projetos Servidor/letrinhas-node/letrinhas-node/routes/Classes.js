@@ -1,46 +1,64 @@
 ﻿/*
 * Routes related to classes.
 */
-var pool = require('../configs/mysql');
-var Q = require('q');
+var service = require('../Scripts/services/classService');
 
-var poolQuery = Q.nbind(pool.query, pool);
+function mapRoutes(app) {
+    app.get('/Classes/All', function (req, res) {
+        service.all().then(function (classes) {
+            return res.json(classes);
+        }).catch(function (_) {
+            return res.status(500).json({ error: 500 });
+        });
+    });
 
-// GET: /Classes/
-function listAll(req, res) {
-    poolQuery('SELECT * FROM Classes').then(function (classes) {
-        return res.json(classes[0]);
-    }).catch(function (err) {
-        return res.status(500).end({ error: 500 });
+    app.get('/Classes/Details/:id', function (req, res) {
+        // TODO
+    });
+
+    app.get('/Classes/Students/:id', function (req, res) {
+        // TODO
+    });
+
+    app.all('/Classes/Create', function (req, res) {
+        switch (req.method) {
+            case 'GET':
+                return res.render('addClass');
+            case 'POST':
+                // TODO: Meter dados na BD.
+                var body = req.body;
+                var sClass = {
+                    schoolId: body.schoolId,
+                    classLevel: body.year_filter,
+                    className: body.className,
+                    classYear: body.classYear
+                };
+
+                service.createClass(sClass).then(function (_) {
+                    return res.end('Dados inseridos com sucesso!');
+                }).catch(function (_) {
+                    return res.status(500).json({ error: 500 });
+                });
+        }
+    });
+
+    app.get('/Classes/Professors/:id?', function (req, res) {
+        var id;
+
+        if (typeof req.params.id !== 'undefined') {
+            id = parseInt(req.params.id);
+
+            if (isNaN(id)) {
+                return res.status(400).end({ error: 400 });
+            }
+        }
+
+        service.professors(id).then(function (professors) {
+            return res.json(professors);
+        }).catch(function (_) {
+            return res.status(500).json({ error: 500 });
+        });
     });
 }
-exports.listAll = listAll;
-
-// GET: /Classes/:id/Students/
-function students(req, res) {
-    res.end('/Classes/:id/Students');
-}
-exports.students = students;
-
-// GET: /Classes/Create/
-function create(req, res) {
-    res.end('/Classes/Create');
-}
-exports.create = create;
-
-// GET: /Classes/:id/
-function details(req, res) {
-    res.end('/Classes/:id');
-}
-exports.details = details;
-
-// GET: /Classes/Relationships/
-function classRelationships(req, res) {
-    poolQuery('SELECT * FROM ProfessorClass').then(function (relation) {
-        return res.json(relation[0]);
-    }).catch(function (err) {
-        return res.status(500).json({ error: 500 });
-    });
-}
-exports.classRelationships = classRelationships;
+exports.mapRoutes = mapRoutes;
 //# sourceMappingURL=Classes.js.map

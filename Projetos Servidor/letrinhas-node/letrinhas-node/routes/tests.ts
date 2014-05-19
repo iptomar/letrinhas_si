@@ -49,15 +49,15 @@ import School = require('../Scripts/structures/schools/School');
 
 export function getImage(request: express.Request, response: express.Response) {
     //appGetServices.getBinaryData((err, result) => {
-        //response.type('json');
-        //response.end(JSON.stringify({
-        //    id: 1,
-        //    title: 'Um carrinho bonito',
-        //    image: result.toString('base64'),
-        //    success: 1
-        //}));
+    //response.type('json');
+    //response.end(JSON.stringify({
+    //    id: 1,
+    //    title: 'Um carrinho bonito',
+    //    image: result.toString('base64'),
+    //    success: 1
+    //}));
 
-        response.end('');
+    response.end('');
     //});
     //console.log("Hello");
 }
@@ -247,7 +247,7 @@ export function getRandomTest(request: express.Request, response: express.Respon
 //        case 'GET':
 //            return res.render('addReadingTest');
 //        case 'POST':
-            
+
 //            // TODO: Meter dados na BD.
 
 //            var body = req.body;
@@ -285,7 +285,7 @@ export function createTeacher(req: express.Request, res: express.Response) {
                 password: body.password,
                 emailAddress: body.mail,
                 telephoneNumber: body.phone,
-                isActive: body.state_filter,          
+                isActive: body.state_filter,
             };
 
             appPostServices.addTeacher(teacher, req.files.photo.path, req.files.photo.originalname)
@@ -295,65 +295,65 @@ export function createTeacher(req: express.Request, res: express.Response) {
     }
 }
 
-    export function createAluno(req: express.Request, res: express.Response) {
-        switch (req.method) {
-            case 'GET':
-                return res.render('addStudent');
-            case 'POST':
+//export function createAluno(req: express.Request, res: express.Response) {
+//    switch (req.method) {
+//        case 'GET':
+//            return res.render('addStudent');
+//        case 'POST':
 
-                 // TODO: Meter dados na BD.
-                var body = req.body;
-                var aluno = <Aluno> {
-                    classId: parseInt(body.txtIdEscola),
-                    name: body.txtName,
-                    isActive: body.state_filter,
-                };
+//            // TODO: Meter dados na BD.
+//            var body = req.body;
+//            var aluno = <Aluno> {
+//                classId: parseInt(body.txtIdEscola),
+//                name: body.txtName,
+//                isActive: body.state_filter,
+//            };
 
-                appPostServices.addStudent(aluno, req.files.photo.path, req.files.photo.originalname)
-                .then((_) => res.end('Dados inseridos com sucesso!'))
-                    .catch((err) => res.end('error: ' + err.toString()));
+//            appPostServices.addStudent(aluno, req.files.photo.path, req.files.photo.originalname)
+//                .then((_) => res.end('Dados inseridos com sucesso!'))
+//                .catch((err) => res.end('error: ' + err.toString()));
 
 
-        }
-}
+//    }
+//}
 
-export function createClass(req: express.Request, res: express.Response) {
-    switch (req.method) {
-        case 'GET':
-            return res.render('addClass');
-        case 'POST':
-            // TODO: Meter dados na BD.
-            var body = req.body;
-            var sClass = <SchoolClass> {
-                schoolId : body.schoolId,
-                classLevel: body.year_filter,
-                className: body.className,
-                classYear: body.classYear
-            };
+//export function createClass(req: express.Request, res: express.Response) {
+//    switch (req.method) {
+//        case 'GET':
+//            return res.render('addClass');
+//        case 'POST':
+//            // TODO: Meter dados na BD.
+//            var body = req.body;
+//            var sClass = <SchoolClass> {
+//                schoolId: body.schoolId,
+//                classLevel: body.year_filter,
+//                className: body.className,
+//                classYear: body.classYear
+//            };
 
-            appPostServices.addClass(sClass);
-            res.end('Dados inseridos com sucesso!');
-                //.catch((err) => res.end('error: ' + err.toString()));
+//            appPostServices.addClass(sClass);
+//            res.end('Dados inseridos com sucesso!');
+//        //.catch((err) => res.end('error: ' + err.toString()));
 
-    }
-}
+//    }
+//}
 
-export function createSchool(req: express.Request, res: express.Response) {
-    switch (req.method) {
-        case 'GET':
-            return res.render('addSchool');
-        case 'POST':
-            // TODO: Meter dados na BD.
-            var body = req.body;
-            var school = <School> {
-                schoolName: body.schoolName,
-                schoolAddress: body.schoolAddress,
-                schoolLogoUrl: body.photo
-            };
+//export function createSchool(req: express.Request, res: express.Response) {
+//    switch (req.method) {
+//        case 'GET':
+//            return res.render('addSchool');
+//        case 'POST':
+//            // TODO: Meter dados na BD.
+//            var body = req.body;
+//            var school = <School> {
+//                schoolName: body.schoolName,
+//                schoolAddress: body.schoolAddress,
+//                schoolLogoUrl: body.photo
+//            };
 
-            appPostServices.addSchool(school, req.files.photo.path, req.files.photo.originalname)
-                .then((_) => res.end('Dados inseridos com sucesso!'))
-                .catch((err) => res.end('error: ' + err.toString()));
+//            appPostServices.addSchool(school, req.files.photo.path, req.files.photo.originalname)
+//                .then((_) => res.end('Dados inseridos com sucesso!'))
+//                .catch((err) => res.end('error: ' + err.toString()));
 
-    }
-}
+//    }
+//}

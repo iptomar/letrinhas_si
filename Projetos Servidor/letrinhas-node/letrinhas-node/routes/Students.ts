@@ -1,49 +1,62 @@
-/*
- * Routes related to students.
- */
-import express = require('express');
-import pool = require('../configs/mysql');
-import Q = require('q');
-import mysql = require('mysql');
+﻿import express = require('express');
 
-var poolQuery = Q.nbind<any>(pool.query, pool);
-
+import service = require('../Scripts/services/studentService');
 import Student = require('../Scripts/structures/schools/Student');
 
-// GET: /Students/All/
-export function all(req: express.Request, res: express.Response) {
-    poolQuery('SELECT * FROM Students')
-        .then((students) => res.json(students[0]))
-        .catch((err) => res.status(500).end({ error: 500 }));
-}
+export function mapRoutes(app: express.Express) {
+    app.get('/Students/All', function (req, res) {
+        service.all()
+            .then((students) => res.json(students))
+            .catch((_) => res.status(500).end({ error: 500 }));
+    });
 
-// GET: /Students/Details/:id
-export function details(req: express.Request, res: express.Response) {
-    poolQuery(mysql.format('SELECT * FROM Students WHERE id = ?', [req.params.id]))
-        .then((students) => res.json(students[0][0]))
-        .catch((err) => res.status(500).end({ error: 500 }));
-}
+    app.get('/Students/Details/:id', function (req, res) {
+        var id = parseInt(req.params.id);
 
-// GET + POST: /Students/Create/
-export function create(req: express.Request, res: express.Response) {
-    switch (req.method) {
-        case 'GET':
-            break;
-        case 'POST':
-            break;
-        default:
-            break;
-    }
-}
+        if (isNaN(id)) { res.status(400).json({ error: 400 }); }
 
-// GET + POST: /Students/Edit/:id
-export function edit(req: express.Request, res: express.Response) {
-    switch (req.method) {
-        case 'GET':
-            break;
-        case 'POST':
-            break;
-        default:
-            break;
+        service.details(id)
+            .then((student) => {
+                if (student === null) { return res.status(404).json({ error: 404 }); }
+
+                return res.json(student);
+            })
+            .catch((_) => res.status(500).json({ error: 400 }));
+    });
+
+    app.all('/Students/Create', function (req, res) {
+        switch (req.method) {
+            case 'GET':
+                return res.render('addStudent');
+            case 'POST':
+
+                // TODO: Meter dados na BD.
+                var body = req.body;
+
+                var aluno = <Student> {
+                    classId: parseInt(body.txtIdEscola),
+                    name: body.txtName,
+                    isActive: body.state_filter,
+                };
+
+                service.create(aluno, req.files.photo.path)
+                    .then((_) => res.end('Dados inseridos com sucesso!'))
+                    .catch((err) => res.end('error: ' + err.toString()));
+
+            default:
+                return res.status(404).json({ error: 404 });
+        }
+    });
+
+    app.all('/Students/Edit/:id', function (req, res) {
+        // TODO
+        switch (req.method) {
+            case 'GET':
+                break;
+            case 'POST':
+                break;
+            default:
+                break;
+        }
     }
 }

@@ -3,8 +3,11 @@
 var indexActions = require('../routes/index');
 var testActions = require('../routes/tests');
 var syncActions = require('../routes/sync');
-var Classes = require('../routes/Classes');
+
 var TestService = require('../routes/Tests2');
+
+var studentRoutes = require('../routes/Students');
+var classRoutes = require('../routes/Classes');
 
 /**
 * Maps routes to the server.
@@ -19,6 +22,9 @@ function mapRoutes(app) {
     mapClassRoutes(app);
 
     mapTestRoutes(app);
+
+    studentRoutes.mapRoutes(app);
+    classRoutes.mapRoutes(app);
     // Probably unnecessary.
     // app.use(sendNotFound);
 }
@@ -35,8 +41,7 @@ function mapGetRoutes(app) {
     // app.all('/CreateTest', testActions.createTest);
     app.all('/CreateTeacher', testActions.createTeacher);
 
-    app.all('/CreateAluno', testActions.createAluno);
-
+    //app.all('/CreateAluno', testActions.createAluno);
     app.all('/CreateClass', testActions.createClass);
 
     app.all('/CreateSchool', testActions.createSchool);
@@ -49,14 +54,13 @@ function mapGetRoutes(app) {
     console.log("Successfully mapped GET routes.");
 }
 
-function mapClassRoutes(app) {
-    app.get('/Classes/', Classes.all);
-    app.get('/Class/:id', Classes.details);
-    app.get('/Class/:id/Students', Classes.students);
-    app.get('/Classes/Create/', Classes.create);
-    app.get('/Classes/Relationships', Classes.classRelationships);
-}
-
+//function mapClassRoutes(app: express.Express) {
+//    app.get('/Classes/', Classes.all);
+//    app.get('/Class/:id', Classes.details);
+//    app.get('/Class/:id/Students', Classes.students);
+//    app.get('/Classes/Create/', Classes.create);
+//    app.get('/Classes/Relationships', Classes.classRelationships);
+//}
 function mapPostRoutes(app) {
     //app.post('/postTestResults', testActions.postTestResults);
     //app.post('/postFiles', testActions.postImage);
@@ -111,6 +115,7 @@ function mapTestRoutes(app) {
         });
     });
 
+    // GET: /Tests/Details/5
     app.get('/Tests/Details/:id', function (req, res) {
         var id = parseInt(req.params.id);
 
@@ -129,6 +134,7 @@ function mapTestRoutes(app) {
         });
     });
 
+    // GET + POST: /Tests/Create/Read
     app.all('/Tests/Create/Read', function (req, res) {
         switch (req.method) {
             case 'GET':

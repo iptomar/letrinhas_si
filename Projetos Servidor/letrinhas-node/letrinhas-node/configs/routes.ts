@@ -9,6 +9,9 @@ import Classes = require('../routes/Classes');
 import TestService = require('../routes/Tests2');
 import ReadingTest = require('../Scripts/structures/tests/ReadingTest');
 
+import studentRoutes = require('../routes/Students');
+import classRoutes = require('../routes/Classes');
+
 import express = require('express');
 
 /**
@@ -21,9 +24,12 @@ export function mapRoutes(app: express.Express) {
     mapPostRoutes(app);
     mapSyncRoutes(app);
 
-    mapClassRoutes(app);
+    //mapClassRoutes(app);
 
     mapTestRoutes(app);
+
+    studentRoutes.mapRoutes(app);
+    classRoutes.mapRoutes(app);
 
     // Probably unnecessary.
     // app.use(sendNotFound);
@@ -42,7 +48,7 @@ function mapGetRoutes(app: express.Express) {
 
     app.all('/CreateTeacher', testActions.createTeacher);
 
-    app.all('/CreateAluno', testActions.createAluno);
+    //app.all('/CreateAluno', testActions.createAluno);
 
     app.all('/CreateClass', testActions.createClass);
 
@@ -60,13 +66,13 @@ function mapGetRoutes(app: express.Express) {
     console.log("Successfully mapped GET routes.");
 }
 
-function mapClassRoutes(app: express.Express) {
-    app.get('/Classes/', Classes.all);
-    app.get('/Class/:id', Classes.details);
-    app.get('/Class/:id/Students', Classes.students);
-    app.get('/Classes/Create/', Classes.create);
-    app.get('/Classes/Relationships', Classes.classRelationships);
-}
+//function mapClassRoutes(app: express.Express) {
+//    app.get('/Classes/', Classes.all);
+//    app.get('/Class/:id', Classes.details);
+//    app.get('/Class/:id/Students', Classes.students);
+//    app.get('/Classes/Create/', Classes.create);
+//    app.get('/Classes/Relationships', Classes.classRelationships);
+//}
 
 function mapPostRoutes(app: express.Express) {
     //app.post('/postTestResults', testActions.postTestResults);
@@ -117,6 +123,7 @@ function mapTestRoutes(app: express.Express) {
             .catch((_) => res.status(500).end({ error: 500 }));
     });
 
+    // GET: /Tests/Details/5
     app.get('/Tests/Details/:id', function (req, res) {
         var id = parseInt(req.params.id);
 
@@ -131,6 +138,8 @@ function mapTestRoutes(app: express.Express) {
             .catch((err) => res.status(500).json({ error: 500 }));
     });
 
+
+    // GET + POST: /Tests/Create/Read
     app.all('/Tests/Create/Read', function (req, res) {
         switch (req.method) {
             case 'GET':

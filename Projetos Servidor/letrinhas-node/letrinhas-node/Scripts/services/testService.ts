@@ -1,25 +1,23 @@
 /*
  * Routes related to tests.
  */
-import pool = require('../configs/mysql');
+import pool = require('../../configs/mysql');
 import Q = require('q');
 import mysql = require('mysql');
 import path = require('path');
 import uuid = require('node-uuid');
-import app = require('../app');
+import app = require('../../app');
 import mv = require('mv');
 
 var poolQuery = Q.nbind<any>(pool.query, pool);
 
-import Test = require('../Scripts/structures/tests/Test');
-import ReadingTest = require('../Scripts/structures/tests/ReadingTest');
+import Test = require('../structures/tests/Test');
+import ReadingTest = require('../structures/tests/ReadingTest');
 
-import TestType = require('../Scripts/structures/tests/TestType');
-import TestCorrection = require('../Scripts/structures/tests/TestCorrection');
-import ReadingTestCorrection = require('../Scripts/structures/tests/ReadingTestCorrection');
-import MultimediaTestCorrection = require('../Scripts/structures/tests/MultimediaTestCorrection');
-
-import Student = require('../Scripts/structures/schools/Student');
+import TestType = require('../structures/tests/TestType');
+import TestCorrection = require('../structures/tests/TestCorrection');
+import ReadingTestCorrection = require('../structures/tests/ReadingTestCorrection');
+import MultimediaTestCorrection = require('../structures/tests/MultimediaTestCorrection');
 
 // GET: /Tests/All/
 // Params: 
@@ -80,7 +78,8 @@ export function details(id: number): Q.Promise<Test> {
 
 // POST: /Tests/Create/Read
 export function createReadTest(t: ReadingTest, uploadedFilePath: string): Q.Promise<void> {
-    var filePath = path.join('appContent/tests', uuid.v4(), 'professor' + path.extname(uploadedFilePath)).replace(/\\/g, '/');
+    // eg: appContent/Tests/uuid/demo.mp3
+    var filePath = path.join('appContent/Tests', uuid.v4(), 'demo' + path.extname(uploadedFilePath)).replace(/\\/g, '/');
 
     var sql = mysql.format("CALL insertReadingTest(?,?,?,?,?,?,?,?,?)", [t.areaId, t.professorId, t.title, t.mainText, t.creationDate, t.grade, t.type, t.textContent, filePath]);
 

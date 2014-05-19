@@ -1,17 +1,17 @@
 /*
 * Routes related to tests.
 */
-var pool = require('../configs/mysql');
+var pool = require('../../configs/mysql');
 var Q = require('q');
 var mysql = require('mysql');
 var path = require('path');
 var uuid = require('node-uuid');
-var app = require('../app');
+var app = require('../../app');
 var mv = require('mv');
 
 var poolQuery = Q.nbind(pool.query, pool);
 
-var TestType = require('../Scripts/structures/tests/TestType');
+var TestType = require('../structures/tests/TestType');
 
 // GET: /Tests/All/
 // Params:
@@ -148,4 +148,4 @@ function submitResult(tc, filePath) {
     }
 }
 exports.submitResult = submitResult;
-//# sourceMappingURL=Tests2.js.map
+//# sourceMappingURL=testService.js.map
