@@ -1,295 +1,88 @@
-﻿/// <reference path="../Scripts/typings/express/express.d.ts" />
-/// <reference path="../Scripts/typings/node/node.d.ts" />
-var appPostServices = require('../Scripts/services/appPostServices');
-var appGetServices = require('../Scripts/services/appGetServices');
+﻿var service = require('../Scripts/services/testService');
 
-//export function listSummary(request: express.Request, response: express.Response): void {
-//    var max = parseInt(request.param('max'));
-//    max = isNaN(max) ? null : max;
-//    appGetServices.getTestListSummaryFromDb(max, (err, list) => {
-//        response.set('Content-Type', 'application/json');
-//        response.charset = 'utf-8';
-//        if (err) {
-//            response.statusCode = 500;
-//            response.send(JSON.stringify({
-//                success: 0,
-//                reason: err.message
-//            }));
-//        } else {
-//            response.send(JSON.stringify({
-//                tests: list,
-//                success: 1
-//            }));
-//        }
-//    });
-//}
-function getImage(request, response) {
-    //appGetServices.getBinaryData((err, result) => {
-    //response.type('json');
-    //response.end(JSON.stringify({
-    //    id: 1,
-    //    title: 'Um carrinho bonito',
-    //    image: result.toString('base64'),
-    //    success: 1
-    //}));
-    response.end('');
-    //});
-    //console.log("Hello");
-}
-exports.getImage = getImage;
+function mapRoutes(app) {
+    // GET + POST: /Tests/Create/Read
+    app.all('/Tests/Create/Read', function (req, res) {
+        switch (req.method) {
+            case 'GET':
+                return res.render('addReadingTest');
+            case 'POST':
+                var body = req.body;
 
-//export function postImage(request: express.Request, response: express.Response) {
-//    // console.log(request);
-//    var correctId: string = request.body['correct-id'];
-//    //// Read the file
-//    //fs.readFile(request.files[correctId].path, (err, data) => {
-//    //    appPostServices.sendBinaryDataToDb(data, (err) => {
-//    //        if (err) {
-//    //            console.log(err);
-//    //        }
-//    //        response.end('Whatever');
-//    //    });
-//    //});
-//    // console.log(request.body);
-//    //fs.readFile(request.files[correctId].path, (err, data) => {
-//    //    fs.writeFile('D:/' + request.files[correctId].path, data, (err) => {
-//    //        console.log('Saved file.');
-//    //    });
-//    //});
-//    console.log(correctId);
-//    console.log(request.files);
-//    response.end('Whatever');
-//}
-//export function teste(request: express.Request, response: express.Response) {
-//    console.log(request.url);
-//    response.render('teste', {
-//        title: "Isto é um teste",
-//        pessoa: "André Carvalho"
-//    });
-//}
-//export function getTest(request: express.Request, response: express.Response) {
-//    var type: number;
-//    if (request.params.id && !isNaN(parseInt(request.params.id, 10))) {
-//        // Get one, using its Id.
-//        appGetServices.getTestById(request.params.id)
-//            .then((test) => response.status(test === null ? 404 : 200).json(test))
-//            .catch((err) => {
-//                console.log(err.stack);
-//                response.status(500).json(null);
-//            });
-//    } else if (!isNaN(type = parseInt(request.query.type))) {
-//        // Get all of a specific type. The type is needed,
-//        // but area and grade are optional.
-//        var areaId = parseInt(request.query.areaId, 10),
-//            grade = parseInt(request.query.grade, 10),
-//            professorId = parseInt(request.query.professorId, 10),
-//            creationDate = parseInt(request.query.since, 10);
-//        appGetServices.getTests({
-//            type: type,
-//            areaId: isNaN(areaId) ? undefined : areaId,
-//            grade: isNaN(grade) ? undefined : grade,
-//            professorId: isNaN(professorId) ? undefined : professorId,
-//            creationDate: isNaN(creationDate) ? undefined : creationDate
-//        })
-//            .then((tests) => response.json(tests))
-//            .catch((err) => {
-//                console.log(err);
-//                response.status(500).json(null);
-//            });
-//    } else {
-//        response.status(400).json({});
-//    }
-//}
-//função que devolve um teste com perguntas random
-function getRandomTest(request, response) {
-    //em querystring vem o numero de perguntas que se pretende, o ano e a area
-    var num = request.query['num'];
-    var year = request.query['ano'];
-    var area = request.query['area'];
+                var teste = {
+                    title: body.title,
+                    grade: body.grade,
+                    creationDate: Date.now(),
+                    professorId: body.professorId,
+                    areaId: body.areaId,
+                    mainText: body.mainText,
+                    textContent: body.textContent,
+                    type: body.type
+                };
 
-    if (isNaN(num) || isNaN(year)) {
-        response.end("Number or Year invalid.");
-    } else {
-        appGetServices.getAllRandomTests(num, year, area, function (err, testlist) {
-            var sendResult = {
-                tests: testlist,
-                success: 1
-            };
+                service.createReadTest(teste, req.files.audio.path).then(function (_) {
+                    return res.redirect('/');
+                }).catch(function (err) {
+                    return res.status(500).json({ error: 500 });
+                });
+            default:
+                // TODO: Talvez fazer uma view para 404, 500, etc.?
+                res.status(404).json({ error: 404 });
+        }
+    });
 
-            response.end(JSON.stringify(sendResult));
+    // GET: /Tests/All/
+    // Params:
+    // -ofType=[0, 1, 2, 3]
+    // -areaId
+    // -grade
+    // -professorId
+    // -creationDate
+    app.get('/Tests/All', function (req, res) {
+        var type = parseInt(req.query.type), options = Object.create(null), areaId = parseInt(req.params.areaId), grade = parseInt(req.params.grade), professorId = parseInt(req.params.professorId), creationDate = parseInt(req.params.creationDate);
+
+        if (isNaN(type)) {
+            return res.status(400).json({ error: 400 });
+        }
+
+        if (!isNaN(areaId)) {
+            options.areaId = areaId;
+        }
+        if (!isNaN(grade)) {
+            options.grade = grade;
+        }
+        if (!isNaN(professorId)) {
+            options.professorId = professorId;
+        }
+        if (!isNaN(creationDate)) {
+            options.creationDate = creationDate;
+        }
+
+        service.all(type, options).then(function (tests) {
+            return res.json(tests);
+        }).catch(function (_) {
+            return res.status(500).json({ error: 500 });
         });
-    }
+    });
+
+    // GET: /Tests/Details/5
+    app.get('/Tests/Details/:id', function (req, res) {
+        var id = parseInt(req.params.id);
+
+        if (isNaN(id)) {
+            return res.status(400).json({ error: 400 });
+        }
+
+        service.details(id).then(function (test) {
+            if (test === null) {
+                return res.status(404).json({ error: 404 });
+            }
+
+            return res.json(test);
+        }).catch(function (err) {
+            return res.status(500).json({ error: 500 });
+        });
+    });
 }
-exports.getRandomTest = getRandomTest;
-
-//export function testsSince(request: express.Request, response: express.Response) {
-//    var time: number;
-//    if (request.query.hasOwnProperty('since') && !isNaN(time = parseInt(request.query.since, 10))) {
-//        appGetServices.getTestsNewerThan(time)
-//            .then((tests) => {
-//                response.json(tests);
-//            });
-//    } else {
-//        response.status(400).type('json').end('null');
-//    }
-//}
-//export function postTestResults(request: express.Request, response: express.Response) {
-//    // Fields:
-//    // * executionDate: The unix timestamp on which the test was done.
-//    // * testId: The ID of the test. Integer, higher than 0.
-//    // * studentId: The ID of the student. Integer, higher than 0.
-//    // * type: String Enum, values: read, multimedia (? Could get the type from the DB)
-//    // * (If type is multimedia)
-//    //   * option: The option which was chosen.Integer, values = 1, 2, or 3.
-//    // * (If type is read):
-//    //   * observations: Professor observations. String.
-//    //   * wpm: Words per minute. Number.
-//    //   * correct: Correct word count: Integer.
-//    //   * precision: Reading precision. Number.
-//    //   * speed: Reading speed. Number.
-//    //   * expressiveness: The student's expressiveness. Number.
-//    //   * rhythm: The student's rhythm. Number.
-//    //   * incorrect: Incorrect word count. Integer.
-//    //   * audio: The audio for the recording. File.
-//    var type = parseInt(request.body.type, 10);
-//    if (!isNaN(type)) {
-//        switch (type) {
-//            case TestType.read:
-//                var body = request.body;
-//                var correction = <ReadingTestCorrection> {
-//                    testId: parseInt(body.testId, 10),
-//                    studentId: parseInt(body.studentId, 10),
-//                    executionDate: parseInt(body.executionDate, 10),
-//                    type: TestType.read,
-//                    correctWordCount: parseInt(body.correct, 10),
-//                    readingPrecision: parseFloat(body.precision),
-//                    expressiveness: parseFloat(body.expressiveness),
-//                    rhythm: parseFloat(body.rhythm),
-//                    readingSpeed: parseFloat(body.speed),
-//                    wordsPerMinute: parseFloat(body.wpm),
-//                    professorObservations: body.observations,
-//                    details: body.details
-//                };
-//                appPostServices.saveTestCorrection(correction, request.files.audio.path, request.files.audio.originalname)
-//                    .then((_) => response.json(null))
-//                    .catch((err) => {
-//                        console.error(err);
-//                        response.status(500).json(null);
-//                    });
-//                break;
-//            case TestType.multimedia:
-//                response.status(500).end('NYI');
-//                break;
-//            default:
-//                response.status(400).json(null);
-//        }
-//    } else {
-//        response.status(400).json(null);
-//    }
-//}
-//export function createTest(req: express.Request, res: express.Response) {
-//    switch (req.method) {
-//        case 'GET':
-//            return res.render('addReadingTest');
-//        case 'POST':
-//            // TODO: Meter dados na BD.
-//            var body = req.body;
-//            var teste = <ReadingTest> {
-//                title: body.title,
-//                grade: body.grade,
-//                creationDate: Date.now(),
-//                professorId: body.professorId,
-//                areaId: body.areaId,
-//                mainText: body.mainText,
-//                textContent: body.textContent,
-//                type: body.type,
-//            };
-//            appPostServices.addReadingTest(teste, req.files.audio.path, req.files.audio.originalname)
-//                .then((_) => res.end('Dados inseridos com sucesso!'))
-//                .catch((err) => res.end('error: ' + err.toString()));
-//            //return ;
-//    }
-//}
-function createTeacher(req, res) {
-    switch (req.method) {
-        case 'GET':
-            return res.render('addTeacher');
-        case 'POST':
-            // TODO: Meter dados na BD.
-            var body = req.body;
-            var teacher = {
-                schoolId: parseInt(body.schoolId),
-                name: body.name,
-                username: body.username,
-                password: body.password,
-                emailAddress: body.mail,
-                telephoneNumber: body.phone,
-                isActive: body.state_filter
-            };
-
-            appPostServices.addTeacher(teacher, req.files.photo.path, req.files.photo.originalname).then(function (_) {
-                return res.end('Dados inseridos com sucesso!');
-            }).catch(function (err) {
-                return res.end('error: ' + err.toString());
-            });
-    }
-}
-exports.createTeacher = createTeacher;
-
-//export function createAluno(req: express.Request, res: express.Response) {
-//    switch (req.method) {
-//        case 'GET':
-//            return res.render('addStudent');
-//        case 'POST':
-//            // TODO: Meter dados na BD.
-//            var body = req.body;
-//            var aluno = <Aluno> {
-//                classId: parseInt(body.txtIdEscola),
-//                name: body.txtName,
-//                isActive: body.state_filter,
-//            };
-//            appPostServices.addStudent(aluno, req.files.photo.path, req.files.photo.originalname)
-//                .then((_) => res.end('Dados inseridos com sucesso!'))
-//                .catch((err) => res.end('error: ' + err.toString()));
-//    }
-//}
-//export function createClass(req: express.Request, res: express.Response) {
-//    switch (req.method) {
-//        case 'GET':
-//            return res.render('addClass');
-//        case 'POST':
-//            // TODO: Meter dados na BD.
-//            var body = req.body;
-//            var sClass = <SchoolClass> {
-//                schoolId: body.schoolId,
-//                classLevel: body.year_filter,
-//                className: body.className,
-//                classYear: body.classYear
-//            };
-//            appPostServices.addClass(sClass);
-//            res.end('Dados inseridos com sucesso!');
-//        //.catch((err) => res.end('error: ' + err.toString()));
-//    }
-//}
-function createSchool(req, res) {
-    switch (req.method) {
-        case 'GET':
-            return res.render('addSchool');
-        case 'POST':
-            // TODO: Meter dados na BD.
-            var body = req.body;
-            var school = {
-                schoolName: body.schoolName,
-                schoolAddress: body.schoolAddress,
-                schoolLogoUrl: body.photo
-            };
-
-            appPostServices.addSchool(school, req.files.photo.path, req.files.photo.originalname).then(function (_) {
-                return res.end('Dados inseridos com sucesso!');
-            }).catch(function (err) {
-                return res.end('error: ' + err.toString());
-            });
-    }
-}
-exports.createSchool = createSchool;
-//# sourceMappingURL=tests.js.map
+exports.mapRoutes = mapRoutes;
+//# sourceMappingURL=Tests.js.map

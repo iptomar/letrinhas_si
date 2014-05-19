@@ -21,11 +21,13 @@ function mapRoutes(app) {
                 return res.status(404).json({ error: 404 });
             }
 
-            return res.json(student);
+            res.json(student);
         }).catch(function (_) {
             return res.status(500).json({ error: 400 });
         });
     });
+
+    console.log('GET /Students/All ->', service.details);
 
     app.all('/Students/Create', function (req, res) {
         switch (req.method) {
@@ -48,9 +50,26 @@ function mapRoutes(app) {
                 });
 
             default:
-                return res.status(404).json({ error: 404 });
+                res.status(404).json({ error: 404 });
         }
     });
+
+    console.log('GET + POST /Students/Create ->', service.create);
+
+    app.all('/Students/Edit/:id', function (req, res) {
+        throw 'NYI';
+
+        switch (req.method) {
+            case 'GET':
+                break;
+            case 'POST':
+                break;
+            default:
+                break;
+        }
+    });
+
+    console.warn('GET + POST /Students/Edit ->', 'NYI');
 }
 exports.mapRoutes = mapRoutes;
 //# sourceMappingURL=Students.js.map

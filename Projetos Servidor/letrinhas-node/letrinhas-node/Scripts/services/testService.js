@@ -92,7 +92,7 @@ function createReadTest(t, uploadedFilePath) {
 exports.createReadTest = createReadTest;
 
 // GET + POST: /Tests/Edit/:id
-function edit() {
+function edit(id) {
     throw 'NYI';
 }
 exports.edit = edit;

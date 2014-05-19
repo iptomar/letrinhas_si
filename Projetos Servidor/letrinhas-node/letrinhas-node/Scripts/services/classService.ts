@@ -9,6 +9,7 @@ import Class = require('../structures/schools/Class');
 import ProfessorClass = require('../structures/schools/ProfessorClass');
 
 export function all(): Q.Promise<Array<Class>> {
+    // TODO: Restrict to current year.
     return poolQuery('SELECT * FROM Classes')
         .then((classes) => classes[0]);
 }

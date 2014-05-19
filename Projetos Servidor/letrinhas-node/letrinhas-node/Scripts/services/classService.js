@@ -5,6 +5,7 @@ var mysql = require('mysql');
 var poolQuery = Q.nbind(pool.query, pool);
 
 function all() {
+    // TODO: Restrict to current year.
     return poolQuery('SELECT * FROM Classes').then(function (classes) {
         return classes[0];
     });

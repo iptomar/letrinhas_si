@@ -1,4 +1,4 @@
-﻿/// <reference path="../typings/node/node.d.ts" />
+/// <reference path="../typings/node/node.d.ts" />
 var Q = require('q');
 
 var pool = require('../../configs/mysql');

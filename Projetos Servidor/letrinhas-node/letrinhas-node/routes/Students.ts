@@ -19,10 +19,12 @@ export function mapRoutes(app: express.Express) {
             .then((student) => {
                 if (student === null) { return res.status(404).json({ error: 404 }); }
 
-                return res.json(student);
+                res.json(student);
             })
             .catch((_) => res.status(500).json({ error: 400 }));
     });
+
+    console.log('GET /Students/All ->', service.details);
 
     app.all('/Students/Create', function (req, res) {
         switch (req.method) {
@@ -44,12 +46,16 @@ export function mapRoutes(app: express.Express) {
                     .catch((err) => res.end('error: ' + err.toString()));
 
             default:
-                return res.status(404).json({ error: 404 });
+                res.status(404).json({ error: 404 });
         }
     });
 
+    console.log('GET + POST /Students/Create ->', service.create);
+
     app.all('/Students/Edit/:id', function (req, res) {
         // TODO
+        throw 'NYI';
+
         switch (req.method) {
             case 'GET':
                 break;
@@ -58,5 +64,7 @@ export function mapRoutes(app: express.Express) {
             default:
                 break;
         }
-    }
+    });
+
+    console.warn('GET + POST /Students/Edit ->', 'NYI');
 }

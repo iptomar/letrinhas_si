@@ -88,7 +88,7 @@ export function createReadTest(t: ReadingTest, uploadedFilePath: string): Q.Prom
 }
 
 // GET + POST: /Tests/Edit/:id
-export function edit() {
+export function edit(id: number) {
     throw 'NYI';
 }
 

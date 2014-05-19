@@ -15,13 +15,13 @@ import Student = require('../structures/schools/Student');
 
 // GET: /Students/All/
 export function all(): Q.Promise<Array<Student>> {
-    return poolQuery('SELECT * FROM Students')
+    return poolQuery('SELECT * FROM Students WHERE isActive = true')
         .then((students) => students[0]);
 }
 
 // GET: /Students/Details/:id
 export function details(id: number): Q.Promise<Student> {
-    return poolQuery(mysql.format('SELECT * FROM Students WHERE id = ?', [id]))
+    return poolQuery(mysql.format('SELECT * FROM Students WHERE id = ? AND isActive = 1', [id]))
         .then((students) => {
             if (students[0].length === 0) { return Q.resolve(null); }
 

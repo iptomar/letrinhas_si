@@ -8,6 +8,13 @@ var app = require('../../app');
 
 var poolQuery = Q.nbind(pool.query, pool);
 
+function all() {
+    return poolQuery('SELECT * FROM Schools').then(function (results) {
+        return results[0];
+    });
+}
+exports.all = all;
+
 function createSchool(s, uploadedFilePath) {
     // eg: appContent/Schools/uuid/logo.jpg
     var filePath = path.join('appContent/Schools', uuid.v4(), 'logo' + path.extname(uploadedFilePath)).replace(/\\/g, '/');

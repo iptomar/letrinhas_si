@@ -14,6 +14,8 @@ export function mapRoutes(app: express.Express) {
             .catch((_) => res.status(500).json({ error: 500 }));
     });
 
+    console.log('GET /Classes/All ->', service.all);
+
     app.get('/Classes/Details/:id', function (req, res) {
         // TODO
     });
@@ -39,8 +41,12 @@ export function mapRoutes(app: express.Express) {
                 service.createClass(sClass)
                     .then((_) => res.end('Dados inseridos com sucesso!'))
                     .catch((_) => res.status(500).json({ error: 500 }));
+            default:
+                res.status(500).json({ error: 500 });
         }
     });
+
+    console.log('GET + POST /Classes/Create ->', service.createClass);
 
     app.get('/Classes/Professors/:id?', function (req, res) {
         var id;
@@ -55,4 +61,6 @@ export function mapRoutes(app: express.Express) {
             .then((professors) => res.json(professors))
             .catch((_) => res.status(500).json({ error: 500 }));
     });
+
+    console.log('GET /Classes/Professors ->', service.professors);
 }

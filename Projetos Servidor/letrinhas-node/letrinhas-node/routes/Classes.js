@@ -12,6 +12,8 @@ function mapRoutes(app) {
         });
     });
 
+    console.log('GET /Classes/All ->', service.all);
+
     app.get('/Classes/Details/:id', function (req, res) {
         // TODO
     });
@@ -39,8 +41,12 @@ function mapRoutes(app) {
                 }).catch(function (_) {
                     return res.status(500).json({ error: 500 });
                 });
+            default:
+                res.status(500).json({ error: 500 });
         }
     });
+
+    console.log('GET + POST /Classes/Create ->', service.createClass);
 
     app.get('/Classes/Professors/:id?', function (req, res) {
         var id;
@@ -59,6 +65,8 @@ function mapRoutes(app) {
             return res.status(500).json({ error: 500 });
         });
     });
+
+    console.log('GET /Classes/Professors ->', service.professors);
 }
 exports.mapRoutes = mapRoutes;
 //# sourceMappingURL=Classes.js.map
