@@ -155,7 +155,11 @@ function submitResult(tc, filePath) {
         case 2 /* list */:
 
         case 3 /* poem */:
-            var rtc = tc, newPath = path.join('appContent', 'Tests', tc.testId, 'Submissions', tc.studentId, tc.executionDate + path.extname(filePath)).replace(/\\/g, '/');
+            var rtc = tc, newPath = null;
+
+            if (typeof filePath !== 'undefined') {
+                newPath = path.join('appContent', 'Tests', tc.testId, 'Submissions', tc.studentId, tc.executionDate + path.extname(filePath)).replace(/\\/g, '/');
+            }
 
             args.concat([
                 newPath,
@@ -173,9 +177,14 @@ function submitResult(tc, filePath) {
 
             var sql = mysql.format('CALL insertReadingTestCorrection(?,?,?,?,?,?,?,?,?,?,?,?,?,?)', args);
 
-            return Q.nfcall(mv, path.join(app.rootDir, newPath), { mkdirp: true }).then(function (_) {
+            // Only save the file if it exists.
+            if (newPath !== null) {
+                return Q.nfcall(mv, path.join(app.rootDir, newPath), { mkdirp: true }).then(function (_) {
+                    return poolQuery(sql);
+                });
+            } else {
                 return poolQuery(sql);
-            });
+            }
         case 1 /* multimedia */:
             var mtc = tc;
 

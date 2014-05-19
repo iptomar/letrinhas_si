@@ -159,10 +159,14 @@ export function submitResult(tc: TestCorrection, filePath?: string): Q.Promise<v
         case TestType.poem:
             var rtc = <ReadingTestCorrection> tc,
                 // eg: appContent/Tests/1/Submissions/2/timestamp.mp3
+                newPath = null;
+
+            if (typeof filePath !== 'undefined') {
                 newPath = path.join('appContent', 'Tests',
                     tc.testId, 'Submissions',
                     tc.studentId,
                     tc.executionDate + path.extname(filePath)).replace(/\\/g, '/');
+            }
 
             args.concat([
                 newPath,
@@ -180,8 +184,13 @@ export function submitResult(tc: TestCorrection, filePath?: string): Q.Promise<v
 
             var sql = mysql.format('CALL insertReadingTestCorrection(?,?,?,?,?,?,?,?,?,?,?,?,?,?)', args);
 
-            return Q.nfcall(mv, path.join(app.rootDir, newPath), { mkdirp: true })
-                .then((_) => poolQuery(sql));
+            // Only save the file if it exists.
+            if (newPath !== null) {
+                return Q.nfcall(mv, path.join(app.rootDir, newPath), { mkdirp: true })
+                    .then((_) => poolQuery(sql));
+            } else {
+                return poolQuery(sql);
+            }
         case TestType.multimedia:
             var mtc = <MultimediaTestCorrection> tc;
 

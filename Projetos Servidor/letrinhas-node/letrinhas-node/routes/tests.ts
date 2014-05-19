@@ -2,10 +2,14 @@
 
 import service = require('../Scripts/services/testService');
 
-import Test = require('../Scripts/structures/tests/Test');
 import TestType = require('../Scripts/structures/tests/TestType');
+
+import Test = require('../Scripts/structures/tests/Test');
 import ReadingTest = require('../Scripts/structures/tests/ReadingTest');
 import MultimediaTest = require('../Scripts/structures/tests/MultimediaTest');
+
+import ReadingTestCorrection = require('../Scripts/structures/tests/ReadingTestCorrection');
+import MultimediaTestCorrection = require('../Scripts/structures/tests/MultimediaTestCorrection');
 
 export function mapRoutes(app: express.Express) {
     // GET + POST: /Tests/Create/Read
@@ -137,8 +141,67 @@ export function mapRoutes(app: express.Express) {
             });
     });
 
-    app.post('/Tests/Submit/:id', function (req, res) {
-        // TODO
-        throw 'NYI';
+    app.post('/Tests/Submit/', function (req, res) {
+        var type = parseInt(req.body.type, 10);
+
+        if (!isNaN(type)) {
+            switch (type) {
+                case TestType.read:
+                case TestType.list:
+                case TestType.poem:
+                    var body = req.body;
+
+                    var rtc = <ReadingTestCorrection> {
+                        testId: parseInt(body.testId, 10),
+                        studentId: parseInt(body.studentId, 10),
+                        executionDate: parseInt(body.executionDate, 10),
+                        type: type,
+
+                        correctWordCount: parseInt(body.correct, 10),
+                        readingPrecision: parseFloat(body.precision),
+                        expressiveness: parseFloat(body.expressiveness),
+                        rhythm: parseFloat(body.rhythm),
+                        readingSpeed: parseFloat(body.speed),
+                        wordsPerMinute: parseFloat(body.wpm),
+
+                        professorObservations: body.observations,
+                        details: body.details,
+
+                        wasCorrected: body.wasCorrected
+                    };
+
+                    service.submitResult(rtc, req.files.audio.path)
+                        .then((_) => res.json(null))
+                        .catch((err) => {
+                            console.error(err);
+                            res.status(500).json({ error: 500 });
+                        });
+
+                    break;
+                case TestType.multimedia:
+
+                    var mtc = <MultimediaTestCorrection> {
+                        testId: parseInt(body.testId, 10),
+                        studentId: parseInt(body.studentId, 10),
+                        executionDate: parseInt(body.executionDate, 10),
+                        type: type,
+                        isCorrect: body.isCorrect,
+                        optionChosen: body.optionChosen
+                    };
+
+                    service.submitResult(mtc)
+                        .then((_) => res.json(null))
+                        .catch((err) => {
+                            console.error(err);
+                            res.status(500).json({ error: 500 });
+                        });
+
+                    break;
+                default:
+                    res.status(404).json({ error: 404 });
+            }
+        } else {
+            res.status(400).json({ error: 400 });
+        }
     });
 }

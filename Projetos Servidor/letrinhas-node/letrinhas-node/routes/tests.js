@@ -1,5 +1,7 @@
 ﻿var service = require('../Scripts/services/testService');
 
+var TestType = require('../Scripts/structures/tests/TestType');
+
 function mapRoutes(app) {
     // GET + POST: /Tests/Create/Read
     app.all('/Tests/Create/Read', function (req, res) {
@@ -140,8 +142,64 @@ function mapRoutes(app) {
         });
     });
 
-    app.post('/Tests/Submit/:id', function (req, res) {
-        throw 'NYI';
+    app.post('/Tests/Submit/', function (req, res) {
+        var type = parseInt(req.body.type, 10);
+
+        if (!isNaN(type)) {
+            switch (type) {
+                case 0 /* read */:
+                case 2 /* list */:
+                case 3 /* poem */:
+                    var body = req.body;
+
+                    var rtc = {
+                        testId: parseInt(body.testId, 10),
+                        studentId: parseInt(body.studentId, 10),
+                        executionDate: parseInt(body.executionDate, 10),
+                        type: type,
+                        correctWordCount: parseInt(body.correct, 10),
+                        readingPrecision: parseFloat(body.precision),
+                        expressiveness: parseFloat(body.expressiveness),
+                        rhythm: parseFloat(body.rhythm),
+                        readingSpeed: parseFloat(body.speed),
+                        wordsPerMinute: parseFloat(body.wpm),
+                        professorObservations: body.observations,
+                        details: body.details,
+                        wasCorrected: body.wasCorrected
+                    };
+
+                    service.submitResult(rtc, req.files.audio.path).then(function (_) {
+                        return res.json(null);
+                    }).catch(function (err) {
+                        console.error(err);
+                        res.status(500).json({ error: 500 });
+                    });
+
+                    break;
+                case 1 /* multimedia */:
+                    var mtc = {
+                        testId: parseInt(body.testId, 10),
+                        studentId: parseInt(body.studentId, 10),
+                        executionDate: parseInt(body.executionDate, 10),
+                        type: type,
+                        isCorrect: body.isCorrect,
+                        optionChosen: body.optionChosen
+                    };
+
+                    service.submitResult(mtc).then(function (_) {
+                        return res.json(null);
+                    }).catch(function (err) {
+                        console.error(err);
+                        res.status(500).json({ error: 500 });
+                    });
+
+                    break;
+                default:
+                    res.status(404).json({ error: 404 });
+            }
+        } else {
+            res.status(400).json({ error: 400 });
+        }
     });
 }
 exports.mapRoutes = mapRoutes;
