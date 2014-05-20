@@ -20,7 +20,7 @@ export function mapRoutes(app: express.Express) {
     console.log('GET /Classes/All ->', service.all);
 
     app.get('/Classes/Details/:id', function (req, res) {
-        var id = parseInt(req.params.id);
+        var id = parseInt(req.params.id, 10);
 
         if (isNaN(id)) { res.status(400).json({ error: 400 }); }
 

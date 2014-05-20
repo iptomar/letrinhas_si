@@ -15,6 +15,6 @@ class ReadingTestCorrection extends TestCorrection {
 
     details: string;
 
-    wasCorrected: boolean;
+    wasCorrected: number;
 }
 export = ReadingTestCorrection;

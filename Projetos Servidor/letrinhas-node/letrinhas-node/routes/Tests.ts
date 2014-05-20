@@ -142,7 +142,7 @@ export function mapRoutes(app: express.Express) {
     });
 
     app.post('/Tests/Submit/', function (req, res) {
-        var type = parseInt(req.body.type, 10);
+        var type = !isNaN(req.body.type) ? parseInt(req.body.type, 10) : null;
 
         if (!isNaN(type)) {
             switch (type) {
@@ -152,22 +152,22 @@ export function mapRoutes(app: express.Express) {
                     var body = req.body;
 
                     var rtc = <ReadingTestCorrection> {
-                        testId: parseInt(body.testId, 10),
-                        studentId: parseInt(body.studentId, 10),
-                        executionDate: parseInt(body.executionDate, 10),
-                        type: type,
+                        testId: !isNaN(body.testId) ? parseInt(body.testId, 10) : null,
+                        studentId: !isNaN(body.studentId) ? parseInt(body.studentId, 10) : null,
+                        executionDate: !isNaN(body.executionDate) ? parseInt(body.executionDate, 10) : null,
+                        type:  type,
 
-                        correctWordCount: parseInt(body.correct, 10),
-                        readingPrecision: parseFloat(body.precision),
-                        expressiveness: parseFloat(body.expressiveness),
-                        rhythm: parseFloat(body.rhythm),
-                        readingSpeed: parseFloat(body.speed),
-                        wordsPerMinute: parseFloat(body.wpm),
+                        correctWordCount: !isNaN(body.correct) ? parseInt(body.correct, 10) : null,
+                        readingPrecision: !isNaN(body.precision) ? parseFloat(body.precision) : null,
+                        expressiveness: !isNaN(body.expressiveness) ? parseFloat(body.expressiveness) : null,
+                        rhythm: !isNaN(body.rhythm) ? parseFloat(body.rhythm) : null,
+                        readingSpeed: !isNaN(body.speed) ? parseFloat(body.speed) : null,
+                        wordsPerMinute: !isNaN(body.wpm) ? parseFloat(body.wpm) : null,
 
                         professorObservations: body.observations,
                         details: body.details,
 
-                        wasCorrected: body.wasCorrected
+                        wasCorrected: !isNaN(body.wasCorrected) ? parseInt(body.wasCorrected, 10) : null
                     };
 
                     service.submitResult(rtc, req.files.audio.path)
@@ -181,12 +181,12 @@ export function mapRoutes(app: express.Express) {
                 case TestType.multimedia:
 
                     var mtc = <MultimediaTestCorrection> {
-                        testId: parseInt(body.testId, 10),
-                        studentId: parseInt(body.studentId, 10),
-                        executionDate: parseInt(body.executionDate, 10),
+                        testId: !isNaN(body.testId) ? parseInt(body.testId, 10) : null,
+                        studentId: !isNaN(body.studentId) ? parseInt(body.studentId, 10) : null,
+                        executionDate: !isNaN(body.executionDate) ? parseInt(body.executionDate, 10) : null,
                         type: type,
-                        isCorrect: body.isCorrect,
-                        optionChosen: body.optionChosen
+                        isCorrect: !isNaN(body.isCorrect) ? parseInt(body.isCorrect, 10) : null,
+                        optionChosen: !isNaN(body.optionChosen) ? parseInt(body.optionChosen, 10) : null
                     };
 
                     service.submitResult(mtc)

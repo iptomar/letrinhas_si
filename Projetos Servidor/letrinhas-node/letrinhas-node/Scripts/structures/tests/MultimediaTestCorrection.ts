@@ -2,6 +2,6 @@
 
 class MultimediaTestCorrection extends TestCorrection {
     optionChosen: number;
-    isCorrect: boolean;
+    isCorrect: number;
 }
 export = MultimediaTestCorrection;
