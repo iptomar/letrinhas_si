@@ -44,7 +44,7 @@ CREATE TABLE Tests (
   grade INT(1),
   type int,
 
-  CONSTRAINT Tests_FK_Areas FOREIGN KEY (areaId) REFERENCES Areas (id)
+  CONSTRAINT Tests_FK_Areas FOREIGN KEY (areaId) REFERENCES Areas (id),
   CONSTRAINT Tests_FK_Professors FOREIGN KEY (professorId) REFERENCES Professors (id)
 
 ) ENGINE = INNODB DEFAULT CHARSET = UTF8;
