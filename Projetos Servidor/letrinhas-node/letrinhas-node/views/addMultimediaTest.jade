@@ -1,0 +1,32 @@
+﻿extends layout
+
+block content
+    form(id="test", method="POST", action="/Tests/Create/Multimedia" enctype="multipart/form-data")
+        
+        h1 Adicionar teste Multimédia
+
+        | Titulo:
+        input(type='text', name = "title")
+        br
+        | Cabeçalho:
+        input(type='text', name = "mainText")
+        br
+        | Grau Escolar:
+        select(name="grade")
+            option(value="1") 1º Ano
+            option(value="2") 2º Ano
+            option(value="3") 3º Ano
+            option(value="4") 4º Ano
+        br
+        | Professor Id:
+        input(type='text', name = "professorId")
+        br
+        | Área:
+        select(name="areaId")
+            option(value="1") Português
+            option(value="2") Inglês
+            option(value="3") Estudo do Meio
+            option(value="4") Matemática
+
+        br
+        input(type="submit")

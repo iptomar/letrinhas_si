@@ -50,12 +50,24 @@ export function mapRoutes(app: express.Express) {
 
     app.all('/Tests/Create/Multimedia', function (req, res) {
         // TODO
-        throw 'NYI';
 
         switch (req.method) {
             case 'GET':
+                res.render('addMultimediaTest');
                 break;
             case 'POST':
+                var body = req.body;
+
+                var teste = <MultimediaTest> {
+                    title: body.title,
+                    professorId: body.professorId,
+                    areaId: body.areaId,
+                    mainText: body.mainText,
+                    type: body.type,
+                };
+
+                console.log(teste);
+
                 break;
             default:
                 // TODO: Talvez fazer uma view para 404, 500, etc.?
