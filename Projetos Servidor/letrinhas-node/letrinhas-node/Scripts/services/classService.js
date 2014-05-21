@@ -32,4 +32,50 @@ function createClass(c) {
     return poolQuery(sql);
 }
 exports.createClass = createClass;
+
+function getAllClasses(onResult) {
+    //realiza a query
+    pool.query("select b.schoolName, a.classLevel, a.className, a.classYear, a.id from Classes as a, Schools as b where a.schoolId = b.id;", function (err, rows, fields) {
+        if (err) {
+            onResult(err, null);
+        } else {
+            var result = [];
+            for (var i = 0; i < rows.length; i++) {
+                result.push({
+                    id: rows[i].id,
+                    schoolName: rows[i].schoolName,
+                    classLevel: rows[i].classLevel,
+                    className: rows[i].className,
+                    classYear: rows[i].classYear
+                });
+            }
+        }
+        return onResult(null, result);
+    });
+}
+exports.getAllClasses = getAllClasses;
+exports.getAllClasses = exports.getAllClasses;
+
+function getClassBySchoolId(id, onResult) {
+    //realiza a query
+    pool.query(mysql.format("select b.schoolName, a.classLevel, a.className, a.classYear, a.id from Classes as a, Schools as b where a.schoolId = b.id and b.id = ? ;", [id]), function (err, rows, fields) {
+        if (err) {
+            onResult(err, null);
+        } else {
+            var result = [];
+            for (var i = 0; i < rows.length; i++) {
+                result.push({
+                    id: rows[i].id,
+                    schoolName: rows[i].schoolName,
+                    classLevel: rows[i].classLevel,
+                    className: rows[i].className,
+                    classYear: rows[i].classYear
+                });
+            }
+        }
+        return onResult(null, result);
+    });
+}
+exports.getClassBySchoolId = getClassBySchoolId;
+exports.getClassBySchoolId = exports.getClassBySchoolId;
 //# sourceMappingURL=classService.js.map

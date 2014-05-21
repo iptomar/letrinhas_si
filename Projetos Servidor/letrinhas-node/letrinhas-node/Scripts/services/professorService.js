@@ -37,4 +37,56 @@ function createProfessor(p, uploadedFilePath) {
     });
 }
 exports.createProfessor = createProfessor;
+
+function getAllProfessors(onResult) {
+    //realiza a query
+    pool.query("select a. id, a.name, a.username, a.emailAddress,a.telephoneNumber,a.isActive,a.photoUrl,b.schoolName from Professors as a, Schools as b where a.schoolId = b.id;", function (err, rows, fields) {
+        if (err) {
+            onResult(err, null);
+        } else {
+            var result = [];
+            for (var i = 0; i < rows.length; i++) {
+                result.push({
+                    id: rows[i].id,
+                    name: rows[i].name,
+                    username: rows[i].username,
+                    email: rows[i].emailAddress,
+                    telephone: rows[i].telephoneNumber,
+                    isActive: rows[i].isActive,
+                    photo: rows[i].photoUrl,
+                    schoolName: rows[i].schoolName
+                });
+            }
+        }
+        return onResult(null, result);
+    });
+}
+exports.getAllProfessors = getAllProfessors;
+exports.getAllProfessors = exports.getAllProfessors;
+
+function getProfessorBySchoolId(id, onResult) {
+    //realiza a query
+    pool.query(mysql.format("select a. id, a.name, a.username, a.emailAddress,a.telephoneNumber,a.isActive,a.photoUrl,b.schoolName from Professors as a, Schools as b where a.schoolId = b.id and b.id = ?;", [id]), function (err, rows, fields) {
+        if (err) {
+            onResult(err, null);
+        } else {
+            var result = [];
+            for (var i = 0; i < rows.length; i++) {
+                result.push({
+                    id: rows[i].id,
+                    name: rows[i].name,
+                    username: rows[i].username,
+                    email: rows[i].emailAddress,
+                    telephone: rows[i].telephoneNumber,
+                    isActive: rows[i].isActive,
+                    photo: rows[i].photoUrl,
+                    schoolName: rows[i].schoolName
+                });
+            }
+        }
+        return onResult(null, result);
+    });
+}
+exports.getProfessorBySchoolId = getProfessorBySchoolId;
+exports.getProfessorBySchoolId = exports.getProfessorBySchoolId;
 //# sourceMappingURL=professorService.js.map

@@ -32,3 +32,43 @@ export function createSchool(s: School, uploadedFilePath: string): Q.Promise<voi
     return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, filePath), { mkdirp: true })
         .then((_) => poolQuery(sql));
 }
+
+export function getAllSchools(onResult) {
+    //realiza a query
+    pool.query("SELECT * from Schools;", function (err, rows, fields) {
+        if (err) {
+            onResult(err, null);
+        } else {
+            var result = [];
+            for (var i = 0; i < rows.length; i++) {
+                result.push({
+                    id: rows[i].id,
+                    name: rows[i].schoolName,
+                    address: rows[i].schoolAddress,
+                    photo : rows[i].schoolLogoUrl
+                });
+            }
+        }
+        return onResult(null, result);
+    });
+}
+exports.getAllSchools = getAllSchools;
+
+export function getId(onResult) {
+    //realiza a query
+    pool.query("SELECT id, schoolName from Schools;", function (err, rows, fields) {
+        if (err) {
+            onResult(err, null);
+        } else {
+            var result = [];
+            for (var i = 0; i < rows.length; i++) {
+                result.push({
+                    id: rows[i].id,
+                    name: rows[i].schoolName,
+                });
+            }
+        }
+        return onResult(null, result);
+    });
+}
+exports.getAllSchools = getAllSchools;

@@ -68,4 +68,14 @@ export function mapRoutes(app: express.Express) {
                 res.status(404).json({ error: 404 });
         }
     });
+
+    app.get('/Schools/GetAll', function (req, res) {
+        service.getAllSchools(function (err, result) {
+            res.render('schoolList', {
+                title: 'Lista de escolas',
+                items: result
+            });
+        }); 
+    });
 }
+

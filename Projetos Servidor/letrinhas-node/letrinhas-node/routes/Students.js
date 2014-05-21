@@ -13,7 +13,7 @@ function mapRoutes(app) {
     console.log('GET /Students/All ->', service.all.toString());
 
     app.get('/Students/Details/:id', function (req, res) {
-        var id = parseInt(req.params.id);
+        var id = parseInt(req.params.id, 10);
 
         if (isNaN(id)) {
             res.status(400).json({ error: 400 });

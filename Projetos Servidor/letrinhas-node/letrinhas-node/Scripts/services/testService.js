@@ -178,6 +178,7 @@ function submitResult(tc, filePath) {
             var sql = mysql.format('CALL insertReadingTestCorrection(?,?,?,?,?,?,?,?,?,?,?,?,?,?)', args);
 
             // Only save the file if it exists.
+            // TODO: Check if we have SOMETHING in the DB, in case the file is sent twice.
             if (newPath !== null) {
                 return Q.nfcall(mv, path.join(app.rootDir, newPath), { mkdirp: true }).then(function (_) {
                     return poolQuery(sql);

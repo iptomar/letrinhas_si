@@ -11,7 +11,7 @@ function mapRoutes(app) {
     });
 
     app.get('/Schools/Details/:id', function (req, res) {
-        var id = parseInt(req.params.id);
+        var id = parseInt(req.params.id, 10);
 
         if (isNaN(id)) {
             res.status(400).json({ error: 400 });
@@ -64,6 +64,15 @@ function mapRoutes(app) {
             default:
                 res.status(404).json({ error: 404 });
         }
+    });
+
+    app.get('/Schools/GetAll', function (req, res) {
+        service.getAllSchools(function (err, result) {
+            res.render('schoolList', {
+                title: 'Lista de escolas',
+                items: result
+            });
+        });
     });
 }
 exports.mapRoutes = mapRoutes;

@@ -6,6 +6,7 @@ import express = require('express');
 
 import service = require('../Scripts/services/classService');
 import Class = require('../Scripts/structures/schools/Class');
+import schoolService = require('../Scripts/services/schoolService');
 
 export function mapRoutes(app: express.Express) {
     app.get('/Classes/All', function (req, res) {
@@ -87,4 +88,41 @@ export function mapRoutes(app: express.Express) {
     });
 
     console.log('GET /Classes/Professors ->', service.professors);
+
+    app.get('/Classes/Choose', function (req, res) {
+        return res.render('classChoose');
+    });
+
+    app.get('/Classes/bySchool', function (req, res) {
+        schoolService.getId(function (err, result) {
+            res.render('classBySchool', {
+                title: 'Lista id e nomes',
+                items: result
+            });
+        });
+    });
+
+    app.get('/Classes/GetAll/:id?', function (req, res) {
+        var id = parseInt(req.params.id, 10);
+        switch (id) {
+            case 1:
+                service.getAllClasses(function (err, result) {
+                    res.render('classList', {
+                        title: 'Lista de Turmas de todas as Escolas',
+                        items: result
+                    });
+                });
+            case 2:
+                service.getClassBySchoolId(req.query.classSelect, function (err, result) {
+                    res.render('classList', {
+                        title: 'Lista de Turmas da escola '+result.schoolName,
+                        items: result
+                    });
+                });
+
+        }
+       
+    });
+
+
 }
