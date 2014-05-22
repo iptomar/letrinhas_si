@@ -137,6 +137,13 @@ export function createReadTest(t: ReadingTest, uploadedFilePath: string): Q.Prom
         .then((_) => poolQuery(sql));
 }
 
+
+export function saveMultimediaTest(teste: MultimediaTest): Q.Promise<void> {
+
+    return Q.reject('Ainda nao está implementado!');
+
+}
+
 // GET + POST: /Tests/Edit/:id
 export function edit(id: number) {
     throw 'NYI';

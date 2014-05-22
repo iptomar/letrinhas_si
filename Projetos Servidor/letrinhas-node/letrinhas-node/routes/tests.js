@@ -1,5 +1,7 @@
 ﻿var service = require('../Scripts/services/testService');
 
+var testService = require('../Scripts/services/testService');
+
 var TestType = require('../Scripts/structures/tests/TestType');
 
 function mapRoutes(app) {
@@ -47,14 +49,23 @@ function mapRoutes(app) {
                 var body = req.body;
 
                 var teste = {
-                    title: body.title,
-                    professorId: body.professorId,
-                    areaId: body.areaId,
-                    mainText: body.mainText,
-                    type: body.type
+                    professorId: req.body.id_professor,
+                    option1: req.body.opt1,
+                    option2: req.body.opt2,
+                    option3: req.body.opt3,
+                    areaId: req.body.areaId,
+                    mainText: req.body.maintext,
+                    type: req.body.type
                 };
 
-                console.log(teste);
+                testService.saveMultimediaTest(teste).then(function (_) {
+                    return res.end('Sucesso!!');
+                }).catch(function (erro) {
+                    console.log(erro);
+                    res.status(500).json({ error: 500 });
+                });
+
+                console.log(req.body);
 
                 break;
             default:

@@ -2,6 +2,8 @@
 
 import service = require('../Scripts/services/testService');
 
+import testService = require('../Scripts/services/testService');
+
 import TestType = require('../Scripts/structures/tests/TestType');
 
 import Test = require('../Scripts/structures/tests/Test');
@@ -48,6 +50,8 @@ export function mapRoutes(app: express.Express) {
         }
     });
 
+
+
     app.all('/Tests/Create/Multimedia', function (req, res) {
         // TODO
 
@@ -59,14 +63,24 @@ export function mapRoutes(app: express.Express) {
                 var body = req.body;
 
                 var teste = <MultimediaTest> {
-                    title: body.title,
-                    professorId: body.professorId,
-                    areaId: body.areaId,
-                    mainText: body.mainText,
-                    type: body.type,
+                    professorId: req.body.id_professor,
+                    option1: req.body.opt1,
+                    option2: req.body.opt2,
+                    option3: req.body.opt3,
+                    areaId: req.body.areaId,
+                    mainText: req.body.maintext,
+                    type: req.body.type,
                 };
 
-                console.log(teste);
+                testService.saveMultimediaTest(teste)
+                    .then((_) => res.end('Sucesso!!')) 
+                    .catch((erro) => {
+                        console.log(erro); 
+                        res.status(500).json({ error: 500 })
+  });
+  
+
+                console.log(req.body);
 
                 break;
             default:
@@ -75,6 +89,7 @@ export function mapRoutes(app: express.Express) {
         }
     });
 
+   
     // GET: /Tests/All/
     // Params: 
     // -ofType=[0, 1, 2, 3]

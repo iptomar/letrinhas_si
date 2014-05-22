@@ -135,6 +135,11 @@ function createReadTest(t, uploadedFilePath) {
 }
 exports.createReadTest = createReadTest;
 
+function saveMultimediaTest(teste) {
+    return Q.reject('Ainda nao está implementado!');
+}
+exports.saveMultimediaTest = saveMultimediaTest;
+
 // GET + POST: /Tests/Edit/:id
 function edit(id) {
     throw 'NYI';
