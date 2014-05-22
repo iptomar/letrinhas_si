@@ -1,43 +1,11 @@
 ﻿import express = require('express');
 
-import service = require('../Scripts/services/professorService');
-import Professor = require('../Scripts/structures/schools/Professor');
-import schoolService = require('../Scripts/services/schoolService');
+import service = require('../../Scripts/services/professorService');
+import Professor = require('../../Scripts/structures/schools/Professor');
+import schoolService = require('../../Scripts/services/schoolService');
 
 export function mapRoutes(app: express.Express) {
-
-    app.get('/Professors/All', function (req, res) {
-        service.all()
-            .then((professors) => res.json(professors))
-            .catch((err) => {
-                console.error(err);
-                res.status(500).json({ error: 500 })
-            });
-    });
-
-    app.get('/Professors/Details/:id', function (req, res) {
-        var id = parseInt(req.params.id, 10);
-
-        if (isNaN(id)) { res.status(400).json({ error: 400 }); }
-
-        service.details(id)
-            .then((professor) => {
-                if (professor === null) { return res.status(404).json({ error: 404 }); }
-
-                res.json(professor);
-            })
-            .catch((err) => {
-                console.error(err);
-                res.status(500).json({ error: 500 })
-            });
-    });
-
-    app.get('/Professors/Edit/:id', function (req, res) {
-        // TODO
-        throw 'NYI';
-    });
-
-    app.all('/Professors/Create', function (req, res) {
+    app.all('/BackOffice/Professors/Create', function (req, res) {
 
         switch (req.method) {
             case 'GET':
@@ -67,7 +35,7 @@ export function mapRoutes(app: express.Express) {
         }
     });
 
-    app.get('/Professors/Choose', function (req, res) {
+    app.get('/BackOffice/Professors/Choose', function (req, res) {
         return res.render('professorChoose');
     });
 
@@ -80,7 +48,7 @@ export function mapRoutes(app: express.Express) {
         });
     });
 
-    app.get('/Professors/GetAll/:id?', function (req, res) {
+    app.get('/BackOffice/Professors/GetAll/:id?', function (req, res) {
         var id = parseInt(req.params.id, 10);
         switch (id) {
             case 1:
@@ -93,15 +61,16 @@ export function mapRoutes(app: express.Express) {
             case 2:
                 service.getProfessorBySchoolId(req.query.professorSelect, function (err, result) {
                     res.render('professorList', {
-                         title: 'Lista de Turmas da escola ' + result.schoolName,
+                        title: 'Lista de Turmas da escola ' + result.schoolName,
                         items: result
                     });
                 });
 
         }
-
     });
 
-
-
+    app.all('/BackOffice/Professors/Edit/:id', function (req, res) {
+        // TODO
+        throw 'NYI';
+    });
 }

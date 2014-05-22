@@ -8,6 +8,9 @@ var poolQuery = Q.nbind<any>(pool.query, pool);
 import Class = require('../structures/schools/Class');
 import ProfessorClass = require('../structures/schools/ProfessorClass');
 
+/**
+ * @author redroserade (André Carvalho)
+ */
 export function all(): Q.Promise<Array<Class>> {
     // TODO: Restrict to current year.
     return poolQuery('SELECT * FROM Classes')
@@ -31,47 +34,17 @@ export function createClass(c: Class): Q.Promise<void> {
     return poolQuery(sql);
 }
 
-export function getAllClasses(onResult) {
-    //realiza a query
-    pool.query("select b.schoolName, a.classLevel, a.className, a.classYear, a.id from Classes as a, Schools as b where a.schoolId = b.id;", function (err, rows, fields) {
-        if (err) {
-            onResult(err, null);
-        } else {
-            var result = [];
-            for (var i = 0; i < rows.length; i++) {
-                result.push({
-                    id: rows[i].id,
-                    schoolName: rows[i].schoolName,
-                    classLevel: rows[i].classLevel,
-                    className: rows[i].className,
-                    classYear: rows[i].classYear
-                });
-            }
-        }
-        return onResult(null, result);
-    });
-}
-exports.getAllClasses = getAllClasses;
+/**
+ * Devolve uma lista de turmas, juntamente com o nome da escola respectiva.
+ * @author luisfmoliveira (Luís Oliveira)
+ */
+export function classDetails(schoolId?: number): Q.Promise<Array<any>> {
+    var sql = "select b.schoolName, a.classLevel, a.className, a.classYear, a.id from Classes as a, Schools as b where a.schoolId = b.id";
 
-export function getClassBySchoolId(id: number, onResult) {
-    //realiza a query
-   
-    pool.query(mysql.format("select b.schoolName, a.classLevel, a.className, a.classYear, a.id from Classes as a, Schools as b where a.schoolId = b.id and b.id = ? ;",[id]), function (err, rows, fields) {
-        if (err) {
-            onResult(err, null);
-        } else {
-            var result = [];
-            for (var i = 0; i < rows.length; i++) {
-                result.push({
-                    id: rows[i].id,
-                    schoolName: rows[i].schoolName,
-                    classLevel: rows[i].classLevel,
-                    className: rows[i].className,
-                    classYear: rows[i].classYear
-                });
-            }
-        }
-        return onResult(null, result);
-    });
+    if (!isNaN(schoolId)) {
+        sql = mysql.format(sql + ' AND b.id = ?', [schoolId]);
+    }
+
+    return poolQuery(sql)
+        .then((results) => results[0]);
 }
-exports.getClassBySchoolId = getClassBySchoolId;

@@ -2,7 +2,7 @@
 block content
     h1 Pesquisa de turmas por Escola
     h4 Selecione a escola
-    form(id="test", method="GET", action="/Professors/GetAll/2" enctype="multipart/form-data") 
+    form(id="test", method="GET", action="/BackOffice/Professors/GetAll/2" enctype="multipart/form-data") 
         select(name="professorSelect")
             -for (var id in items)
                 -var item = items[id]

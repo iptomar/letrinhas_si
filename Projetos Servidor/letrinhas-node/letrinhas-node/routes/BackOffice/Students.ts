@@ -1,40 +1,10 @@
 ﻿import express = require('express');
 
-import service = require('../Scripts/services/studentService');
-import Student = require('../Scripts/structures/schools/Student');
+import service = require('../../Scripts/services/studentService');
+import Student = require('../../Scripts/structures/schools/Student');
 
-export function mapRoutes(app: express.Express) {
-    app.get('/Students/All', function (req, res) {
-        service.all()
-            .then((students) => res.json(students))
-            .catch((err) => {
-                console.error(err);
-                res.status(500).json({ error: 500 })
-            });
-    });
-
-    console.log('GET /Students/All ->', service.all.toString());
-
-    app.get('/Students/Details/:id', function (req, res) {
-        var id = parseInt(req.params.id, 10);
-
-        if (isNaN(id)) { res.status(400).json({ error: 400 }); }
-
-        service.details(id)
-            .then((student) => {
-                if (student === null) { return res.status(404).json({ error: 404 }); }
-
-                res.json(student);
-            })
-            .catch((err) => {
-                console.error(err);
-                res.status(500).json({ error: 500 })
-            });
-    });
-
-    console.log('GET /Students/All ->', 'service.details');
-
-    app.all('/Students/Create', function (req, res) {
+export function mapRoutes(app) {
+    app.all('/BackOffice/Students/Create', function (req, res) {
         switch (req.method) {
             case 'GET':
                 res.render('addStudent');
@@ -64,7 +34,7 @@ export function mapRoutes(app: express.Express) {
 
     console.log('GET + POST /Students/Create ->', 'service.create');
 
-    app.all('/Students/Edit/:id', function (req, res) {
+    app.all('/BackOffice/Students/Edit/:id', function (req, res) {
         // TODO
         throw 'NYI';
 

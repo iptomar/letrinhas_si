@@ -4,6 +4,9 @@ var mysql = require('mysql');
 
 var poolQuery = Q.nbind(pool.query, pool);
 
+/**
+* @author redroserade (André Carvalho)
+*/
 function all() {
     // TODO: Restrict to current year.
     return poolQuery('SELECT * FROM Classes').then(function (classes) {
@@ -33,49 +36,20 @@ function createClass(c) {
 }
 exports.createClass = createClass;
 
-function getAllClasses(onResult) {
-    //realiza a query
-    pool.query("select b.schoolName, a.classLevel, a.className, a.classYear, a.id from Classes as a, Schools as b where a.schoolId = b.id;", function (err, rows, fields) {
-        if (err) {
-            onResult(err, null);
-        } else {
-            var result = [];
-            for (var i = 0; i < rows.length; i++) {
-                result.push({
-                    id: rows[i].id,
-                    schoolName: rows[i].schoolName,
-                    classLevel: rows[i].classLevel,
-                    className: rows[i].className,
-                    classYear: rows[i].classYear
-                });
-            }
-        }
-        return onResult(null, result);
-    });
-}
-exports.getAllClasses = getAllClasses;
-exports.getAllClasses = exports.getAllClasses;
+/**
+* Devolve uma lista de turmas, juntamente com o nome da escola respectiva.
+* @author luisfmoliveira (Luís Oliveira)
+*/
+function classDetails(schoolId) {
+    var sql = "select b.schoolName, a.classLevel, a.className, a.classYear, a.id from Classes as a, Schools as b where a.schoolId = b.id";
 
-function getClassBySchoolId(id, onResult) {
-    //realiza a query
-    pool.query(mysql.format("select b.schoolName, a.classLevel, a.className, a.classYear, a.id from Classes as a, Schools as b where a.schoolId = b.id and b.id = ? ;", [id]), function (err, rows, fields) {
-        if (err) {
-            onResult(err, null);
-        } else {
-            var result = [];
-            for (var i = 0; i < rows.length; i++) {
-                result.push({
-                    id: rows[i].id,
-                    schoolName: rows[i].schoolName,
-                    classLevel: rows[i].classLevel,
-                    className: rows[i].className,
-                    classYear: rows[i].classYear
-                });
-            }
-        }
-        return onResult(null, result);
+    if (!isNaN(schoolId)) {
+        sql = mysql.format(sql + ' AND b.id = ?', [schoolId]);
+    }
+
+    return poolQuery(sql).then(function (results) {
+        return results[0];
     });
 }
-exports.getClassBySchoolId = getClassBySchoolId;
-exports.getClassBySchoolId = exports.getClassBySchoolId;
+exports.classDetails = classDetails;
 //# sourceMappingURL=classService.js.map

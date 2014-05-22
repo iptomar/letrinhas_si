@@ -34,9 +34,16 @@
   </PropertyGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
-    <TypeScriptCompile Include="routes\Classes.ts" />
+    <TypeScriptCompile Include="routes\apiRouteMappings.ts" />
+    <TypeScriptCompile Include="routes\Api\Classes.ts" />
+    <TypeScriptCompile Include="routes\backOfficeRouteMappings.ts" />
+    <TypeScriptCompile Include="routes\BackOffice\Classes.ts" />
+    <TypeScriptCompile Include="routes\BackOffice\Professors.ts" />
+    <TypeScriptCompile Include="routes\BackOffice\Schools.ts" />
+    <TypeScriptCompile Include="routes\BackOffice\Students.ts" />
+    <TypeScriptCompile Include="routes\BackOffice\Tests.ts" />
     <TypeScriptCompile Include="routes\Index.ts" />
-    <TypeScriptCompile Include="routes\Tests.ts" />
+    <TypeScriptCompile Include="routes\Api\Tests.ts" />
     <TypeScriptCompile Include="configs\mysql.ts" />
     <TypeScriptCompile Include="Scripts\structures\schools\Class.ts" />
     <TypeScriptCompile Include="Scripts\structures\schools\Professor.ts" />
@@ -60,9 +67,9 @@
     <TypeScriptCompile Include="configs\routes.ts" />
     <TypeScriptCompile Include="Scripts\typings\mv\mv.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\q\q.d.ts" />
-    <TypeScriptCompile Include="routes\Students.ts" />
-    <TypeScriptCompile Include="routes\Schools.ts" />
-    <TypeScriptCompile Include="routes\Professors.ts" />
+    <TypeScriptCompile Include="routes\Api\Students.ts" />
+    <TypeScriptCompile Include="routes\Api\Schools.ts" />
+    <TypeScriptCompile Include="routes\Api\Professors.ts" />
     <TypeScriptCompile Include="Scripts\services\classService.ts" />
     <TypeScriptCompile Include="Scripts\services\schoolService.ts" />
     <TypeScriptCompile Include="Scripts\services\studentService.ts" />
@@ -78,7 +85,6 @@
     <Content Include="views\classBySchool.jade" />
     <Content Include="views\classChoose.jade" />
     <Content Include="views\classList.jade" />
-    <Content Include="views\formtest.jade" />
     <Content Include="views\index.jade" />
     <Content Include="views\professorBySchool.jade" />
     <Content Include="views\professorChoose.jade" />
@@ -95,6 +101,8 @@
     <Folder Include="public\scripts\" />
     <Folder Include="public\stylesheets\" />
     <Folder Include="routes\" />
+    <Folder Include="routes\Api\" />
+    <Folder Include="routes\BackOffice\" />
     <Folder Include="Scripts\" />
     <Folder Include="configs\" />
     <Folder Include="Scripts\typings\jquery\" />

@@ -1,79 +1,8 @@
-﻿var service = require('../Scripts/services/testService');
+﻿var service = require('../../Scripts/services/testService');
 
-var testService = require('../Scripts/services/testService');
-
-var TestType = require('../Scripts/structures/tests/TestType');
+var TestType = require('../../Scripts/structures/tests/TestType');
 
 function mapRoutes(app) {
-    // GET + POST: /Tests/Create/Read
-    app.all('/Tests/Create/Read', function (req, res) {
-        switch (req.method) {
-            case 'GET':
-                res.render('addReadingTest');
-                break;
-            case 'POST':
-                var body = req.body;
-
-                var teste = {
-                    title: body.title,
-                    grade: body.grade,
-                    creationDate: Date.now(),
-                    professorId: body.professorId,
-                    areaId: body.areaId,
-                    mainText: body.mainText,
-                    textContent: body.textContent,
-                    type: body.type
-                };
-
-                console.log(teste);
-
-                service.createReadTest(teste, req.files.audio.path).then(function (_) {
-                    return res.redirect('/');
-                }).catch(function (err) {
-                    console.error(err);
-                    res.status(500).json({ error: 500 });
-                });
-                break;
-            default:
-                // TODO: Talvez fazer uma view para 404, 500, etc.?
-                res.status(404).json({ error: 404 });
-        }
-    });
-
-    app.all('/Tests/Create/Multimedia', function (req, res) {
-        switch (req.method) {
-            case 'GET':
-                res.render('addMultimediaTest');
-                break;
-            case 'POST':
-                var body = req.body;
-
-                var teste = {
-                    professorId: req.body.id_professor,
-                    option1: req.body.opt1,
-                    option2: req.body.opt2,
-                    option3: req.body.opt3,
-                    areaId: req.body.areaId,
-                    mainText: req.body.maintext,
-                    type: req.body.type
-                };
-
-                testService.saveMultimediaTest(teste).then(function (_) {
-                    return res.end('Sucesso!!');
-                }).catch(function (erro) {
-                    console.log(erro);
-                    res.status(500).json({ error: 500 });
-                });
-
-                console.log(req.body);
-
-                break;
-            default:
-                // TODO: Talvez fazer uma view para 404, 500, etc.?
-                res.status(404).json({ error: 404 });
-        }
-    });
-
     // GET: /Tests/All/
     // Params:
     // -ofType=[0, 1, 2, 3]
@@ -81,7 +10,7 @@ function mapRoutes(app) {
     // -grade
     // -professorId
     // -creationDate
-    app.get('/Tests/All', function (req, res) {
+    app.get('/Api/Tests/All', function (req, res) {
         var type = parseInt(req.query.type), options = Object.create(null), areaId = parseInt(req.query.areaId), grade = parseInt(req.query.grade), professorId = parseInt(req.query.professorId), creationDate = parseInt(req.query.creationDate);
 
         if (isNaN(type)) {
@@ -119,7 +48,7 @@ function mapRoutes(app) {
     *
     * @author luisfmoliveira
     */
-    app.get('/Tests/Random', function (req, res) {
+    app.get('/Api/Tests/Random', function (req, res) {
         var num = parseInt(req.query.count), year = parseInt(req.query.grade), area = parseInt(req.query.areaId), options = Object.create(null);
 
         if (isNaN(area) || isNaN(year)) {
@@ -145,7 +74,7 @@ function mapRoutes(app) {
     });
 
     // GET: /Tests/Details/5
-    app.get('/Tests/Details/:id', function (req, res) {
+    app.get('/Api/Tests/Details/:id', function (req, res) {
         var id = parseInt(req.params.id);
 
         if (isNaN(id)) {
@@ -164,7 +93,7 @@ function mapRoutes(app) {
         });
     });
 
-    app.post('/Tests/Submit/', function (req, res) {
+    app.post('/Api/Tests/Submit/', function (req, res) {
         var type = !isNaN(req.body.type) ? parseInt(req.body.type, 10) : null;
 
         if (!isNaN(type)) {

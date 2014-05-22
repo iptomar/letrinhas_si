@@ -1,41 +1,9 @@
-﻿var service = require('../Scripts/services/professorService');
+﻿var service = require('../../Scripts/services/professorService');
 
-var schoolService = require('../Scripts/services/schoolService');
+var schoolService = require('../../Scripts/services/schoolService');
 
 function mapRoutes(app) {
-    app.get('/Professors/All', function (req, res) {
-        service.all().then(function (professors) {
-            return res.json(professors);
-        }).catch(function (err) {
-            console.error(err);
-            res.status(500).json({ error: 500 });
-        });
-    });
-
-    app.get('/Professors/Details/:id', function (req, res) {
-        var id = parseInt(req.params.id, 10);
-
-        if (isNaN(id)) {
-            res.status(400).json({ error: 400 });
-        }
-
-        service.details(id).then(function (professor) {
-            if (professor === null) {
-                return res.status(404).json({ error: 404 });
-            }
-
-            res.json(professor);
-        }).catch(function (err) {
-            console.error(err);
-            res.status(500).json({ error: 500 });
-        });
-    });
-
-    app.get('/Professors/Edit/:id', function (req, res) {
-        throw 'NYI';
-    });
-
-    app.all('/Professors/Create', function (req, res) {
+    app.all('/BackOffice/Professors/Create', function (req, res) {
         switch (req.method) {
             case 'GET':
                 return res.render('addTeacher');
@@ -64,7 +32,7 @@ function mapRoutes(app) {
         }
     });
 
-    app.get('/Professors/Choose', function (req, res) {
+    app.get('/BackOffice/Professors/Choose', function (req, res) {
         return res.render('professorChoose');
     });
 
@@ -77,7 +45,7 @@ function mapRoutes(app) {
         });
     });
 
-    app.get('/Professors/GetAll/:id?', function (req, res) {
+    app.get('/BackOffice/Professors/GetAll/:id?', function (req, res) {
         var id = parseInt(req.params.id, 10);
         switch (id) {
             case 1:
@@ -95,6 +63,10 @@ function mapRoutes(app) {
                     });
                 });
         }
+    });
+
+    app.all('/BackOffice/Professors/Edit/:id', function (req, res) {
+        throw 'NYI';
     });
 }
 exports.mapRoutes = mapRoutes;

@@ -1,35 +1,7 @@
-﻿var service = require('../Scripts/services/schoolService');
+﻿var service = require('../../Scripts/services/schoolService');
 
 function mapRoutes(app) {
-    app.get('/Schools/All', function (req, res) {
-        service.all().then(function (schools) {
-            return res.json(schools);
-        }).catch(function (err) {
-            console.error(err);
-            res.status(500).json({ error: 500 });
-        });
-    });
-
-    app.get('/Schools/Details/:id', function (req, res) {
-        var id = parseInt(req.params.id, 10);
-
-        if (isNaN(id)) {
-            res.status(400).json({ error: 400 });
-        }
-
-        service.details(id).then(function (school) {
-            if (school === null) {
-                return res.status(404).json({ error: 404 });
-            }
-
-            res.json(school);
-        }).catch(function (err) {
-            console.error(err);
-            res.status(500).json({ error: 500 });
-        });
-    });
-
-    app.all('/Schools/Create', function (req, res) {
+    app.all('/BackOffice/Schools/Create', function (req, res) {
         switch (req.method) {
             case 'GET':
                 return res.render('addSchool');
@@ -53,7 +25,7 @@ function mapRoutes(app) {
         }
     });
 
-    app.all('/Schools/Edit/:id', function (req, res) {
+    app.all('/BackOffice/Schools/Edit/:id', function (req, res) {
         throw 'NYI';
 
         switch (req.method) {
@@ -66,7 +38,7 @@ function mapRoutes(app) {
         }
     });
 
-    app.get('/Schools/GetAll', function (req, res) {
+    app.get('/BackOffice/Schools/GetAll', function (req, res) {
         service.getAllSchools(function (err, result) {
             res.render('schoolList', {
                 title: 'Lista de escolas',

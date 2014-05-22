@@ -1,95 +1,17 @@
 ﻿import express = require('express');
 
-import service = require('../Scripts/services/testService');
+import service = require('../../Scripts/services/testService');
 
-import testService = require('../Scripts/services/testService');
+import TestType = require('../../Scripts/structures/tests/TestType');
 
-import TestType = require('../Scripts/structures/tests/TestType');
+import Test = require('../../Scripts/structures/tests/Test');
+import ReadingTest = require('../../Scripts/structures/tests/ReadingTest');
+import MultimediaTest = require('../../Scripts/structures/tests/MultimediaTest');
 
-import Test = require('../Scripts/structures/tests/Test');
-import ReadingTest = require('../Scripts/structures/tests/ReadingTest');
-import MultimediaTest = require('../Scripts/structures/tests/MultimediaTest');
+import ReadingTestCorrection = require('../../Scripts/structures/tests/ReadingTestCorrection');
+import MultimediaTestCorrection = require('../../Scripts/structures/tests/MultimediaTestCorrection');
 
-import ReadingTestCorrection = require('../Scripts/structures/tests/ReadingTestCorrection');
-import MultimediaTestCorrection = require('../Scripts/structures/tests/MultimediaTestCorrection');
-
-export function mapRoutes(app: express.Express) {
-    // GET + POST: /Tests/Create/Read
-    app.all('/Tests/Create/Read', function (req, res) {
-        switch (req.method) {
-            case 'GET':
-                res.render('addReadingTest');
-                break;
-            case 'POST':
-                var body = req.body;
-
-                var teste = <ReadingTest> {
-                    title: body.title,
-                    grade: body.grade,
-                    creationDate: Date.now(),
-                    professorId: body.professorId,
-                    areaId: body.areaId,
-                    mainText: body.mainText,
-                    textContent: body.textContent,
-                    type: body.type,
-                };
-
-                console.log(teste);
-
-                service.createReadTest(teste, req.files.audio.path)
-                // TODO: Talvez fazer redirect para a lista.
-                    .then((_) => res.redirect('/'))
-                    .catch((err) => {
-                        console.error(err);
-                        res.status(500).json({ error: 500 })
-                });
-                break;
-            default:
-                // TODO: Talvez fazer uma view para 404, 500, etc.?
-                res.status(404).json({ error: 404 });
-        }
-    });
-
-
-
-    app.all('/Tests/Create/Multimedia', function (req, res) {
-        // TODO
-
-        switch (req.method) {
-            case 'GET':
-                res.render('addMultimediaTest');
-                break;
-            case 'POST':
-                var body = req.body;
-
-                var teste = <MultimediaTest> {
-                    professorId: req.body.id_professor,
-                    option1: req.body.opt1,
-                    option2: req.body.opt2,
-                    option3: req.body.opt3,
-                    areaId: req.body.areaId,
-                    mainText: req.body.maintext,
-                    type: req.body.type,
-                };
-
-                testService.saveMultimediaTest(teste)
-                    .then((_) => res.end('Sucesso!!')) 
-                    .catch((erro) => {
-                        console.log(erro); 
-                        res.status(500).json({ error: 500 })
-  });
-  
-
-                console.log(req.body);
-
-                break;
-            default:
-                // TODO: Talvez fazer uma view para 404, 500, etc.?
-                res.status(404).json({ error: 404 });
-        }
-    });
-
-   
+export function mapRoutes(app: express.Express) { 
     // GET: /Tests/All/
     // Params: 
     // -ofType=[0, 1, 2, 3]
@@ -97,7 +19,7 @@ export function mapRoutes(app: express.Express) {
     // -grade
     // -professorId
     // -creationDate
-    app.get('/Tests/All', function (req, res) {
+    app.get('/Api/Tests/All', function (req, res) {
         var type = parseInt(req.query.type),
             options = Object.create(null),
             areaId = parseInt(req.query.areaId),
@@ -130,7 +52,7 @@ export function mapRoutes(app: express.Express) {
      * 
      * @author luisfmoliveira
      */
-    app.get('/Tests/Random', function (req, res) {
+    app.get('/Api/Tests/Random', function (req, res) {
         var num = parseInt(req.query.count),
             year = parseInt(req.query.grade),
             area = parseInt(req.query.areaId),
@@ -151,7 +73,7 @@ export function mapRoutes(app: express.Express) {
     });
 
     // GET: /Tests/Details/5
-    app.get('/Tests/Details/:id', function (req, res) {
+    app.get('/Api/Tests/Details/:id', function (req, res) {
         var id = parseInt(req.params.id);
 
         if (isNaN(id)) { return res.status(400).json({ error: 400 }); }
@@ -168,7 +90,7 @@ export function mapRoutes(app: express.Express) {
             });
     });
 
-    app.post('/Tests/Submit/', function (req, res) {
+    app.post('/Api/Tests/Submit/', function (req, res) {
         var type = !isNaN(req.body.type) ? parseInt(req.body.type, 10) : null;
 
         if (!isNaN(type)) {
