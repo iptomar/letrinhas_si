@@ -1,7 +1,7 @@
 ﻿extends layout
 
 block content
-    form(id="test", method="POST", action="/CreateClass" enctype="multipart/form-data") 
+    form(id="test", method="POST", action="/BackOffice/Classes/Create" enctype="multipart/form-data") 
         h1 Adicionar Turma
         | IdEscola:
         input(type='text', name = "schoolId")

@@ -1,18 +1,22 @@
 ﻿extends layout
 
 block content
-    form(id="test", method="POST", action="/BackOffice/Tests/Create/Read" enctype="multipart/form-data")
+    form(id="test", method="POST", action="/Tests/Create/Multimedia" enctype="multipart/form-data")
         
-        h1 Adicionar teste de leitura
+        h1 Adicionar teste Multimédia
 
         | Titulo:
         input(type='text', name = "title")
         br
-        | Pergunta:
+        | Cabeçalho:
         input(type='text', name = "mainText")
         br
-        | Texto:
-        textarea(name="textContent")
+        input(type="radio", name="correct", value="1")
+        input(type='text', name = "opt1")
+        input(type="radio", name="correct", value="2")
+        input(type='text', name = "opt2")
+        input(type="radio", name="correct", value="3")
+        input(type='text', name = "opt3")
         br
         | Grau Escolar:
         select(name="grade")
@@ -20,14 +24,6 @@ block content
             option(value="2") 2º Ano
             option(value="3") 3º Ano
             option(value="4") 4º Ano
-        br
-        | Tipo:
-        input(type="radio", name="type", value="0")
-        | Texto
-        input(type="radio", name="type", value="3")
-        | Poema
-        input(type="radio", name="type", value="2")
-        | Lista
         br
         | Professor Id:
         input(type='text', name = "professorId")
@@ -38,9 +34,6 @@ block content
             option(value="2") Inglês
             option(value="3") Estudo do Meio
             option(value="4") Matemática
-        
-        br
-        input(type="file" accept="audio/*" name="audio")
+
         br
         input(type="submit")
-        

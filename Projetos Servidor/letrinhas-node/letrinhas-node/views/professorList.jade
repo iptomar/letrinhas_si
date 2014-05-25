@@ -1,0 +1,26 @@
+﻿extends layout
+
+block content
+    h1 Lista de Professores
+    p #{title}
+    table(border =1)
+     tr(align="center")
+      td Foto do Docente
+      td Nome
+      td Username
+      td E-mail
+      td Telefone
+      td Estado
+      td Escola onde leciona
+       -for (var id in items)
+        - var item = items[id]
+         tr
+          td  
+           img(src= "../#{item.photo}" height="42" width="42")
+          td #{item.name} 
+          td #{item.username}
+          td #{item.email}
+          td #{item.telephone}
+          td #{item.isActive}
+          td #{item.schoolName}
+    a(href="/") Voltar

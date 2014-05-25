@@ -1,0 +1,18 @@
+﻿extends layout
+
+block content
+    h1 Lista de Escolas
+    p Veja a  #{title}
+    table(border =1)
+     tr(align="center")
+      td Logotipo
+      td Nome
+      td Endereço
+       -for (var id in items)
+        - var item = items[id]
+         tr
+          td  
+           img(src= "../#{item.photo}" height="42" width="42")
+          td #{item.name} 
+          td #{item.address}
+    a(href="/") Voltar

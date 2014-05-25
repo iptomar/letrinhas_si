@@ -1,13 +1,22 @@
 ﻿extends layout
 
 block content
-  h1 LETRINHAS - Menu de adição
-  a(href="/CreateTest") Adicionar teste de escrita
+  h1 LETRINHAS 
+  h4 Adição
+  a(href="/BackOffice/Tests/Create/Read") Adicionar teste de escrita
   br
-  a(href="/CreateTeacher") Adicionar Professor
+  a(href="/BackOffice/Professors/Create") Adicionar Professor
   br
-  a(href="/CreateAluno") Adicionar Aluno
+  a(href="/BackOffice/Students/Create") Adicionar Aluno
   br
-  a(href="/CreateClass") Adicionar Turma
+  a(href="/BackOffice/Classes/Create") Adicionar Turma
   br
-  a(href="/CreateSchool") Adicionar Escola
+  a(href="/BackOffice/Schools/Create") Adicionar Escola
+  br
+  a(href="/BackOffice/Tests/Create/Multimedia") Adicionar teste Multimédia
+  h4 Listagem
+  a(href="/BackOffice/Schools/GetAll") Listar Escolas
+  br
+  a(href="/BackOffice/Classes/Choose") Listar Turmas
+  br
+  a(href="/BackOffice/Professors/Choose") Listar Professores

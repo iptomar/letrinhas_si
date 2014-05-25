@@ -34,15 +34,17 @@
   </PropertyGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
-    <TypeScriptCompile Include="configs\pathConfig.ts" />
-    <TypeScriptCompile Include="routes\index.ts" />
-    <TypeScriptCompile Include="routes\sync.ts" />
-    <TypeScriptCompile Include="routes\user.ts" />
+    <TypeScriptCompile Include="routes\apiRouteMappings.ts" />
+    <TypeScriptCompile Include="routes\Api\Classes.ts" />
+    <TypeScriptCompile Include="routes\backOfficeRouteMappings.ts" />
+    <TypeScriptCompile Include="routes\BackOffice\Classes.ts" />
+    <TypeScriptCompile Include="routes\BackOffice\Professors.ts" />
+    <TypeScriptCompile Include="routes\BackOffice\Schools.ts" />
+    <TypeScriptCompile Include="routes\BackOffice\Students.ts" />
+    <TypeScriptCompile Include="routes\BackOffice\Tests.ts" />
+    <TypeScriptCompile Include="routes\Index.ts" />
+    <TypeScriptCompile Include="routes\Api\Tests.ts" />
     <TypeScriptCompile Include="configs\mysql.ts" />
-    <TypeScriptCompile Include="configs\authConfig.ts" />
-    <TypeScriptCompile Include="Scripts\services\appGetServices.ts" />
-    <TypeScriptCompile Include="Scripts\services\appPostServices.ts" />
-    <TypeScriptCompile Include="Scripts\services\syncServices.ts" />
     <TypeScriptCompile Include="Scripts\structures\schools\Class.ts" />
     <TypeScriptCompile Include="Scripts\structures\schools\Professor.ts" />
     <TypeScriptCompile Include="Scripts\structures\schools\ProfessorClass.ts" />
@@ -65,15 +67,29 @@
     <TypeScriptCompile Include="configs\routes.ts" />
     <TypeScriptCompile Include="Scripts\typings\mv\mv.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\q\q.d.ts" />
-    <TypeScriptCompile Include="Scripts\utils\promiseBasedMySql.ts" />
+    <TypeScriptCompile Include="routes\Api\Students.ts" />
+    <TypeScriptCompile Include="routes\Api\Schools.ts" />
+    <TypeScriptCompile Include="routes\Api\Professors.ts" />
+    <TypeScriptCompile Include="Scripts\services\classService.ts" />
+    <TypeScriptCompile Include="Scripts\services\schoolService.ts" />
+    <TypeScriptCompile Include="Scripts\services\studentService.ts" />
+    <TypeScriptCompile Include="Scripts\services\professorService.ts" />
+    <TypeScriptCompile Include="Scripts\services\testService.ts" />
     <Content Include="public\scripts\formtest.ts" />
     <Content Include="public\stylesheets\style.css" />
+    <Content Include="views\addClass.jade" />
     <Content Include="views\addReadingTest.jade" />
     <Content Include="views\addSchool.jade" />
     <Content Include="views\addStudent.jade" />
     <Content Include="views\addTeacher.jade" />
-    <Content Include="views\formtest.jade" />
+    <Content Include="views\classBySchool.jade" />
+    <Content Include="views\classChoose.jade" />
+    <Content Include="views\classList.jade" />
     <Content Include="views\index.jade" />
+    <Content Include="views\professorBySchool.jade" />
+    <Content Include="views\professorChoose.jade" />
+    <Content Include="views\professorList.jade" />
+    <Content Include="views\schoolList.jade" />
     <Content Include="views\teste.jade" />
     <Content Include="views\layout.jade" />
     <Content Include="README.md" />
@@ -85,6 +101,8 @@
     <Folder Include="public\scripts\" />
     <Folder Include="public\stylesheets\" />
     <Folder Include="routes\" />
+    <Folder Include="routes\Api\" />
+    <Folder Include="routes\BackOffice\" />
     <Folder Include="Scripts\" />
     <Folder Include="configs\" />
     <Folder Include="Scripts\typings\jquery\" />
@@ -92,7 +110,6 @@
     <Folder Include="Scripts\typings\mv\" />
     <Folder Include="Scripts\typings\node-uuid\" />
     <Folder Include="Scripts\typings\q\" />
-    <Folder Include="Scripts\utils\" />
     <Folder Include="Scripts\structures\" />
     <Folder Include="Scripts\services\" />
     <Folder Include="Scripts\structures\tests\" />
@@ -105,7 +122,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="public\scripts\formtest.js" />
-    <TypeScriptCompile Include="routes\tests.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
   <ProjectExtensions>
