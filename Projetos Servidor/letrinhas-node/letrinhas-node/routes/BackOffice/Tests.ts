@@ -11,7 +11,7 @@ import MultimediaTest = require('../../Scripts/structures/tests/MultimediaTest')
 import ReadingTestCorrection = require('../../Scripts/structures/tests/ReadingTestCorrection');
 import MultimediaTestCorrection = require('../../Scripts/structures/tests/MultimediaTestCorrection');
 
-export function mapRoutes(app) {
+export function mapRoutes(app: express.Express) {
     app.all('/BackOffice/Tests/Create/Multimedia', function (req, res) {
         // TODO
 

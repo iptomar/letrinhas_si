@@ -8,6 +8,7 @@ import service = require('../../Scripts/services/classService');
 import Class = require('../../Scripts/structures/schools/Class');
 import schoolService = require('../../Scripts/services/schoolService');
 
+
 export function mapRoutes(app: express.Express) {
     app.get('/Api/Classes/All', function (req, res) {
         service.all()
@@ -18,7 +19,7 @@ export function mapRoutes(app: express.Express) {
             });
     });
 
-    console.log('GET /Classes/All ->', service.all);
+    console.log('GET /Classes/All ->', 'service.all');
 
     app.get('/Api/Classes/Details/:id', function (req, res) {
         var id = parseInt(req.params.id, 10);
