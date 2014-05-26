@@ -30,7 +30,9 @@ block content
         | Lista
         br
         | Professor Id:
-        input(type='text', name = "professorId")
+        select(name="professorId")
+            each prof in professores
+                option(value="#{prof.id}")= prof.name
         br
         | Área:
         select(name="areaId")
@@ -40,7 +42,7 @@ block content
             option(value="4") Matemática
         
         br
-        input(type="file" accept="audio/*" name="audio")
+        input(type="file" accept="audio/*" name="audio" required)
         br
         input(type="submit")
         

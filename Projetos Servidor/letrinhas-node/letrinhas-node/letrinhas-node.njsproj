@@ -78,6 +78,7 @@
     <Content Include="public\scripts\formtest.ts" />
     <Content Include="public\stylesheets\style.css" />
     <Content Include="views\addClass.jade" />
+    <Content Include="views\addMultimediaTest.jade" />
     <Content Include="views\addReadingTest.jade" />
     <Content Include="views\addSchool.jade" />
     <Content Include="views\addStudent.jade" />

@@ -1,4 +1,5 @@
 ﻿var testService = require('../../Scripts/services/testService');
+var professorService = require('../../Scripts/services/professorService');
 
 function mapRoutes(app) {
     app.all('/BackOffice/Tests/Create/Multimedia', function (req, res) {
@@ -39,9 +40,22 @@ function mapRoutes(app) {
     app.all('/BackOffice/Tests/Create/Read', function (req, res) {
         switch (req.method) {
             case 'GET':
-                res.render('addReadingTest');
+                professorService.all().then(function (professors) {
+                    res.render('addReadingTest', {
+                        title: 'Adicionar teste de leitura',
+                        professores: professors
+                    });
+                }).catch(function (err) {
+                    console.error(err);
+                    res.status(500).json({ error: 500 });
+                });
+
                 break;
             case 'POST':
+                if (typeof req.files.audio === 'undefined') {
+                    return res.status(400).json({ error: 400 });
+                }
+
                 var body = req.body;
 
                 var teste = {

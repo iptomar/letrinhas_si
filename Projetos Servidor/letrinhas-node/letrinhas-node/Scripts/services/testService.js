@@ -23,25 +23,26 @@ var TestType = require('../structures/tests/TestType');
 function all(ofType, options) {
     var parameters = [];
 
-    if (typeof options.areaId !== 'undefined') {
-        parameters.push({ name: 'areaId', value: options.areaId });
-    }
-    if (typeof options.grade !== 'undefined') {
-        parameters.push({ name: 'grade', value: options.grade });
-    }
-    if (typeof options.professorId !== 'undefined') {
-        parameters.push({ name: 'professorId', value: options.professorId });
-    }
-
     // Build the sql query.
     var where = 'WHERE t.type = ' + ofType;
 
-    for (var i = 0; i < parameters.length; i += 1) {
-        where += ' AND t.' + parameters[i].name + ' = ' + parameters[i].value;
+    if (typeof options !== 'undefined') {
+        if (typeof options.areaId !== 'undefined') {
+            parameters.push({ name: 'areaId', value: options.areaId });
+        }
+        if (typeof options.grade !== 'undefined') {
+            parameters.push({ name: 'grade', value: options.grade });
+        }
+        if (typeof options.professorId !== 'undefined') {
+            parameters.push({ name: 'professorId', value: options.professorId });
+        }
+        if (typeof options.creationDate !== 'undefined') {
+            where += ' AND t.creationDate > ' + options.creationDate;
+        }
     }
 
-    if (options.creationDate) {
-        where += ' AND t.creationDate > ' + options.creationDate;
+    for (var i = 0; i < parameters.length; i += 1) {
+        where += ' AND t.' + parameters[i].name + ' = ' + parameters[i].value;
     }
 
     switch (ofType) {
@@ -207,4 +208,20 @@ function submitResult(tc, filePath) {
     }
 }
 exports.submitResult = submitResult;
+
+function submissions(isCorrected, studentId, testId) {
+    var sql = "select tc.testId,tc.studentId,tc.executionDate,tc.type,rtc.testId,rtc.studentId,rtc.executionDate,rtc.soundFileUrl,rtc.professorObservations,rtc.wordsPerMinute,rtc.correctWordCount,rtc.readingPrecision,rtc.readingSpeed,rtc.expressiveness,rtc.rhythm,rtc.details,rtc.wasCorrected from TestCorrections as tc join ReadingTestCorrections as rtc on tc.testId = rtc.testId and tc.studentId = rtc.studentId and tc.executionDate = rtc.executionDate WHERE rtc.wasCorrected = " + isCorrected;
+
+    if (typeof studentId !== 'undefined') {
+        sql += " and tc.studentId = " + studentId;
+    }
+    if (typeof testId !== 'undefined') {
+        sql += " and tc.testId = " + testId;
+    }
+
+    return poolQuery(sql).then(function (results) {
+        return results[0];
+    });
+}
+exports.submissions = submissions;
 //# sourceMappingURL=testService.js.map
