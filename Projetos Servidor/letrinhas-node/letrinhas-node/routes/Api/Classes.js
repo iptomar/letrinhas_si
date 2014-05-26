@@ -13,7 +13,7 @@ function mapRoutes(app) {
         });
     });
 
-    console.log('GET /Classes/All ->', service.all);
+    console.log('GET /Classes/All ->', 'service.all');
 
     app.get('/Api/Classes/Details/:id', function (req, res) {
         var id = parseInt(req.params.id, 10);

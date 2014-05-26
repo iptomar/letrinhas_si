@@ -152,6 +152,21 @@ function mapRoutes(app) {
             res.status(400).json({ error: 400 });
         }
     });
+
+    app.get('/Api/Tests/Submissions', function (req, res) {
+        var isCorrected = parseInt(req.query.isCorrected);
+
+        if (isNaN(isCorrected)) {
+            return res.status(400).json({ error: 400 });
+        }
+
+        service.submissions(isCorrected).then(function (submissions) {
+            return res.json(submissions);
+        }).catch(function (err) {
+            console.error(err);
+            res.status(500).json({ error: 500 });
+        });
+    });
 }
 exports.mapRoutes = mapRoutes;
 //# sourceMappingURL=Tests.js.map

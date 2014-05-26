@@ -1,6 +1,7 @@
 ﻿import express = require('express');
 
 import testService = require('../../Scripts/services/testService');
+import professorService = require('../../Scripts/services/professorService');
 
 import TestType = require('../../Scripts/structures/tests/TestType');
 
@@ -33,12 +34,12 @@ export function mapRoutes(app: express.Express) {
                 };
 
                 testService.saveMultimediaTest(teste)
-                    .then((_) => res.end('Sucesso!!')) 
+                    .then((_) => res.end('Sucesso!!'))
                     .catch((erro) => {
-                        console.log(erro); 
+                        console.log(erro);
                         res.status(500).json({ error: 500 })
                     });
-  
+
 
                 console.log(req.body);
 
@@ -54,9 +55,26 @@ export function mapRoutes(app: express.Express) {
     app.all('/BackOffice/Tests/Create/Read', function (req, res) {
         switch (req.method) {
             case 'GET':
-                res.render('addReadingTest');
+                professorService.all()
+                    .then((professors) => {
+                        res.render('addReadingTest', {
+                            title: 'Adicionar teste de leitura',
+                            professores: professors
+                        });
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        res.status(500).json({ error: 500 });
+                    });
+
+
                 break;
             case 'POST':
+
+                if (typeof req.files.audio === 'undefined') {
+                    return res.status(400).json({ error: 400 });
+                }
+
                 var body = req.body;
 
                 var teste = <ReadingTest> {
