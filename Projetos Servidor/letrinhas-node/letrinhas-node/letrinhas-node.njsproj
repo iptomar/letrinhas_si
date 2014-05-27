@@ -79,6 +79,7 @@
     <Content Include="public\stylesheets\style.css" />
     <Content Include="views\addClass.jade" />
     <Content Include="views\addMultimediaTest.jade" />
+    <Content Include="views\addMultimediaTest2.jade" />
     <Content Include="views\addReadingTest.jade" />
     <Content Include="views\addSchool.jade" />
     <Content Include="views\addStudent.jade" />
@@ -87,6 +88,7 @@
     <Content Include="views\classChoose.jade" />
     <Content Include="views\classList.jade" />
     <Content Include="views\index.jade" />
+    <Content Include="views\multimediaTipoEscolhe.jade" />
     <Content Include="views\professorBySchool.jade" />
     <Content Include="views\professorChoose.jade" />
     <Content Include="views\professorList.jade" />
