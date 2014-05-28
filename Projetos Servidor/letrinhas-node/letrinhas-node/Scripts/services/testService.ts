@@ -136,11 +136,26 @@ export function createReadTest(t: ReadingTest, uploadedFilePath: string): Q.Prom
 }
 
 
+/**
+ * Só para texto.
+ */
 export function saveMultimediaTest(teste: MultimediaTest): Q.Promise<void> {
+    // Construir o caminho-base para guardar o teste.
+    var caminhoBase = 'appContent/Tests/' + uuid.v4(),
+        camOp1, camOp2, camOp3, camConteudo;
+
+    // if's para cada um dos campos isUrl
+    if (teste.contentIsUrl === true) {
+        // Guardar o ficheiro relativo ao conteúdo.
+        camConteudo = caminhoBase + '/pergunta' + path.extname(teste.questionContent);
+    } else {
+
+    }
 
     return Q.reject('Ainda nao está implementado!');
 
 }
+
 
 // GET + POST: /Tests/Edit/:id
 export function edit(id: number) {

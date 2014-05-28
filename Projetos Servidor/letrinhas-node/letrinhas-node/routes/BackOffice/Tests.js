@@ -2,40 +2,6 @@
 var professorService = require('../../Scripts/services/professorService');
 
 function mapRoutes(app) {
-    app.all('/BackOffice/Tests/Create/Multimedia', function (req, res) {
-        switch (req.method) {
-            case 'GET':
-                res.render('addMultimediaTest');
-                break;
-            case 'POST':
-                var body = req.body;
-
-                var teste = {
-                    professorId: req.body.id_professor,
-                    option1: req.body.opt1,
-                    option2: req.body.opt2,
-                    option3: req.body.opt3,
-                    areaId: req.body.areaId,
-                    mainText: req.body.maintext,
-                    type: req.body.type
-                };
-
-                testService.saveMultimediaTest(teste).then(function (_) {
-                    return res.end('Sucesso!!');
-                }).catch(function (erro) {
-                    console.log(erro);
-                    res.status(500).json({ error: 500 });
-                });
-
-                console.log(req.body);
-
-                break;
-            default:
-                // TODO: Talvez fazer uma view para 404, 500, etc.?
-                res.status(404).json({ error: 404 });
-        }
-    });
-
     // GET + POST: /Tests/Create/Read
     app.all('/BackOffice/Tests/Create/Read', function (req, res) {
         switch (req.method) {
@@ -85,9 +51,29 @@ function mapRoutes(app) {
     });
 
     app.all('/BackOffice/Tests/Create/Multimedia', function (req, res) {
+        // TODO
+        console.log(req);
+
         switch (req.method) {
             case 'GET':
-                res.render('addMultimediaTest');
+                switch (req.query.type) {
+                    case '0':
+                        res.render('addMultimediaTest');
+                        break;
+                    case '1':
+                        // Texto e imagens
+                        res.end('NYI');
+                        break;
+                    case '2':
+                        // Só Imagens
+                        res.end('NYI');
+                        break;
+                    default:
+                        res.render('multimediaTipoEscolhe');
+
+                        break;
+                }
+
                 break;
             case 'POST':
                 var body = req.body;

@@ -1,15 +1,15 @@
 ﻿extends layout
 
 block content
-    form(id="test", method="POST", action="/BackOffice/Tests/Create/Multimedia" enctype="multipart/form-data")
+    form(id="test", method="POST", action="/BackOffice/Tests/Create/Multimedia2" enctype="multipart/form-data")
         
-        h1 Adicionar teste Multimédia
+        h1 Adicionar teste Multimédia2
 
         | Titulo:
         input(type='text', name = "title")
         br
         | Cabeçalho:
-        input(type="file" name="imagem")
+        input(type='text', name = "mainText")
         br
         input(type="radio", name="correct", value="1")
         input(type='text', name = "opt1")
