@@ -13,14 +13,14 @@ function mapRoutes(app) {
         // Obtemos as turmas (opcionalmente para uma turma)...
         classService.classDetails(options.schoolId).then(function (classData) {
             res.render('classList', {
-                title: 'Lista de turmas' + (typeof options.schoolId !== 'undefined' ? ' da escola' + classData[0].schoolName : ''),
+                title: 'Lista de turmas' + (typeof options.schoolId !== 'undefined' ? ' da escola ' + classData[0].schoolName : ''),
                 items: classData
             });
         }).catch(function (err) {
             console.error(err);
 
             // TODO: Uma view de 500.
-            res.status(500).end('Whoopsie!');
+            res.render('listError');
         });
     });
 
@@ -53,8 +53,9 @@ function mapRoutes(app) {
         }
     });
 
-    app.get('/BackOffice/Classes/Choose', function (req, res) {
-        return res.render('classChoose');
+    app.get('/BackOffice/Classes/bySchool/:id', function (req, res) {
+        var id = req.query.id;
+        console.log(id);
     });
 }
 exports.mapRoutes = mapRoutes;

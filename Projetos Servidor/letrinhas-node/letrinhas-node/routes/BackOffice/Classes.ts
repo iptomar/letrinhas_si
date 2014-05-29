@@ -19,14 +19,14 @@ export function mapRoutes(app: express.Express) {
         classService.classDetails(options.schoolId)
             .then((classData) => {
                 res.render('classList', {
-                    title: 'Lista de turmas' + (typeof options.schoolId !== 'undefined' ? ' da escola' + classData[0].schoolName : ''),
+                    title: 'Lista de turmas' + (typeof options.schoolId !== 'undefined' ? ' da escola ' + classData[0].schoolName : ''),
                     items: classData
                 });
             })
             .catch((err) => {
                 console.error(err);
                 // TODO: Uma view de 500.
-                res.status(500).end('Whoopsie!');
+                res.render('listError');
             });
     });
 
@@ -60,7 +60,8 @@ export function mapRoutes(app: express.Express) {
         }
     });
 
-    app.get('/BackOffice/Classes/Choose', function (req, res) {
-        return res.render('classChoose');
+    app.get('/BackOffice/Classes/bySchool/:id', function (req, res) {
+        var id = req.query.id
+        console.log(id);
     });
 }

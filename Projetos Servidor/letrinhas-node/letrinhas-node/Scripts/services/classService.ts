@@ -39,7 +39,7 @@ export function createClass(c: Class): Q.Promise<void> {
  * @author luisfmoliveira (Luís Oliveira)
  */
 export function classDetails(schoolId?: number): Q.Promise<Array<any>> {
-    var sql = "select b.schoolName, a.classLevel, a.className, a.classYear, a.id from Classes as a, Schools as b where a.schoolId = b.id";
+    var sql = "select b.schoolName, a.classLevel, a.className, a.classYear, a.id, a.schoolId from Classes as a, Schools as b where a.schoolId = b.id";
 
     if (!isNaN(schoolId)) {
         sql = mysql.format(sql + ' AND b.id = ?', [schoolId]);

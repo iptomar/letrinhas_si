@@ -12,15 +12,18 @@ block content
       td Telefone
       td Estado
       td Escola onde leciona
+      td Testes que criou
        -for (var id in items)
         - var item = items[id]
          tr
           td  
-           img(src= "../#{item.photo}" height="42" width="42")
+           img(src= "/#{item.photoUrl}" height="42" width="42")
           td #{item.name} 
           td #{item.username}
-          td #{item.email}
-          td #{item.telephone}
+          td #{item.emailAddress}
+          td #{item.telephoneNumber}
           td #{item.isActive}
           td #{item.schoolName}
+          td 
+            a(href="/BackOffice/Tests/Titles?professorId=#{item.id}") Ver testes de leitura
     a(href="/") Voltar

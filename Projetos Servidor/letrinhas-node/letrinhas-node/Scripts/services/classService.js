@@ -41,7 +41,7 @@ exports.createClass = createClass;
 * @author luisfmoliveira (Luís Oliveira)
 */
 function classDetails(schoolId) {
-    var sql = "select b.schoolName, a.classLevel, a.className, a.classYear, a.id from Classes as a, Schools as b where a.schoolId = b.id";
+    var sql = "select b.schoolName, a.classLevel, a.className, a.classYear, a.id, a.schoolId from Classes as a, Schools as b where a.schoolId = b.id";
 
     if (!isNaN(schoolId)) {
         sql = mysql.format(sql + ' AND b.id = ?', [schoolId]);

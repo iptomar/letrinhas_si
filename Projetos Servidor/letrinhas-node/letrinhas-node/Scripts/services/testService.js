@@ -237,4 +237,33 @@ function submissions(isCorrected, studentId, testId) {
     });
 }
 exports.submissions = submissions;
+
+/**
+* Devolve uma lista de titulos de testes.
+* @author luisfmoliveira (Luís Oliveira)
+*/
+function testTitles(professorId) {
+    var sql = "select t.id, t.areaId, t.title, t.mainText, t.grade, p.name, t.professorId from Tests as t, Professors as p where t.professorId = p.id and t.type = 0";
+
+    if (!isNaN(professorId)) {
+        sql = mysql.format(sql + ' AND t.professorId = ?', [professorId]);
+    }
+    return poolQuery(sql).then(function (results) {
+        return results[0];
+    });
+}
+exports.testTitles = testTitles;
+
+function testDetails(testId) {
+    var sql = "select r.id, r.textContent, r.professorAudioUrl, t.title from ReadingTests as r, Tests as t where r.id = t.id";
+
+    if (!isNaN(testId)) {
+        sql = mysql.format(sql + ' AND r.id = ?', [testId]);
+    }
+    console.log(sql);
+    return poolQuery(sql).then(function (results) {
+        return results[0];
+    });
+}
+exports.testDetails = testDetails;
 //# sourceMappingURL=testService.js.map
