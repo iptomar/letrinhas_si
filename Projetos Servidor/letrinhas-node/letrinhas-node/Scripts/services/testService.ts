@@ -183,12 +183,12 @@ export function submitResult(tc: TestCorrection, filePath?: string): Q.Promise<v
 
             if (typeof filePath !== 'undefined') {
                 newPath = path.join('appContent', 'Tests',
-                    tc.testId, 'Submissions',
-                    tc.studentId,
+                    tc.testId + '', 'Submissions',
+                    tc.studentId + '',
                     tc.executionDate + path.extname(filePath)).replace(/\\/g, '/');
             }
 
-            args.concat([
+            args = args.concat([
                 newPath,
                 rtc.professorObservations,
                 rtc.wordsPerMinute,
@@ -204,18 +204,19 @@ export function submitResult(tc: TestCorrection, filePath?: string): Q.Promise<v
 
             var sql = mysql.format('CALL insertReadingTestCorrection(?,?,?,?,?,?,?,?,?,?,?,?,?,?)', args);
 
-            // Only save the file if it exists.
-            // TODO: Check if we have SOMETHING in the DB, in case the file is sent twice.
+            //Only save the file if it exists.
+            //TODO: Check if we have SOMETHING in the DB, in case the file is sent twice.
             if (newPath !== null) {
-                return Q.nfcall(mv, path.join(app.rootDir, newPath), { mkdirp: true })
+                return Q.nfcall(mv, filePath, path.join(app.rootDir, newPath), { mkdirp: true })
                     .then((_) => poolQuery(sql));
             } else {
                 return poolQuery(sql);
             }
+            break;
         case TestType.multimedia:
             var mtc = <MultimediaTestCorrection> tc;
 
-            args.concat([
+            args = args.concat([
                 mtc.optionChosen,
                 mtc.isCorrect
             ]);
@@ -223,6 +224,7 @@ export function submitResult(tc: TestCorrection, filePath?: string): Q.Promise<v
             var sql = mysql.format('CALL insertMultimediaTestCorrection(?,?,?,?,?)', args);
 
             return poolQuery(sql);
+            break;
         default:
             return Q.reject('Unknown type.');
     }

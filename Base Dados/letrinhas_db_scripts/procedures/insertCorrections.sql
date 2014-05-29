@@ -79,14 +79,26 @@ BEGIN
   -- Start a transaction
   start transaction;
 
-  -- Insert common data.
-  insert into TestCorrections(testId, studentId, executionDate, type) VALUES (
-    testId, studentId, from_unixtime(executionDate), 1
-  );
+  if (select count(*) from TestCorrections as tc
+                      where tc.testId = testId and
+                            tc.studentId = studentId and
+                            tc.executionDate = executionDate) = 0 then
 
-  -- Insert reading test data.
-  insert into MultimediaTestCorrections VALUES 
-    (last_insert_id(), optionChosen, isCorrect);
+    -- Insert common data.
+    insert into TestCorrections(testId, studentId, executionDate, type) VALUES 
+      (testId, studentId, executionDate, 1);
+
+    -- Insert reading test data.
+    insert into MultimediaTestCorrections VALUES 
+      (testId, studentId, executionDate, optionChosen, isCorrect);
+  else
+    update MultimediaTestCorrections as mtc
+           set mtc.optionChosen = optionChosen,
+               mtc.isCorrect = isCorrect
+           where mtc.testId = testId and 
+                 mtc.studentId = studentId and 
+                 mtc.executionDate = executionDate;
+  end if;
 
   -- Commit.
   commit;

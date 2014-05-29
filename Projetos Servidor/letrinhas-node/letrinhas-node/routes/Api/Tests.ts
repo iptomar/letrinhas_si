@@ -90,15 +90,16 @@ export function mapRoutes(app: express.Express) {
             });
     });
 
-    app.post('/Api/Tests/Submit/', function (req, res) {
-        var type = !isNaN(req.body.type) ? parseInt(req.body.type, 10) : null;
+    app.post('/Api/Tests/Submit', function (req, res) {
+        var type = !isNaN(req.body.type) ? parseInt(req.body.type, 10) : null,
+                   body = req.body;
 
         if (!isNaN(type)) {
             switch (type) {
                 case TestType.read:
                 case TestType.list:
                 case TestType.poem:
-                    var body = req.body;
+                    
 
                     var rtc = <ReadingTestCorrection> {
                         testId: !isNaN(body.testId) ? parseInt(body.testId, 10) : null,
