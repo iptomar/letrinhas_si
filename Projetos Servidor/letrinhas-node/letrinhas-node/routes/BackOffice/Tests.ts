@@ -11,6 +11,7 @@ import MultimediaTest = require('../../Scripts/structures/tests/MultimediaTest')
 
 import ReadingTestCorrection = require('../../Scripts/structures/tests/ReadingTestCorrection');
 import MultimediaTestCorrection = require('../../Scripts/structures/tests/MultimediaTestCorrection');
+import TestCorrection = require('../../Scripts/structures/tests/TestCorrection');
 
 export function mapRoutes(app: express.Express) {
     // GET + POST: /Tests/Create/Read
@@ -110,5 +111,24 @@ export function mapRoutes(app: express.Express) {
                 // TODO: Talvez fazer uma view para 404, 500, etc.?
                 res.status(404).json({ error: 404 });
         }
+    });
+
+    app.get('/BackOffice/Tests/Submissions', function (req, res) {
+        var isCorrected = parseInt(req.query.isCorrected);
+
+        if (isNaN(isCorrected)) {
+            return res.status(400).render('Erros/400');
+        }
+
+
+        testService.submissions(isCorrected)
+        //.then(submissions => res.json(submissions))
+            .then(function (submissions) {
+                res.render('submissionsList', { title: "Submissoes", items: submissions });
+            })
+                .catch((err) => {
+                console.error(err);
+                res.status(500).render('Erros/500');
+            });
     });
 }

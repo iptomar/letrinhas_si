@@ -87,12 +87,16 @@
     <Content Include="views\classBySchool.jade" />
     <Content Include="views\classChoose.jade" />
     <Content Include="views\classList.jade" />
+    <Content Include="views\Erros\400.jade" />
+    <Content Include="views\Erros\404.jade" />
+    <Content Include="views\Erros\500.jade" />
     <Content Include="views\index.jade" />
     <Content Include="views\multimediaTipoEscolhe.jade" />
     <Content Include="views\professorBySchool.jade" />
     <Content Include="views\professorChoose.jade" />
     <Content Include="views\professorList.jade" />
     <Content Include="views\schoolList.jade" />
+    <Content Include="views\submissionsList.jade" />
     <Content Include="views\teste.jade" />
     <Content Include="views\layout.jade" />
     <Content Include="README.md" />
@@ -122,6 +126,7 @@
     <Folder Include="Scripts\typings\mysql\" />
     <Folder Include="Scripts\typings\node\" />
     <Folder Include="views\" />
+    <Folder Include="views\Erros\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="public\scripts\formtest.js" />

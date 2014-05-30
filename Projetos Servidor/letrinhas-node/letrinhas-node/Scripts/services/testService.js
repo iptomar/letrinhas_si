@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Routes related to tests.
 */
 var pool = require('../../configs/mysql');
@@ -177,10 +177,10 @@ function submitResult(tc, filePath) {
             var rtc = tc, newPath = null;
 
             if (typeof filePath !== 'undefined') {
-                newPath = path.join('appContent', 'Tests', tc.testId, 'Submissions', tc.studentId, tc.executionDate + path.extname(filePath)).replace(/\\/g, '/');
+                newPath = path.join('appContent', 'Tests', tc.testId + '', 'Submissions', tc.studentId + '', tc.executionDate + path.extname(filePath)).replace(/\\/g, '/');
             }
 
-            args.concat([
+            args = args.concat([
                 newPath,
                 rtc.professorObservations,
                 rtc.wordsPerMinute,
@@ -196,19 +196,20 @@ function submitResult(tc, filePath) {
 
             var sql = mysql.format('CALL insertReadingTestCorrection(?,?,?,?,?,?,?,?,?,?,?,?,?,?)', args);
 
-            // Only save the file if it exists.
-            // TODO: Check if we have SOMETHING in the DB, in case the file is sent twice.
+            //Only save the file if it exists.
+            //TODO: Check if we have SOMETHING in the DB, in case the file is sent twice.
             if (newPath !== null) {
-                return Q.nfcall(mv, path.join(app.rootDir, newPath), { mkdirp: true }).then(function (_) {
+                return Q.nfcall(mv, filePath, path.join(app.rootDir, newPath), { mkdirp: true }).then(function (_) {
                     return poolQuery(sql);
                 });
             } else {
                 return poolQuery(sql);
             }
+            break;
         case 1 /* multimedia */:
             var mtc = tc;
 
-            args.concat([
+            args = args.concat([
                 mtc.optionChosen,
                 mtc.isCorrect
             ]);
@@ -216,6 +217,7 @@ function submitResult(tc, filePath) {
             var sql = mysql.format('CALL insertMultimediaTestCorrection(?,?,?,?,?)', args);
 
             return poolQuery(sql);
+            break;
         default:
             return Q.reject('Unknown type.');
     }

@@ -1,0 +1,11 @@
+﻿extends layout
+
+block content
+    h1 Lista de Sudmissoes
+    p Veja a  #{title}
+    each item in items
+        p Olha ai #{item.testId}
+        p UU #{item.studentId}
+        p hee haaw #{item.executionDate}
+        p Olé #{item.type}
+    a(href="/") Voltar
