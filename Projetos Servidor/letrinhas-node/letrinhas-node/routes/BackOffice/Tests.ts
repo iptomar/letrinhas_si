@@ -113,6 +113,7 @@ export function mapRoutes(app: express.Express) {
         }
     });
 
+
     app.get('/BackOffice/Tests/Submissions', function (req, res) {
         var isCorrected = parseInt(req.query.isCorrected);
 
@@ -129,6 +130,56 @@ export function mapRoutes(app: express.Express) {
                 .catch((err) => {
                 console.error(err);
                 res.status(500).render('Erros/500');
+            });
+    });
+	
+    app.get('/BackOffice/Tests/Details', function (req, res) {
+        
+        // objecto de opções.
+        var options = Object.create(null);
+
+        // Verificar se temos um id de teste válido. Ignoramo-lo se não for
+        if (!isNaN(req.query.testId)) {
+            options.testId = parseInt(req.query.testId, 10);
+        }
+
+        // Obtemos os titulos dos testes (opcionalmente para uma turma)...
+        testService.testDetails(options.testId)
+            .then((testData) => {
+                res.render('testDetails', {
+                    title: 'Detalhes de um teste' + (typeof options.professorId !== 'undefined' ? ' do professor ' + testData[0].name : ''),
+                    items: testData
+                });
+            })
+            .catch((err) => {
+                console.error(err);
+                // TODO: Uma view de 500.
+                res.render('listError');
+            });
+    });
+
+    app.get('/BackOffice/Tests/Titles', function (req, res) {
+
+        // objecto de opções.
+        var options = Object.create(null);
+
+        // Verificar se temos um id de escola válido. Ignoramo-lo se não for
+        if (!isNaN(req.query.professorId)) {
+            options.professorId = parseInt(req.query.professorId, 10);
+        }
+
+        // Obtemos os titulos dos testes (opcionalmente para uma turma)...
+        testService.testTitles(options.professorId)
+            .then((testTitleData) => {
+                res.render('testTitles', {
+                    title: 'Lista de testes' + (typeof options.professorId !== 'undefined' ? ' do professor ' + testTitleData[0].name : ''),
+                    items: testTitleData
+                });
+            })
+            .catch((err) => {
+                console.error(err);
+                // TODO: Uma view de 500.
+                res.render('listError');
             });
     });
 }

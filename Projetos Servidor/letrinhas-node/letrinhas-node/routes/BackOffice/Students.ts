@@ -4,6 +4,53 @@ import service = require('../../Scripts/services/studentService');
 import Student = require('../../Scripts/structures/schools/Student');
 
 export function mapRoutes(app) {
+
+    app.get('/BackOffice/Students/All', function (req, res) {
+        // objecto de opções.
+        var options = Object.create(null);
+
+        // Verificar se temos um id de escola válido. Ignoramo-lo se não for
+        if (!isNaN(req.query.schoolId) || !isNaN(req.query.classId)) {
+            options.schoolId = parseInt(req.query.schoolId, 10);
+            options.classId = parseInt(req.query.classId, 10);
+        }
+
+        console.log(options.schoolId);
+        console.log(options.classId);
+
+        if (isNaN(options.classId)) {
+            // Obtemos os alunos (opcionalmente para uma escola)...
+            service.studentDetails(options.schoolId)
+                .then((studentData) => {
+                    res.render('studentList', {
+                        title: 'Lista de alunos' + (typeof options.schoolId !== 'undefined' ? ' da escola ' + studentData[0].schoolName : ''),
+                        items: studentData
+                    });
+                })
+                .catch((err) => {
+                    console.error(err);
+                    // TODO: Uma view de 500.
+                    res.render('listError');
+                });
+        }
+        else {
+            // Obtemos os alunos de uma turma (opcionalmente para uma escola)...
+            service.studentClassDetails(options.schoolId, options.classId)
+                .then((studentData) => {
+                    res.render('studentList', {
+                        title: 'Lista de alunos' + (typeof options.schoolId !== 'undefined' ? ' da escola ' + studentData[0].schoolName : ''),
+                        items: studentData
+                    });
+                })
+                .catch((err) => {
+                    console.error(err);
+                    // TODO: Uma view de 500.
+                    res.render('listError');
+                });
+        }
+    });
+
+
     app.all('/BackOffice/Students/Create', function (req, res) {
         switch (req.method) {
             case 'GET':
@@ -32,8 +79,6 @@ export function mapRoutes(app) {
         }
     });
 
-    console.log('GET + POST /Students/Create ->', 'service.create');
-
     app.all('/BackOffice/Students/Edit/:id', function (req, res) {
         // TODO
         throw 'NYI';
@@ -47,6 +92,4 @@ export function mapRoutes(app) {
                 break;
         }
     });
-
-    console.warn('GET + POST /Students/Edit ->', 'NYI');
 }

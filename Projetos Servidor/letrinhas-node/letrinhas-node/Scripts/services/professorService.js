@@ -89,4 +89,21 @@ function getProfessorBySchoolId(id, onResult) {
 }
 exports.getProfessorBySchoolId = getProfessorBySchoolId;
 exports.getProfessorBySchoolId = exports.getProfessorBySchoolId;
+
+/**
+* Devolve uma lista de professores, juntamente com o nome da escola respectiva.
+* @author luisfmoliveira (Luís Oliveira)
+*/
+function professorDetails(schoolId) {
+    var sql = "select a. id, a.name, a.username, a.emailAddress,a.telephoneNumber,a.isActive,a.photoUrl,b.schoolName from Professors as a, Schools as b where a.schoolId = b.id";
+
+    if (!isNaN(schoolId)) {
+        sql = mysql.format(sql + ' AND a.schoolId = ?', [schoolId]);
+    }
+
+    return poolQuery(sql).then(function (results) {
+        return results[0];
+    });
+}
+exports.professorDetails = professorDetails;
 //# sourceMappingURL=professorService.js.map

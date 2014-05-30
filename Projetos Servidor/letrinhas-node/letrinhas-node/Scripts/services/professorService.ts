@@ -85,3 +85,19 @@ export function getProfessorBySchoolId(id: number, onResult) {
     });
 }
 exports.getProfessorBySchoolId = getProfessorBySchoolId;
+
+
+/**
+ * Devolve uma lista de professores, juntamente com o nome da escola respectiva.
+ * @author luisfmoliveira (Luís Oliveira)
+ */
+export function professorDetails(schoolId?: number): Q.Promise<Array<any>> {
+    var sql = "select a. id, a.name, a.username, a.emailAddress,a.telephoneNumber,a.isActive,a.photoUrl,b.schoolName from Professors as a, Schools as b where a.schoolId = b.id";
+
+    if (!isNaN(schoolId)) {
+        sql = mysql.format(sql + ' AND a.schoolId = ?', [schoolId]);
+    }
+
+    return poolQuery(sql)
+        .then((results) => results[0]);
+}

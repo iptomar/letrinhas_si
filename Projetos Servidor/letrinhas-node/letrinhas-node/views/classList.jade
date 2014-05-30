@@ -9,6 +9,7 @@ block content
       td Ano
       td Nome
       td Ano Letivo
+      td Ver alunos da turma
        -for (var id in items)
         - var item = items[id]
          tr
@@ -16,4 +17,6 @@ block content
           td #{item.classLevel} 
           td #{item.className}
           td #{item.classYear}
+          td
+            a(href="/BackOffice/Students/All?schoolId=#{item.schoolId}&classId=#{item.id}") Ver Alunos 
     a(href="/") Voltar

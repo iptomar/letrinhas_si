@@ -5,6 +5,34 @@ import Professor = require('../../Scripts/structures/schools/Professor');
 import schoolService = require('../../Scripts/services/schoolService');
 
 export function mapRoutes(app: express.Express) {
+
+    app.get('/BackOffice/Professors/All', function (req, res) {
+        // objecto de opções.
+        var options = Object.create(null);
+
+        // Verificar se temos um id de escola válido. Ignoramo-lo se não for
+        if (!isNaN(req.query.schoolId)) {
+            options.schoolId = parseInt(req.query.schoolId, 10);
+        }
+
+        // Obtemos as turmas (opcionalmente para uma turma)...
+        service.professorDetails(options.schoolId)
+            .then((professorData) => {
+                res.render('professorList', {
+                    title: 'Lista de Professores' + (typeof options.schoolId !== 'undefined' ? ' da escola ' + professorData[0].schoolName : ''),
+                    items: professorData
+                });
+            })
+            .catch((err) => {
+                console.error(err);
+                // TODO: Uma view de 500.
+                res.render('listError');
+            });
+    });
+
+
+
+
     app.all('/BackOffice/Professors/Create', function (req, res) {
 
         switch (req.method) {
@@ -48,29 +76,9 @@ export function mapRoutes(app: express.Express) {
         });
     });
 
-    app.get('/BackOffice/Professors/GetAll/:id?', function (req, res) {
-        var id = parseInt(req.params.id, 10);
-        switch (id) {
-            case 1:
-                service.getAllProfessors(function (err, result) {
-                    res.render('professorList', {
-                        title: 'Lista de professores do agrupamento',
-                        items: result
-                    });
-                });
-            case 2:
-                service.getProfessorBySchoolId(req.query.professorSelect, function (err, result) {
-                    res.render('professorList', {
-                        title: 'Lista de Turmas da escola ' + result.schoolName,
-                        items: result
-                    });
-                });
-
-        }
-    });
-
     app.all('/BackOffice/Professors/Edit/:id', function (req, res) {
         // TODO
         throw 'NYI';
     });
+
 }

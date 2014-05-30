@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Routes related to students.
 */
 var pool = require('../../configs/mysql');
@@ -44,4 +44,38 @@ function create(s, uploadedFilePath) {
     });
 }
 exports.create = create;
+
+/**
+* Devolve uma lista de alunos, juntamente com o nome da escola respectiva.
+* @author luisfmoliveira (Lu�s Oliveira)
+*/
+function studentDetails(schoolId) {
+    var sql = "select b.id, b.name, b.photoUrl, b.isActive, a.schoolName, c.classLevel, c.className, c.classYear from Schools as a, Students as b, Classes as c where b.classId = c.id and c.schoolId = a.id";
+
+    if (!isNaN(schoolId)) {
+        sql = mysql.format(sql + ' AND c.schoolId = ?', [schoolId]);
+    }
+
+    return poolQuery(sql).then(function (results) {
+        return results[0];
+    });
+}
+exports.studentDetails = studentDetails;
+
+/**
+* Devolve uma lista de alunos de uma turma, juntamente com o nome da escola respectiva.
+* @author luisfmoliveira (Lu�s Oliveira)
+*/
+function studentClassDetails(schoolId, classId) {
+    var sql = "select b.id, b.name, b.photoUrl, b.isActive, a.schoolName, c.classLevel, c.className, c.classYear from Schools as a, Students as b, Classes as c where b.classId = c.id and c.schoolId = a.id";
+
+    if (!isNaN(schoolId)) {
+        sql = mysql.format(sql + ' AND c.schoolId = ? AND b.classID = ?', [schoolId, classId]);
+    }
+
+    return poolQuery(sql).then(function (results) {
+        return results[0];
+    });
+}
+exports.studentClassDetails = studentClassDetails;
 //# sourceMappingURL=studentService.js.map

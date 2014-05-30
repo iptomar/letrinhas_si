@@ -1,0 +1,19 @@
+﻿extends layout
+
+block content
+    h1 Detalhes do teste
+    p #{title}
+    table(border =1)
+     tr(align="center")
+      td Titulo
+      td Texto
+      td Audio
+       -for (var id in items)
+        - var item = items[id]
+         tr 
+          td #{item.title} 
+          td #{item.textContent}
+          td
+            audio(src="/#{item.professorAudioUrl}" controls="controls")
+        
+    a(href="/") Voltar

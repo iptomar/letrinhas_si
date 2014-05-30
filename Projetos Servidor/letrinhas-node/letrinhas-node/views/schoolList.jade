@@ -8,11 +8,20 @@ block content
       td Logotipo
       td Nome
       td Endereço
+      td Ver turmas da escola
+      td Ver professores da escola
+      td Ver alunos da escola
        -for (var id in items)
         - var item = items[id]
          tr
           td  
-           img(src= "../#{item.photo}" height="42" width="42")
+           img(src= "/#{item.photo}" height="42" width="42")
           td #{item.name} 
           td #{item.address}
+          td 
+            a(href="/BackOffice/Classes/All?schoolId=#{item.id}") Ver Turmas
+          td 
+            a(href="/BackOffice/Professors/All?schoolId=#{item.id}") Ver Professores
+          td 
+            a(href="/BackOffice/Students/All?schoolId=#{item.id}") Ver Alunos 
     a(href="/") Voltar
