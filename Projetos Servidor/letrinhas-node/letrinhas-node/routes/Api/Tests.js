@@ -93,16 +93,14 @@ function mapRoutes(app) {
         });
     });
 
-    app.post('/Api/Tests/Submit/', function (req, res) {
-        var type = !isNaN(req.body.type) ? parseInt(req.body.type, 10) : null;
+    app.post('/Api/Tests/Submit', function (req, res) {
+        var type = !isNaN(req.body.type) ? parseInt(req.body.type, 10) : null, body = req.body;
 
         if (!isNaN(type)) {
             switch (type) {
                 case 0 /* read */:
                 case 2 /* list */:
                 case 3 /* poem */:
-                    var body = req.body;
-
                     var rtc = {
                         testId: !isNaN(body.testId) ? parseInt(body.testId, 10) : null,
                         studentId: !isNaN(body.studentId) ? parseInt(body.studentId, 10) : null,

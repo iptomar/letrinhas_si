@@ -25,6 +25,8 @@ function mapRoutes(app) {
     });
 
     app.get('/BackOffice/Classes/Details/:id', function (req, res) {
+        // TODO
+        res.status(500).end('NYI');
     });
 
     app.all('/BackOffice/Classes/Create', function (req, res) {
@@ -54,8 +56,11 @@ function mapRoutes(app) {
     });
 
     app.get('/BackOffice/Classes/bySchool/:id', function (req, res) {
+        // TODO
         var id = req.query.id;
         console.log(id);
+
+        res.status(500).end('NYI');
     });
 }
 exports.mapRoutes = mapRoutes;

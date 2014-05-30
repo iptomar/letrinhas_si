@@ -70,8 +70,6 @@ function mapRoutes(app) {
         }
     });
 
-    console.log('GET + POST /Students/Create ->', 'service.create');
-
     app.all('/BackOffice/Students/Edit/:id', function (req, res) {
         throw 'NYI';
 
@@ -84,8 +82,6 @@ function mapRoutes(app) {
                 break;
         }
     });
-
-    console.warn('GET + POST /Students/Edit ->', 'NYI');
 }
 exports.mapRoutes = mapRoutes;
 //# sourceMappingURL=Students.js.map

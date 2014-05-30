@@ -86,8 +86,6 @@
     <Content Include="views\addTeacher.jade" />
     <Content Include="views\classList.jade" />
     <Content Include="views\index.jade" />
-    <Content Include="views\insertError.jade" />
-    <Content Include="views\insertSuccess.jade" />
     <Content Include="views\listError.jade" />
     <Content Include="views\multimediaTipoEscolhe.jade" />
     <Content Include="views\professorList.jade" />

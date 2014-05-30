@@ -79,8 +79,6 @@ export function mapRoutes(app) {
         }
     });
 
-    console.log('GET + POST /Students/Create ->', 'service.create');
-
     app.all('/BackOffice/Students/Edit/:id', function (req, res) {
         // TODO
         throw 'NYI';
@@ -94,6 +92,4 @@ export function mapRoutes(app) {
                 break;
         }
     });
-
-    console.warn('GET + POST /Students/Edit ->', 'NYI');
 }
