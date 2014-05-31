@@ -156,14 +156,13 @@ export function mapRoutes(app: express.Express) {
     });
 
     app.get('/Api/Tests/Submissions', function (req, res) {
-        var isCorrected = parseInt(req.query.isCorrected);
+        var isCorrected = parseInt(req.query.wasCorrected),
+            testId = parseInt(req.query.testId),
+            studentId = parseInt(req.query.studentId);
 
-        if (isNaN(isCorrected)) {
-            return res.status(400).json({ error: 400 });
-        }
-
-
-        service.submissions(isCorrected)
+        service.submissions(isNaN(isCorrected) ? null : isCorrected,
+                            isNaN(testId) ? null : testId,
+                            isNaN(studentId) ? null : studentId)
             .then((submissions) => res.json(submissions))
             .catch((err) => {
                 console.error(err);

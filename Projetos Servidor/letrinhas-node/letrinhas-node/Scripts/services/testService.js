@@ -224,14 +224,23 @@ function submitResult(tc, filePath) {
 }
 exports.submitResult = submitResult;
 
+/**
+* Returns a list of submissions for (optionally) a test, student and test.
+*/
 function submissions(isCorrected, studentId, testId) {
-    var sql = "select tc.testId,tc.studentId,tc.executionDate,tc.type,rtc.testId,rtc.studentId,rtc.executionDate,rtc.soundFileUrl,rtc.professorObservations,rtc.wordsPerMinute,rtc.correctWordCount,rtc.readingPrecision,rtc.readingSpeed,rtc.expressiveness,rtc.rhythm,rtc.details,rtc.wasCorrected from TestCorrections as tc join ReadingTestCorrections as rtc on tc.testId = rtc.testId and tc.studentId = rtc.studentId and tc.executionDate = rtc.executionDate WHERE rtc.wasCorrected = " + isCorrected;
+    if (typeof isCorrected === "undefined") { isCorrected = null; }
+    if (typeof studentId === "undefined") { studentId = null; }
+    if (typeof testId === "undefined") { testId = null; }
+    var sql = "select tc.testId,tc.studentId,tc.executionDate,tc.type,rtc.soundFileUrl,rtc.professorObservations,rtc.wordsPerMinute,rtc.correctWordCount,rtc.readingPrecision,rtc.readingSpeed,rtc.expressiveness,rtc.rhythm,rtc.details,rtc.wasCorrected from TestCorrections as tc join ReadingTestCorrections as rtc on tc.testId = rtc.testId and tc.studentId = rtc.studentId and tc.executionDate = rtc.executionDate where true ";
 
-    if (typeof studentId !== 'undefined') {
-        sql += " and tc.studentId = " + studentId;
+    if (isCorrected !== null) {
+        sql += mysql.format(' and rtc.wasCorrected = ?', [isCorrected]);
     }
-    if (typeof testId !== 'undefined') {
-        sql += " and tc.testId = " + testId;
+    if (studentId !== null) {
+        sql += mysql.format(" and tc.studentId = ?", [studentId]);
+    }
+    if (testId !== null) {
+        sql += mysql.format(" and tc.testId = ?", [testId]);
     }
 
     return poolQuery(sql).then(function (results) {
@@ -262,7 +271,7 @@ function testDetails(testId) {
     if (!isNaN(testId)) {
         sql = mysql.format(sql + ' AND r.id = ?', [testId]);
     }
-    console.log(sql);
+
     return poolQuery(sql).then(function (results) {
         return results[0];
     });
