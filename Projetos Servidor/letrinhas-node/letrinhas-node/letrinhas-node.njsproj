@@ -80,6 +80,7 @@
     <Content Include="views\addClass.jade" />
     <Content Include="views\addMultimediaTest.jade" />
     <Content Include="views\addMultimediaTest2.jade" />
+    <Content Include="views\addMultimediaTest3.jade" />
     <Content Include="views\addReadingTest.jade" />
     <Content Include="views\addSchool.jade" />
     <Content Include="views\addStudent.jade" />
@@ -94,7 +95,6 @@
     <Content Include="views\professorList.jade" />
     <Content Include="views\schoolList.jade" />
     <Content Include="views\submissionsList.jade" />
-    <Content Include="views\teste.jade" />
     <Content Include="views\studentList.jade" />
     <Content Include="views\testDetails.jade" />
     <Content Include="views\testTitles.jade" />

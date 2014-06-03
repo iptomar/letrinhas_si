@@ -9,6 +9,7 @@ import Test = require('../../Scripts/structures/tests/Test');
 import ReadingTest = require('../../Scripts/structures/tests/ReadingTest');
 import MultimediaTest = require('../../Scripts/structures/tests/MultimediaTest');
 
+
 import ReadingTestCorrection = require('../../Scripts/structures/tests/ReadingTestCorrection');
 import MultimediaTestCorrection = require('../../Scripts/structures/tests/MultimediaTestCorrection');
 import TestCorrection = require('../../Scripts/structures/tests/TestCorrection');
@@ -80,11 +81,11 @@ export function mapRoutes(app: express.Express) {
                         break;
                     case '1':
                         // Texto e imagens
-                        res.end('NYI');
+                        res.render('addMultimediaTest3');
                         break;
                     case '2':
                         // Só Imagens
-                        res.end('NYI');
+                        res.render('addMultimediaTest2');
                         break;
                     default:
                         res.render('multimediaTipoEscolhe');

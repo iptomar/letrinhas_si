@@ -20,7 +20,7 @@ function mapRoutes(app) {
             console.error(err);
 
             // TODO: Uma view de 500.
-            res.render('listError');
+            res.status(500).render('Erros/500');
         });
     });
 
