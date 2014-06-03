@@ -1,4 +1,5 @@
 ﻿var service = require('../../Scripts/services/studentService');
+var schoolService = require('../../Scripts/services/schoolService');
 
 function mapRoutes(app) {
     app.get('/BackOffice/Students/All', function (req, res) {
@@ -29,7 +30,7 @@ function mapRoutes(app) {
             });
         } else {
             // Obtemos os alunos de uma turma (opcionalmente para uma escola)...
-            service.studentClassDetails(options.schoolId, options.classId).then(function (studentData) {
+            service.studentDetailsEdit(options.schoolId, options.classId).then(function (studentData) {
                 res.render('studentList', {
                     title: 'Lista de alunos' + (typeof options.schoolId !== 'undefined' ? ' da escola ' + studentData[0].schoolName : ''),
                     items: studentData
@@ -46,16 +47,23 @@ function mapRoutes(app) {
     app.all('/BackOffice/Students/Create', function (req, res) {
         switch (req.method) {
             case 'GET':
-                res.render('addStudent');
+                schoolService.allSchoolClasses().then(function (schools) {
+                    res.render('addStudent', {
+                        title: 'Adicionar aluno',
+                        escolas: schools
+                    });
+                }).catch(function (err) {
+                    console.error(err);
+                    res.status(500).json({ error: 500 });
+                });
                 break;
             case 'POST':
                 // TODO: Meter dados na BD.
                 var body = req.body;
 
                 var aluno = {
-                    classId: parseInt(body.txtIdEscola),
-                    name: body.txtName,
-                    isActive: body.state_filter
+                    classId: parseInt(body.schoolId),
+                    name: body.txtName
                 };
 
                 service.create(aluno, req.files.photo.path).then(function (_) {
@@ -70,9 +78,7 @@ function mapRoutes(app) {
         }
     });
 
-    app.all('/BackOffice/Students/Edit/:id', function (req, res) {
-        throw 'NYI';
-
+    app.all('/BackOffice/Students/Edit', function (req, res) {
         switch (req.method) {
             case 'GET':
                 break;

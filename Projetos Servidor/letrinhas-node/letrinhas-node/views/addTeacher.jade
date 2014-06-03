@@ -4,31 +4,27 @@ block content
     form(id="test", method="POST", action="/BackOffice/Professors/Create" enctype="multipart/form-data") 
         h1 Adicionar Professor
         | Nome do Professor:
-        input(type='text', name = "name")
+        input(type='text', name = "name" required)
         br
         | Email:
-        input(type='text', name = "mail")
+        input(type='email' name = "mail" required)
         br
         | Telefone:
-        input(type='text', name = "phone")
-        br
-        | Estado de Atividade:
-        input(type="radio", name="state_filter", value="0")
-        | Inativo
-        input(type="radio", name="state_filter", value="1")
-        | Ativo
+        input(type='text', name = "phone"  maxlength="9" size="9" required)
         br
         | Username:
-        input(type='text', name = "username")
+        input(type='text', name = "username" required)
         br
         | Password:
-        input(type='password', name = "password")
+        input(type='password', name = "password" required)
         br
-        | ID Escola:
-        input(type='text', name = "schoolId")
+        | Selecione a Escola:
+        select(name="schoolId")
+          each school in escolas
+             option(value="#{school.id}")= school.schoolName
         br
         | Foto:
-        input(type="file" name="photo")
+        input(type="file" name="photo" required)
         br
         input(type="submit")
     script(type="text/javascript", src="/scripts/formtest.js")

@@ -21,7 +21,7 @@ export function all(): Q.Promise<Array<Student>> {
 
 // GET: /Students/Details/:id
 export function details(id: number): Q.Promise<Student> {
-    return poolQuery(mysql.format('SELECT * FROM Students WHERE id = ? AND isActive = 1', [id]))
+    return poolQuery(mysql.format('SELECT * FROM Students WHERE id = ? AND isActive = 1', [1]))
         .then((students) => {
             if (students[0].length === 0) { return Q.resolve(null); }
 
@@ -61,11 +61,11 @@ export function studentDetails(schoolId?: number): Q.Promise<Array<any>> {
  * Devolve uma lista de alunos de uma turma, juntamente com o nome da escola respectiva.
  * @author luisfmoliveira (Lu�s Oliveira)
  */
-export function studentClassDetails(schoolId?: number, classId?:number): Q.Promise<Array<any>> {
-    var sql = "select b.id, b.name, b.photoUrl, b.isActive, a.schoolName, c.classLevel, c.className, c.classYear from Schools as a, Students as b, Classes as c where b.classId = c.id and c.schoolId = a.id";
+export function studentDetailsEdit(schoolId?: number, classId?:number): Q.Promise<Array<any>> {
+    var sql = "select s.id as idEscola, s.schoolName, c.id as idTurma, c.classLevel, c.className, c.classYear, st.id as idAluno, st.classId, st.isActive, st.name from Schools as s, Classes as c, Students as st where s.id = c.schoolId";
 
     if (!isNaN(schoolId)) {
-        sql = mysql.format(sql + ' AND c.schoolId = ? AND b.classID = ?', [schoolId,classId]);
+        sql = mysql.format(sql + ' AND st.id = ?', [schoolId,classId]);
     }
 
     return poolQuery(sql)

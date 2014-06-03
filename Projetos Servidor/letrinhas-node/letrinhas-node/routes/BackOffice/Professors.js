@@ -29,18 +29,26 @@ function mapRoutes(app) {
     app.all('/BackOffice/Professors/Create', function (req, res) {
         switch (req.method) {
             case 'GET':
-                return res.render('addTeacher');
+                schoolService.all().then(function (schools) {
+                    res.render('addTeacher', {
+                        title: 'Adicionar Professor',
+                        escolas: schools
+                    });
+                }).catch(function (err) {
+                    console.error(err);
+                    res.status(500).json({ error: 500 });
+                });
+                break;
             case 'POST':
                 // TODO: Meter dados na BD.
                 var body = req.body;
                 var professor = {
-                    schoolId: parseInt(body.schoolId),
+                    schoolId: body.schoolId,
                     name: body.name,
                     username: body.username,
                     password: body.password,
                     emailAddress: body.mail,
-                    telephoneNumber: body.phone,
-                    isActive: body.state_filter
+                    telephoneNumber: body.phone
                 };
 
                 service.createProfessor(professor, req.files.photo.path).then(function (_) {

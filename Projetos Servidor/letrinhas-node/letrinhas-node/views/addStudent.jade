@@ -4,19 +4,15 @@ block content
     form(id="student", method="POST", action="/BackOffice/Students/Create" enctype="multipart/form-data")
         h1 Adicionar aluno
         | Nome do Aluno:
-        input(type='text', name = "txtName")
+        input(type='text', name = "txtName" required)
         br
-        | Estado:
-        input(type="radio", name="state_filter", value="0")
-        | Inativo
-        input(type="radio", name="state_filter", value="1")
-        | Ativo
-        br
-        | Id da Escola:
-        input(type='text', name = "txtIdEscola")
+        | Selecione a Escola e a respectiva turma:
+        select(name="schoolId")
+          each school in escolas
+             option(value="#{school.idTurma}")= school.schoolName +" - "+ school.classLevel+"º "+school.className +" - "+ school.classYear
         br
         | Foto:
-        input(type="file" name="photo")
+        input(type="file" name="photo" required)
         br
         input(type="submit")
         script(type="text/javascript", src="/scripts/formtest.js")
