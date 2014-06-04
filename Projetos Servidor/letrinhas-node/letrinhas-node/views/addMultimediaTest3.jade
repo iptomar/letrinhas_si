@@ -6,17 +6,17 @@ block content
         h1 Adicionar teste Multimédia Texto com Imagens
 
         | Titulo:
-        input(type='text', name = "title")
+        input(type='text', name = "title" required)
         br
         | Cabeçalho:
-        input(type='text', name = "mainText")
+        input(type='text', name = "mainText" required)
         br
-        input(type="radio", name="correct", value="1")
-        input(type='file', name = "opt1")
+        input(type="radio", name="correct", value="1" )
+        input(type='file', name = "opt1" required)
         input(type="radio", name="correct", value="2")
-        input(type='file', name = "opt2")
+        input(type='file', name = "opt2" required)
         input(type="radio", name="correct", value="3")
-        input(type='file', name = "opt3")
+        input(type='file', name = "opt3" required)
         br
         | Grau Escolar:
         select(name="grade")
