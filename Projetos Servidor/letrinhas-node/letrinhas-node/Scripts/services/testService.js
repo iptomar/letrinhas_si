@@ -227,7 +227,7 @@ exports.submitResult = submitResult;
 /**
 * Returns a list of submissions for (optionally) a test, student and test.
 */
-function submissions(isCorrected, studentId, testId) {
+function readingSubmissions(isCorrected, studentId, testId) {
     if (typeof isCorrected === "undefined") { isCorrected = null; }
     if (typeof studentId === "undefined") { studentId = null; }
     if (typeof testId === "undefined") { testId = null; }
@@ -247,7 +247,25 @@ function submissions(isCorrected, studentId, testId) {
         return results[0];
     });
 }
-exports.submissions = submissions;
+exports.readingSubmissions = readingSubmissions;
+
+function multimediaSubmisssions(studentId, testId) {
+    if (typeof studentId === "undefined") { studentId = null; }
+    if (typeof testId === "undefined") { testId = null; }
+    var sql = 'select * from MultimediaTestCorrections where true ';
+
+    if (studentId !== null) {
+        sql += mysql.format(" and studentId = ?", [studentId]);
+    }
+    if (testId !== null) {
+        sql += mysql.format(" and testId = ?", [testId]);
+    }
+
+    return poolQuery(sql).then(function (results) {
+        return results[0];
+    });
+}
+exports.multimediaSubmisssions = multimediaSubmisssions;
 
 /**
 * Devolve uma lista de titulos de testes.

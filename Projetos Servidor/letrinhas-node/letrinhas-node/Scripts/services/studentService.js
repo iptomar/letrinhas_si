@@ -66,8 +66,8 @@ exports.studentDetails = studentDetails;
 * Devolve uma lista de alunos de uma turma, juntamente com o nome da escola respectiva.
 * @author luisfmoliveira (Lu�s Oliveira)
 */
-function studentClassDetails(schoolId, classId) {
-    var sql = "select b.id, b.name, b.photoUrl, b.isActive, a.schoolName, c.classLevel, c.className, c.classYear from Schools as a, Students as b, Classes as c where b.classId = c.id and c.schoolId = a.id";
+function studentDetailsEdit(schoolId, classId) {
+    var sql = "select s.id as idEscola, s.schoolName, c.id as idTurma, c.classLevel, c.className, c.classYear, st.id as idAluno, st.classId, st.isActive, st.name from Schools as s, Classes as c, Students as st where s.id = c.schoolId";
 
     if (!isNaN(schoolId)) {
         sql = mysql.format(sql + ' AND c.schoolId = ? AND b.classID = ?', [schoolId, classId]);
@@ -77,5 +77,5 @@ function studentClassDetails(schoolId, classId) {
         return results[0];
     });
 }
-exports.studentClassDetails = studentClassDetails;
+exports.studentDetailsEdit = studentDetailsEdit;
 //# sourceMappingURL=studentService.js.map

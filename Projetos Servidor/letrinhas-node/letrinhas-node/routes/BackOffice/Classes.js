@@ -1,4 +1,5 @@
 ﻿var classService = require('../../Scripts/services/classService');
+var schoolService = require('../../Scripts/services/schoolService');
 
 function mapRoutes(app) {
     app.get('/BackOffice/Classes/All', function (req, res) {
@@ -32,7 +33,16 @@ function mapRoutes(app) {
     app.all('/BackOffice/Classes/Create', function (req, res) {
         switch (req.method) {
             case 'GET':
-                return res.render('addClass');
+                schoolService.all().then(function (schools) {
+                    res.render('addClass', {
+                        title: 'Adicionar turma',
+                        escolas: schools
+                    });
+                }).catch(function (err) {
+                    console.error(err);
+                    res.status(500).json({ error: 500 });
+                });
+                break;
             case 'POST':
                 // TODO: Meter dados na BD.
                 var body = req.body;

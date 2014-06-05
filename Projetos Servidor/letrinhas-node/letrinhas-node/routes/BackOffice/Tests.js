@@ -95,21 +95,21 @@ function mapRoutes(app) {
         }
     });
 
-    app.get('/BackOffice/Tests/Submissions', function (req, res) {
-        var isCorrected = parseInt(req.query.isCorrected);
-
-        if (isNaN(isCorrected)) {
-            return res.status(400).render('Erros/400');
-        }
-
-        testService.submissions(isCorrected).then(function (submissions) {
-            res.render('submissionsList', { title: "Submissoes", items: submissions });
-        }).catch(function (err) {
-            console.error(err);
-            res.status(500).render('Erros/500');
-        });
-    });
-
+    //app.get('/BackOffice/Tests/Submissions', function (req, res) {
+    //    var isCorrected = parseInt(req.query.isCorrected);
+    //    if (isNaN(isCorrected)) {
+    //        return res.status(400).render('Erros/400');
+    //    }
+    //    testService.submissions(isCorrected)
+    //    //.then(submissions => res.json(submissions))
+    //        .then(function (submissions) {
+    //            res.render('submissionsList', { title: "Submissoes", items: submissions });
+    //        })
+    //            .catch((err) => {
+    //            console.error(err);
+    //            res.status(500).render('Erros/500');
+    //        });
+    //});
     app.get('/BackOffice/Tests/Details', function (req, res) {
         // objecto de opções.
         var options = Object.create(null);

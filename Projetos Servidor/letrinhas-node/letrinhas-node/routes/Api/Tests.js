@@ -151,10 +151,27 @@ function mapRoutes(app) {
         }
     });
 
-    app.get('/Api/Tests/Submissions', function (req, res) {
+    /**
+    * Returns JSON for submissions related to reading tests.
+    */
+    app.get('/Api/Tests/Submissions/Read', function (req, res) {
         var isCorrected = parseInt(req.query.wasCorrected), testId = parseInt(req.query.testId), studentId = parseInt(req.query.studentId);
 
-        service.submissions(isNaN(isCorrected) ? null : isCorrected, isNaN(testId) ? null : testId, isNaN(studentId) ? null : studentId).then(function (submissions) {
+        service.readingSubmissions(isNaN(isCorrected) ? null : isCorrected, isNaN(studentId) ? null : studentId, isNaN(testId) ? null : testId).then(function (submissions) {
+            return res.json(submissions);
+        }).catch(function (err) {
+            console.error(err);
+            res.status(500).json({ error: 500 });
+        });
+    });
+
+    /**
+    * Returns JSON for submissions related to multimedia tests.
+    */
+    app.get('/Api/Tests/Submissions/Multimedia', function (req, res) {
+        var testId = parseInt(req.query.testId), studentId = parseInt(req.query.studentId);
+
+        service.multimediaSubmisssions(isNaN(studentId) ? null : studentId, isNaN(testId) ? null : testId).then(function (submissions) {
             return res.json(submissions);
         }).catch(function (err) {
             console.error(err);

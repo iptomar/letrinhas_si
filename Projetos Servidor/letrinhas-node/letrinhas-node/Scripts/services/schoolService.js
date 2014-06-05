@@ -79,4 +79,35 @@ function getId(onResult) {
 }
 exports.getId = getId;
 exports.getAllSchools = exports.getAllSchools;
+
+/**
+* Devolve os detalhes de uma escola selecionada
+* @author luisfmoliveira (Luís Oliveira)
+*/
+function schoolDetails(schoolId) {
+    var sql = "select * from Schools where id";
+
+    if (!isNaN(schoolId)) {
+        sql = mysql.format(sql + '= ?', [schoolId]);
+    }
+
+    return poolQuery(sql).then(function (results) {
+        return results[0];
+    });
+}
+exports.schoolDetails = schoolDetails;
+
+function updateSchool(s) {
+    // eg: appContent/Schools/uuid/logo.jpg
+    var sql = mysql.format("UPDATE Schools SET schoolAddress = ?, schoolName= ? WHERE id = ?", [s.schoolAddress, s.schoolName, s.id]);
+    return poolQuery(sql);
+}
+exports.updateSchool = updateSchool;
+
+function allSchoolClasses() {
+    return poolQuery('select s.id as idEscola, s.schoolName, c.id as idTurma, c.classLevel, c.className, c.classYear from Schools as s, Classes as c where s.id = c.schoolId').then(function (results) {
+        return results[0];
+    });
+}
+exports.allSchoolClasses = allSchoolClasses;
 //# sourceMappingURL=schoolService.js.map
