@@ -36,7 +36,7 @@ export function mapRoutes(app) {
         }
         else {
             // Obtemos os alunos de uma turma (opcionalmente para uma escola)...
-            service.studentDetailsEdit(options.schoolId, options.classId)
+            service.studentDetails(options.schoolId, options.classId)
                 .then((studentData) => {
                     res.render('studentList', {
                         title: 'Lista de alunos' + (typeof options.schoolId !== 'undefined' ? ' da escola ' + studentData[0].schoolName : ''),
@@ -126,7 +126,12 @@ export function mapRoutes(app) {
                 break;
             case 'POST':
                 var body = req.body;
-                service.editStudentClass(body.id, body.newClass)
+                var aluno = <Student> {
+                    id: parseInt(body.id),
+                    classId: parseInt(body.newClass),
+                    name: body.name
+                };
+                service.editStudentClass(aluno)
                     .then((_) => res.render('editSucess'))
                     .catch((err) => {
                         console.error(err);

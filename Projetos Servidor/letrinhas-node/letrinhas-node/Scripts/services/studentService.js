@@ -49,11 +49,17 @@ exports.create = create;
 * Devolve uma lista de alunos, juntamente com o nome da escola respectiva.
 * @author luisfmoliveira (Lu�s Oliveira)
 */
-function studentDetails(schoolId) {
-    var sql = "select b.id, b.name, b.photoUrl, b.isActive, a.schoolName, c.classLevel, c.className, c.classYear from Schools as a, Students as b, Classes as c where b.classId = c.id and c.schoolId = a.id";
+function studentDetails(schoolId, classId) {
+    if (typeof schoolId === "undefined") { schoolId = null; }
+    if (typeof classId === "undefined") { classId = null; }
+    var sql = "select s.id, s.classId, s.name, s.photoUrl, s.isActive, t.schoolName, c.className " + "from Students as s " + "join Classes as c on c.id = s.classId " + "join Schools as t on t.id = c.schoolId " + "where true";
 
-    if (!isNaN(schoolId)) {
-        sql = mysql.format(sql + ' AND c.schoolId = ?', [schoolId]);
+    if (schoolId !== null && !isNaN(schoolId)) {
+        sql = mysql.format(sql + ' and t.id = ?', [schoolId]);
+    }
+
+    if (classId !== null && !isNaN(classId)) {
+        sql = mysql.format(sql + ' and c.id = ?', [classId]);
     }
 
     return poolQuery(sql).then(function (results) {
@@ -79,10 +85,10 @@ function studentDetailsChangeClass(studentId) {
 }
 exports.studentDetailsChangeClass = studentDetailsChangeClass;
 
-function editStudentClass(studentId, classId) {
+function editStudentClass(s) {
     var sql = "Update Students SET";
-    if (!isNaN(studentId) || !isNaN(classId)) {
-        sql = mysql.format(sql + " classId = ? WHERE id = ?", [classId, studentId]);
+    if (!isNaN(s.id) || !isNaN(s.classId)) {
+        sql = mysql.format(sql + " classId = ?, name = ? WHERE id = ?", [s.classId, s.name, s.id]);
     }
 
     return poolQuery(sql);

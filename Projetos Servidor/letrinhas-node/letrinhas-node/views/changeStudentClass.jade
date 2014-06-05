@@ -2,21 +2,21 @@
 
 block content
     
-    h1 Mudar aluno de turma
+    h1 Alterar dados do aluno
 
-    form(novalidate, id="letrinhas-change-class", class="form-horizontal", role="form", method="POST", action="/BackOffice/Students/Edit/Class", enctype="multipart/form-data")
+    form(novalidate, id="letrinhas-change-class", class="form-horizontal", role="form", method="POST", action="/BackOffice/Students/Edit/Class")
          - var item = itemsStudent[0]
             div(class="form-group")
                 label(for="name", class="control-label col-sm-2") Nome do Aluno
             
                 div(class="col-sm-10")
-                    input(type="text", id="name", name="name", class="form-control", value="#{item.NomeAluno}",  readonly)
+                    input(type="text", id="name", name="name", class="form-control", value="#{item.NomeAluno}", required)
 
             div(class="form-group")
                 label(for="name", class="control-label col-sm-2" ) Turma atual do aluno
             
                 div(class="col-sm-10")
-                    input(type="text", id="class", name="class", class="form-control", value="#{item.schoolName} - #{item.classLevel}º #{item.className} do ano lectivo #{item.classYear}", readonly)
+                    p #{item.schoolName} - #{item.classLevel}º #{item.className} do ano lectivo #{item.classYear}
         
             div(class="form-group")
                 label(for="name", class="control-label col-sm-2") Alterar para
@@ -38,15 +38,8 @@ block additionalScripts
 
     script.
         (function () {
-            $('#letrinhas-add-prof').validate({
-                rules: {
-                    phone: {
-                        digits: true
-                    },
-                    password: {
-                        digits: true
-                    }
-                }
+            $('#lletrinhas-change-class').validate({
+               
             });
         }());
         
