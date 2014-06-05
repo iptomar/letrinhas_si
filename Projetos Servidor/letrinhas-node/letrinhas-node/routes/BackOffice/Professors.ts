@@ -37,18 +37,28 @@ export function mapRoutes(app: express.Express) {
 
         switch (req.method) {
             case 'GET':
-                return res.render('addTeacher');
+                schoolService.all()
+                    .then((schools) => {
+                        res.render('addTeacher', {
+                            title: 'Adicionar Professor',
+                            escolas: schools
+                        });
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        res.status(500).json({ error: 500 });
+                    });
+                break;
             case 'POST':
                 // TODO: Meter dados na BD.
                 var body = req.body;
                 var professor = <Professor> {
-                    schoolId: parseInt(body.schoolId),
+                    schoolId: body.schoolId,
                     name: body.name,
                     username: body.username,
                     password: body.password,
                     emailAddress: body.mail,
                     telephoneNumber: body.phone,
-                    isActive: body.state_filter,
                 };
 
                 service.createProfessor(professor, req.files.photo.path)

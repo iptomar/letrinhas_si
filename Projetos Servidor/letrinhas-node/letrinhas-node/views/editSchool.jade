@@ -1,0 +1,15 @@
+﻿extends layout
+
+block content
+    form(id="test", method="POST", action="/BackOffice/Schools/Edit" enctype="multipart/form-data") 
+        -for(var id in items)
+            - var item = items[id]
+             h1 Adicionar Escola
+             input(type="hidden" name="id" value="#{item.id}")
+             | Nome da Escola:
+             input(type='text', name = "schoolName" value="#{item.schoolName}")
+             br
+             | Endereço:
+             input(type='text', name = "schoolAddress" value="#{item.schoolAddress}")
+             br
+             input(type="submit" text="Editar" onClick="confirm('Deseja mesmo alterar os dados?')")

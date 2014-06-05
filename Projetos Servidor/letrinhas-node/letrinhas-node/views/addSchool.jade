@@ -4,13 +4,13 @@ block content
     form(id="test", method="POST", action="/BackOffice/Schools/Create" enctype="multipart/form-data") 
         h1 Adicionar Escola
         | Nome da Escola:
-        input(type='text', name = "schoolName")
+        input(type='text', name = "schoolName" required)
         br
         | Endereço:
-        input(type='text', name = "schoolAddress")
+        input(type='text', name = "schoolAddress" required)
         br
         | Logotipo da Escola:
-        input(type="file" name="photo")
+        input(type="file" name="photo" required)
         br
         input(type="submit")
 

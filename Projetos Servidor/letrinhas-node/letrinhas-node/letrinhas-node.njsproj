@@ -75,6 +75,16 @@
     <TypeScriptCompile Include="Scripts\services\studentService.ts" />
     <TypeScriptCompile Include="Scripts\services\professorService.ts" />
     <TypeScriptCompile Include="Scripts\services\testService.ts" />
+    <Content Include="public\bootstrap\css\bootstrap-theme.css" />
+    <Content Include="public\bootstrap\css\bootstrap-theme.css.map" />
+    <Content Include="public\bootstrap\css\bootstrap-theme.min.css" />
+    <Content Include="public\bootstrap\css\bootstrap.css" />
+    <Content Include="public\bootstrap\css\bootstrap.css.map" />
+    <Content Include="public\bootstrap\css\bootstrap.min.css" />
+    <Content Include="public\bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="public\bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="public\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="public\bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="public\scripts\formtest.ts" />
     <Content Include="public\stylesheets\style.css" />
     <Content Include="views\addClass.jade" />
@@ -86,6 +96,8 @@
     <Content Include="views\addStudent.jade" />
     <Content Include="views\addTeacher.jade" />
     <Content Include="views\classList.jade" />
+    <Content Include="views\editSchool.jade" />
+    <Content Include="views\editSucess.jade" />
     <Content Include="views\Erros\400.jade" />
     <Content Include="views\Erros\404.jade" />
     <Content Include="views\Erros\500.jade" />
@@ -104,8 +116,13 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="public\" />
+    <Folder Include="public\bootstrap\" />
+    <Folder Include="public\bootstrap\css\" />
+    <Folder Include="public\bootstrap\fonts\" />
+    <Folder Include="public\bootstrap\js\" />
     <Folder Include="public\images\" />
     <Folder Include="public\scripts\" />
+    <Folder Include="public\scripts\jquery\" />
     <Folder Include="public\stylesheets\" />
     <Folder Include="routes\" />
     <Folder Include="routes\Api\" />
@@ -129,7 +146,10 @@
     <Folder Include="views\Erros\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="public\bootstrap\js\bootstrap.js" />
+    <Compile Include="public\bootstrap\js\bootstrap.min.js" />
     <Compile Include="public\scripts\formtest.js" />
+    <Compile Include="public\scripts\jquery\jquery-2.1.1.min.js" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
   <ProjectExtensions>

@@ -230,11 +230,24 @@ export function submitResult(tc: TestCorrection, filePath?: string): Q.Promise<v
     }
 }
 
-export function submissions(isCorrected: number, studentId?: number, testId?: number): Q.Promise<Array<any>> {
-    var sql = "select tc.testId,tc.studentId,tc.executionDate,tc.type,rtc.testId,rtc.studentId,rtc.executionDate,rtc.soundFileUrl,rtc.professorObservations,rtc.wordsPerMinute,rtc.correctWordCount,rtc.readingPrecision,rtc.readingSpeed,rtc.expressiveness,rtc.rhythm,rtc.details,rtc.wasCorrected from TestCorrections as tc join ReadingTestCorrections as rtc on tc.testId = rtc.testId and tc.studentId = rtc.studentId and tc.executionDate = rtc.executionDate WHERE rtc.wasCorrected = " + isCorrected;
+/**
+ * Returns a list of submissions for (optionally) a test, student and test.
+ */
+export function readingSubmissions(isCorrected = null, studentId = null, testId = null): Q.Promise<Array<TestCorrection>> {
+    var sql = "select tc.testId,tc.studentId,tc.executionDate,tc.type,rtc.soundFileUrl,rtc.professorObservations,rtc.wordsPerMinute,rtc.correctWordCount,rtc.readingPrecision,rtc.readingSpeed,rtc.expressiveness,rtc.rhythm,rtc.details,rtc.wasCorrected from TestCorrections as tc join ReadingTestCorrections as rtc on tc.testId = rtc.testId and tc.studentId = rtc.studentId and tc.executionDate = rtc.executionDate where true ";
 
     if (typeof studentId !== 'undefined') { sql += " and tc.studentId = " + studentId }
     if (typeof testId !== 'undefined') { sql += " and tc.testId = " + testId }
+
+    return poolQuery(sql)
+        .then((results) => results[0]);
+}
+
+export function multimediaSubmisssions(studentId = null, testId = null): Q.Promise<Array<TestCorrection>> {
+    var sql = 'select * from MultimediaTestCorrections where true ';
+
+    if (studentId !== null) { sql += mysql.format(" and studentId = ?", [studentId]); }
+    if (testId !== null) { sql += mysql.format(" and testId = ?", [testId]); }
 
     return poolQuery(sql)
         .then((results) => results[0]);

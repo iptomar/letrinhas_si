@@ -11,15 +11,18 @@ block content
       td Ano
       td Turma
       td Estado (1 = Activo | 0 = Inativo)
+      td Alterar dados
        -for (var id in items)
         - var item = items[id]
          tr
           td  
            img(src= "/#{item.photoUrl}" height="42" width="42")
-          td #{item.photoUrl} 
-          td #{item.name}
+          td #{item.name} 
           td #{item.schoolName}
-          td #{item.classLevel} #{item.className}
+          td #{item.classLevel}
+          td #{item.className}
           td #{item.isActive}
+          td 
+           a(href="/BackOffice/Students/Edit?studentId=#{item.id}") Editar
         
     a(href="/") Voltar

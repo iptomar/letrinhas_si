@@ -38,7 +38,18 @@ export function mapRoutes(app: express.Express) {
     app.all('/BackOffice/Classes/Create', function (req, res) {
         switch (req.method) {
             case 'GET':
-                return res.render('addClass');
+                schoolService.all()
+                    .then((schools) => {
+                        res.render('addClass', {
+                            title: 'Adicionar turma',
+                            escolas: schools
+                        });
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        res.status(500).json({ error: 500 });
+                    });
+                break;
             case 'POST':
                 // TODO: Meter dados na BD.
                 var body = req.body;
