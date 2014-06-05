@@ -11,7 +11,7 @@ block content
       td Ano
       td Turma
       td Estado (1 = Activo | 0 = Inativo)
-      td Alterar dados
+      td Alterar a turma
        -for (var id in items)
         - var item = items[id]
          tr
@@ -23,6 +23,6 @@ block content
           td #{item.className}
           td #{item.isActive}
           td 
-           a(href="/BackOffice/Students/Edit?studentId=#{item.id}") Editar
+           a(href="/BackOffice/Students/Edit/Class?studentId=#{item.id}") Mudar de Turma
         
     a(href="/") Voltar

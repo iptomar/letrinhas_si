@@ -89,12 +89,49 @@ export function mapRoutes(app) {
         }
     });
 
-    app.all('/BackOffice/Students/Edit', function (req, res) {
+    app.all('/BackOffice/Students/Edit/Class', function (req, res) {
           // TODO      
         switch (req.method) {
             case 'GET':
+                // objecto de opções.
+                var options = Object.create(null);
+                
+                // Verificar se temos um id de escola válido. Ignoramo-lo se não for
+                if (!isNaN(req.query.studentId)) {
+                    options.studentId = parseInt(req.query.studentId, 10);
+                }
+                var studentDetails;
+                var classDetails;
+                // Obtemos as turmas (opcionalmente para uma turma)...
+                service.studentDetailsChangeClass(options.studentId)
+                    .then((studentData) => {
+                        studentDetails = studentData
+                    })
+                    .then((_) => schoolService.allSchoolClasses())
+                    .then((classData) => {
+                        classDetails = classData
+                    })
+                    .then((_) =>{
+                        res.render('changeStudentClass', {
+                            title: 'Alterar turma',
+                            itemsStudent: studentDetails,
+                            itemsClass : classDetails
+                        });
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        // TODO: Uma view de 500.
+                        res.status(500).render('Erros/500');
+                    });
                 break;
             case 'POST':
+                var body = req.body;
+                service.editStudentClass(body.id, body.newClass)
+                    .then((_) => res.render('editSucess'))
+                    .catch((err) => {
+                        console.error(err);
+                        res.status(500).json({ error: 500 })
+                });
                 break;
             default:
                 break;

@@ -66,16 +66,26 @@ exports.studentDetails = studentDetails;
 * Devolve uma lista de alunos de uma turma, juntamente com o nome da escola respectiva.
 * @author luisfmoliveira (Lu�s Oliveira)
 */
-function studentDetailsEdit(schoolId, classId) {
-    var sql = "select s.id as idEscola, s.schoolName, c.id as idTurma, c.classLevel, c.className, c.classYear, st.id as idAluno, st.classId, st.isActive, st.name from Schools as s, Classes as c, Students as st where s.id = c.schoolId";
+function studentDetailsChangeClass(studentId) {
+    var sql = "select b.id, b.name as NomeAluno, b.photoUrl, b.isActive, a.schoolName, c.classLevel, c.className, c.classYear from Schools as a, Students as b, Classes as c where b.classId = c.id and c.schoolId = a.id";
 
-    if (!isNaN(schoolId)) {
-        sql = mysql.format(sql + ' AND c.schoolId = ? AND b.classID = ?', [schoolId, classId]);
+    if (!isNaN(studentId)) {
+        sql = mysql.format(sql + ' AND b.id = ?', [studentId]);
     }
 
     return poolQuery(sql).then(function (results) {
         return results[0];
     });
 }
-exports.studentDetailsEdit = studentDetailsEdit;
+exports.studentDetailsChangeClass = studentDetailsChangeClass;
+
+function editStudentClass(studentId, classId) {
+    var sql = "Update Students SET";
+    if (!isNaN(studentId) || !isNaN(classId)) {
+        sql = mysql.format(sql + " classId = ? WHERE id = ?", [classId, studentId]);
+    }
+
+    return poolQuery(sql);
+}
+exports.editStudentClass = editStudentClass;
 //# sourceMappingURL=studentService.js.map

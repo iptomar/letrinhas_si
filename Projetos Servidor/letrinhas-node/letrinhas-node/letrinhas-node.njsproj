@@ -95,6 +95,7 @@
     <Content Include="views\addSchool.jade" />
     <Content Include="views\addStudent.jade" />
     <Content Include="views\addTeacher.jade" />
+    <Content Include="views\changeStudentClass.jade" />
     <Content Include="views\classList.jade" />
     <Content Include="views\editSchool.jade" />
     <Content Include="views\editSucess.jade" />
