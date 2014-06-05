@@ -13,6 +13,10 @@ function mapRoutes(app) {
     schoolRoutes.mapRoutes(app);
     testRoutes.mapRoutes(app);
     professorRoutes.mapRoutes(app);
+
+    app.get('/BackOffice/About', function (req, res) {
+        return res.render('Home/about');
+    });
 }
 exports.mapRoutes = mapRoutes;
 //# sourceMappingURL=backOfficeRouteMappings.js.map

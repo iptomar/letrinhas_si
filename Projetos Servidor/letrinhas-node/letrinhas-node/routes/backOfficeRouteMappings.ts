@@ -15,4 +15,8 @@ export function mapRoutes(app: express.Express) {
     schoolRoutes.mapRoutes(app);
     testRoutes.mapRoutes(app);
     professorRoutes.mapRoutes(app);
+
+    app.get('/BackOffice/About', function (req, res) {
+        return res.render('Home/about');
+    });
 }
