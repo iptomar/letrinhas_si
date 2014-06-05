@@ -16,39 +16,20 @@ export function mapRoutes(app) {
             options.classId = parseInt(req.query.classId, 10);
         }
 
-        console.log(options.schoolId);
-        console.log(options.classId);
-
-        if (isNaN(options.classId)) {
-            // Obtemos os alunos (opcionalmente para uma escola)...
-            service.studentDetails(options.schoolId)
-                .then((studentData) => {
+        service.studentDetails(
+            isNaN(options.schoolId) ? undefined : options.schoolId,
+            isNaN(options.classId) ? undefined : options.classId)
+        .then((studentData) => {
                     res.render('studentList', {
-                        title: 'Lista de alunos' + (typeof options.schoolId !== 'undefined' ? ' da escola ' + studentData[0].schoolName : ''),
+                        title: 'Lista de alunos',
                         items: studentData
                     });
                 })
                 .catch((err) => {
                     console.error(err);
                     // TODO: Uma view de 500.
-                    res.render('listError');
+                    res.status(500).render('Erros/500');
                 });
-        }
-        else {
-            // Obtemos os alunos de uma turma (opcionalmente para uma escola)...
-            service.studentDetailsEdit(options.schoolId, options.classId)
-                .then((studentData) => {
-                    res.render('studentList', {
-                        title: 'Lista de alunos' + (typeof options.schoolId !== 'undefined' ? ' da escola ' + studentData[0].schoolName : ''),
-                        items: studentData
-                    });
-                })
-                .catch((err) => {
-                    console.error(err);
-                    // TODO: Uma view de 500.
-                    res.render('listError');
-                });
-        }
     });
 
 

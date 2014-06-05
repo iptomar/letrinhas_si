@@ -41,31 +41,25 @@ export function create(s: Student, uploadedFilePath: string) {
         .then((_) => poolQuery(sql));
 }
 
-/**
- * Devolve uma lista de alunos, juntamente com o nome da escola respectiva.
- * @author luisfmoliveira (Lu�s Oliveira)
- */
-export function studentDetails(schoolId?: number): Q.Promise<Array<any>> {
-    var sql = "select b.id, b.name, b.photoUrl, b.isActive, a.schoolName, c.classLevel, c.className, c.classYear from Schools as a, Students as b, Classes as c where b.classId = c.id and c.schoolId = a.id";
-
-    if (!isNaN(schoolId)) {
-        sql = mysql.format(sql + ' AND c.schoolId = ?', [schoolId]);
-    }
-
-    return poolQuery(sql)
-        .then((results) => results[0]);
-}
-
 
 /**
  * Devolve uma lista de alunos de uma turma, juntamente com o nome da escola respectiva.
- * @author luisfmoliveira (Lu�s Oliveira)
+ * @author luisfmoliveira (Luis Oliveira)
  */
-export function studentDetailsEdit(schoolId?: number, classId?:number): Q.Promise<Array<any>> {
-    var sql = "select s.id as idEscola, s.schoolName, c.id as idTurma, c.classLevel, c.className, c.classYear, st.id as idAluno, st.classId, st.isActive, st.name from Schools as s, Classes as c, Students as st where s.id = c.schoolId";
+export function studentDetails(schoolId = null, classId = null): Q.Promise<Array<any>> {
+    var sql =
+        "select s.id, s.classId, s.name, s.photoUrl, s.isActive, t.schoolName, c.className " +
+        "from Students as s " +
+        "join Classes as c on c.id = s.classId " +
+        "join Schools as t on t.id = c.schoolId " +
+        "where true";
 
-    if (!isNaN(schoolId)) {
-        sql = mysql.format(sql + ' AND c.schoolId = ? AND b.classID = ?', [schoolId,classId]);
+    if (schoolId !== null && !isNaN(schoolId)) {
+        sql = mysql.format(sql + ' and t.id = ?', [schoolId]);
+    }
+
+    if (classId !== null && !isNaN(classId)) {
+        sql = mysql.format(sql + ' and c.id = ?', [classId]);
     }
 
     return poolQuery(sql)

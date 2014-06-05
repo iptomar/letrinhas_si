@@ -3,23 +3,23 @@
 block content
     h1 Listagem dos titulos de teste
     p #{title}
-    table(border =1)
-     tr(align="center")
-      td Titulo
-      td Pergunta
-      td Ano
-      td Professor 
-      td Area
-      td Detalhes
-       -for (var id in items)
-        - var item = items[id]
-         tr 
-          td #{item.title} 
-          td #{item.mainText}
-          td #{item.grade}
-          td #{item.name} 
-          td #{item.areaId}
-          td
-            a(href="/BackOffice/Tests/Details?testId=#{item.id}") Ver Detalhes
-        
-    a(href="/") Voltar
+    table(class="table table-striped")
+        thead
+            th Titulo
+            th Pergunta
+            th Ano
+            th Professor 
+            th Area
+            th Ações
+
+        each item in items
+            tr 
+                td #{item.title} 
+                td #{item.mainText}
+                td #{item.grade}
+                td #{item.name} 
+                td #{item.areaId}
+                td
+                    a(href="/BackOffice/Tests/Details?testId=#{item.id}") Ver Detalhes
+                
+        a(href="/") Voltar

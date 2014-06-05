@@ -2,25 +2,26 @@
 
 block content
     h1 Lista de Turmas
-    p #{title}
-    table(border =1)
-     tr(align="center")
-      td Escola
-      td Ano
-      td Nome
-      td Ano Letivo
-      td Ver alunos da turma
-      td Editar dados da turma
-       -for (var id in items)
-        - var item = items[id]
-         tr
-          td #{item.schoolName} 
-          td #{item.classLevel} 
-          td #{item.className}
-          td #{item.classYear}
-          td
-            a(href="/BackOffice/Students/All?schoolId=#{item.schoolId}&classId=#{item.id}") Ver Alunos 
-          td
-            a(href="/BackOffice/Classes/Edit?classId=#{item.id}") Ver Alunos 
-          
+
+    table(class="table table-striped")
+        thead
+            th Escola
+            th Ano
+            th Nome
+            th Ano Letivo
+            th Ações
+
+        each item in items
+            tr
+                td #{item.schoolName} 
+                td #{item.classLevel} 
+                td #{item.className}
+                td #{item.classYear}
+                td
+                    a(href="/BackOffice/Students/All?schoolId=#{item.schoolId}&classId=#{item.id}") Ver Alunos 
+                    
+                    &nbsp;
+
+                    a(href="/BackOffice/Classes/Edit?classId=#{item.id}") Editar
+                
     a(href="/") Voltar

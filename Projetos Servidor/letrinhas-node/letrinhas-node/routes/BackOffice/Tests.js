@@ -121,9 +121,10 @@ function mapRoutes(app) {
 
         // Obtemos os titulos dos testes (opcionalmente para uma turma)...
         testService.testDetails(options.testId).then(function (testData) {
+            console.log(testData);
             res.render('testDetails', {
                 title: 'Detalhes de um teste' + (typeof options.professorId !== 'undefined' ? ' do professor ' + testData[0].name : ''),
-                items: testData
+                test: testData
             });
         }).catch(function (err) {
             console.error(err);
@@ -142,10 +143,10 @@ function mapRoutes(app) {
             options.professorId = parseInt(req.query.professorId, 10);
         }
 
-        // Obtemos os titulos dos testes (opcionalmente para uma turma)...
+        // Obtemos os titulos dos testes (opcionalmente para um professor)...
         testService.testTitles(options.professorId).then(function (testTitleData) {
             res.render('testTitles', {
-                title: 'Lista de testes' + (typeof options.professorId !== 'undefined' ? ' do professor ' + testTitleData[0].name : ''),
+                title: 'Lista de testes' + (typeof options.professorId !== 'undefined' ? ' do professor ' + testTitleData.name : ''),
                 items: testTitleData
             });
         }).catch(function (err) {

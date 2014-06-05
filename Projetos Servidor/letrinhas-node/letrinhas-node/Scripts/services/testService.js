@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Routes related to tests.
 */
 var pool = require('../../configs/mysql');
@@ -291,7 +291,7 @@ function testDetails(testId) {
     }
 
     return poolQuery(sql).then(function (results) {
-        return results[0];
+        return results[0][0];
     });
 }
 exports.testDetails = testDetails;

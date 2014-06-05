@@ -12,36 +12,17 @@ function mapRoutes(app) {
             options.classId = parseInt(req.query.classId, 10);
         }
 
-        console.log(options.schoolId);
-        console.log(options.classId);
-
-        if (isNaN(options.classId)) {
-            // Obtemos os alunos (opcionalmente para uma escola)...
-            service.studentDetails(options.schoolId).then(function (studentData) {
-                res.render('studentList', {
-                    title: 'Lista de alunos' + (typeof options.schoolId !== 'undefined' ? ' da escola ' + studentData[0].schoolName : ''),
-                    items: studentData
-                });
-            }).catch(function (err) {
-                console.error(err);
-
-                // TODO: Uma view de 500.
-                res.render('listError');
+        service.studentDetails(isNaN(options.schoolId) ? undefined : options.schoolId, isNaN(options.classId) ? undefined : options.classId).then(function (studentData) {
+            res.render('studentList', {
+                title: 'Lista de alunos',
+                items: studentData
             });
-        } else {
-            // Obtemos os alunos de uma turma (opcionalmente para uma escola)...
-            service.studentDetailsEdit(options.schoolId, options.classId).then(function (studentData) {
-                res.render('studentList', {
-                    title: 'Lista de alunos' + (typeof options.schoolId !== 'undefined' ? ' da escola ' + studentData[0].schoolName : ''),
-                    items: studentData
-                });
-            }).catch(function (err) {
-                console.error(err);
+        }).catch(function (err) {
+            console.error(err);
 
-                // TODO: Uma view de 500.
-                res.render('listError');
-            });
-        }
+            // TODO: Uma view de 500.
+            res.status(500).render('Erros/500');
+        });
     });
 
     app.all('/BackOffice/Students/Create', function (req, res) {

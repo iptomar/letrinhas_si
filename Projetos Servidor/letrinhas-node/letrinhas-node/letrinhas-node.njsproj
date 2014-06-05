@@ -101,6 +101,7 @@
     <Content Include="views\Erros\400.jade" />
     <Content Include="views\Erros\404.jade" />
     <Content Include="views\Erros\500.jade" />
+    <Content Include="views\Home\about.jade" />
     <Content Include="views\index.jade" />
     <Content Include="views\listError.jade" />
     <Content Include="views\multimediaTipoEscolhe.jade" />
@@ -144,12 +145,16 @@
     <Folder Include="Scripts\typings\node\" />
     <Folder Include="views\" />
     <Folder Include="views\Erros\" />
+    <Folder Include="views\Home\" />
+    <Folder Include="views\Professors\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="public\bootstrap\js\bootstrap.js" />
     <Compile Include="public\bootstrap\js\bootstrap.min.js" />
     <Compile Include="public\scripts\formtest.js" />
     <Compile Include="public\scripts\jquery\jquery-2.1.1.min.js" />
+    <Compile Include="public\scripts\jquery\jquery.validate.min.js" />
+    <Compile Include="public\scripts\jquery\messages_pt_PT.js" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
   <ProjectExtensions>

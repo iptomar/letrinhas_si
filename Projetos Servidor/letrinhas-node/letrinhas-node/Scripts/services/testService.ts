@@ -268,7 +268,7 @@ export function testTitles(professorId?: number): Q.Promise<Array<any>> {
         .then((results) => results[0]);
 }
 
-export function testDetails(testId?: number): Q.Promise<Array<any>> {
+export function testDetails(testId?: number): Q.Promise<any> {
     var sql = "select r.id, r.textContent, r.professorAudioUrl, t.title from ReadingTests as r, Tests as t where r.id = t.id";
 
     if (!isNaN(testId)) {
@@ -276,5 +276,5 @@ export function testDetails(testId?: number): Q.Promise<Array<any>> {
     }
 
     return poolQuery(sql)
-        .then((results) => results[0]);
+        .then((results) => results[0][0]);
 }

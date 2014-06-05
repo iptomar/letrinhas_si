@@ -147,9 +147,10 @@ export function mapRoutes(app: express.Express) {
         // Obtemos os titulos dos testes (opcionalmente para uma turma)...
         testService.testDetails(options.testId)
             .then((testData) => {
+                console.log(testData);
                 res.render('testDetails', {
                     title: 'Detalhes de um teste' + (typeof options.professorId !== 'undefined' ? ' do professor ' + testData[0].name : ''),
-                    items: testData
+                    test: testData
                 });
             })
             .catch((err) => {
@@ -169,11 +170,11 @@ export function mapRoutes(app: express.Express) {
             options.professorId = parseInt(req.query.professorId, 10);
         }
 
-        // Obtemos os titulos dos testes (opcionalmente para uma turma)...
+        // Obtemos os titulos dos testes (opcionalmente para um professor)...
         testService.testTitles(options.professorId)
             .then((testTitleData) => {
                 res.render('testTitles', {
-                    title: 'Lista de testes' + (typeof options.professorId !== 'undefined' ? ' do professor ' + testTitleData[0].name : ''),
+                    title: 'Lista de testes' + (typeof options.professorId !== 'undefined' ? ' do professor ' + testTitleData.name : ''),
                     items: testTitleData
                 });
             })

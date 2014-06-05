@@ -2,27 +2,30 @@
 
 block content
     h1 Lista de Alunos
-    p #{title}
-    table(border =1)
-     tr(align="center")
-      td Foto do Aluno
-      td Nome
-      td Escola
-      td Ano
-      td Turma
-      td Estado (1 = Activo | 0 = Inativo)
-      td Alterar dados
-       -for (var id in items)
-        - var item = items[id]
-         tr
-          td  
-           img(src= "/#{item.photoUrl}" height="42" width="42")
-          td #{item.name} 
-          td #{item.schoolName}
-          td #{item.classLevel}
-          td #{item.className}
-          td #{item.isActive}
-          td 
-           a(href="/BackOffice/Students/Edit?studentId=#{item.id}") Editar
-        
+
+    if (items.length === 0)
+        div(class="alert alert-warning") Sem resultados
+    else
+        table(class="table table-striped")
+            thead
+                th Foto do Aluno
+                th Nome
+                th Escola
+                th Ano
+                th Turma
+                th Estado
+                th Ações
+
+            each item in items
+                tr
+                    td  
+                        img(src= "/#{item.photoUrl}" height="50" width="50")
+                    td #{item.name} 
+                    td #{item.schoolName}
+                    td #{item.classLevel}
+                    td #{item.className}
+                    td #{item.isActive}
+                    td 
+                        a(href="/BackOffice/Students/Edit?studentId=#{item.id}") Editar
+            
     a(href="/") Voltar

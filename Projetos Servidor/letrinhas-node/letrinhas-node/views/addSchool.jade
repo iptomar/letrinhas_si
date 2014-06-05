@@ -1,18 +1,39 @@
 ﻿extends layout
 
 block content
-    form(id="test", method="POST", action="/BackOffice/Schools/Create" enctype="multipart/form-data") 
-        h1 Adicionar Escola
-        | Nome da Escola:
-        input(type='text', name = "schoolName" required)
-        br
-        | Endereço:
-        input(type='text', name = "schoolAddress" required)
-        br
-        | Logotipo da Escola:
-        input(type="file" name="photo" required)
-        br
-        input(type="submit")
+    h1 Adicionar escola
+
+    form(novalidate class="form-horizontal" id="letrinhas-add-form", method="POST", action="/BackOffice/Schools/Create" enctype="multipart/form-data") 
+        div(class="form-group")
+            label(for="schoolName", class="control-label col-sm-2") Nome da escola
+
+            div(class="col-sm-10")
+                input(type="text", id="schoolName", name="schoolName", required, maxlength="40" class="form-control", placeholder="Nome da escola")
+
+        div(class="form-group")
+            label(for="schoolAddress", class="control-label col-sm-2") Morada
+
+            div(class="col-sm-10")
+                input(type="text", id="schoolAddress", name="schoolAddress", required, maxlength="90" class="form-control", placeholder="Endereço da escola")
+        
+        div(class="form-group")
+            label(for="photo" class="control-label col-sm-2") Fotografia
+
+            div(class="col-sm-10")
+                input(type="file", id="photo", name="photo", required accept="image/*" class="form-control-static")    
+
+        div(class="form-group")                        
+            div(class="col-sm-offset-2 col-sm-10")
+                input(type="submit", class="btn btn-primary" id="form-submit", value="Adicionar")
+
+block additionalScripts
+    script(src="/scripts/jquery/jquery.validate.min.js")
+    script(src="/scripts/jquery/messages_pt_PT.js")
+
+    script.
+        (function () {
+            $('#letrinhas-add-form').validate();
+        }());
 
 
       

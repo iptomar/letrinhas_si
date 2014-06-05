@@ -1,48 +1,80 @@
 ﻿extends layout
 
 block content
-    form(id="test", method="POST", action="/BackOffice/Tests/Create/Read" enctype="multipart/form-data")
-        
-        h1 Adicionar teste de leitura
 
-        | Titulo:
-        input(type='text', name = "title" required)
-        br
-        | Pergunta:
-        input(type='text', name = "mainText" required)
-        br
-        | Texto:
-        textarea(name="textContent" required)
-        br
-        | Grau Escolar:
-        select(name="grade")
-            option(value="1") 1º Ano
-            option(value="2") 2º Ano
-            option(value="3") 3º Ano
-            option(value="4") 4º Ano
-        br
-        | Tipo:
-        input(type="radio", name="type", value="0" checked)
-        | Texto
-        input(type="radio", name="type", value="3")
-        | Poema
-        input(type="radio", name="type", value="2")
-        | Lista
-        br
-        | Professor Id:
-        select(name="professorId")
-            each prof in professores
-                option(value="#{prof.id}")= prof.name
-        br
-        | Área:
-        select(name="areaId")
-            option(value="1") Português
-            option(value="2") Inglês
-            option(value="3") Estudo do Meio
-            option(value="4") Matemática
+    h1 Adicionar teste de leitura
+
+    form(novalidate, id="letrinhas-add-form", class="form-horizontal", method="POST", action="/BackOffice/Tests/Create/Read" enctype="multipart/form-data")
         
-        br
-        input(type="file" accept="audio/*" name="audio" required)
-        br
-        input(type="submit")
+        div(class="form-group")
+            label(for="title", class="control-label col-sm-2") Título do teste
+
+            div(class="col-sm-10")
+                input(type="text", id="title", name="title", required, class="form-control", placeholder="A História da Carochinha")
+        
+        div(class="form-group")
+            label(for="mainText", class="control-label col-sm-2") Pergunta
+
+            div(class="col-sm-10")
+                input(type="text", id="mainText", name="mainText", required, class="form-control", placeholder="Lê o seguinte texto")
+
+        div(class="form-group")
+            label(for="type", class="control-label col-sm-2") Tipo de teste
+            div(class="col-sm-10")
+                select(name="type", id="type", class="form-control")
+                    option(value="0") Texto normal
+                    option(value="2") Lista de palavras (uma por linha)
+                    option(value="3") Poema
+
+        div(class="form-group")
+            label(for="areaId", class="control-label col-sm-2") Disciplina
+            div(class="col-sm-10")
+                select(name="areaId", id="areaId", class="form-control")
+                    option(value="1") Português
+                    option(value="2") Inglês
+                    option(value="3") Estudo do Meio
+                    option(value="4") Matemática
+
+        div(class="form-group")
+            label(for="textContent", class="control-label col-sm-2") Texto a ser lido
+
+            div(class="col-sm-10")
+                textarea(rows="10" id="textContent", name="textContent", required, class="form-control", placeholder="Era uma vez...")
+
+        div(class="form-group")
+            label(for="grade", class="control-label col-sm-2") Grau escolar
+            div(class="col-sm-10")
+                select(name="grade", id="grade", class="form-control")
+                    option(value="1") 1º
+                    option(value="2") 2º
+                    option(value="3") 3º
+                    option(value="4") 4º
+
+        div(class="form-group")
+            label(for="professorId", class="control-label col-sm-2") Professor
+
+            div(class="col-sm-10")
+                select(name="professorId" class="form-control")
+                    each prof in professores
+                        option(value="#{prof.id}")= prof.name
+        
+        div(class="form-group")
+            label(for="audio", class="control-label col-sm-2") Voz de exemplo
+
+            div(class="col-sm-10")
+                input(type="file", id="audio", name="audio", required, class="form-control-static", accept="audio/*")
+
+        div(class="form-group")
+            div(class="col-sm-offset-2 col-sm-10")
+                input(type="submit", class="btn btn-primary" id="form-submit", value="Adicionar")
+
+block additionalScripts
+    script(src="/scripts/jquery/jquery.validate.min.js")
+    script(src="/scripts/jquery/messages_pt_PT.js")
+
+    script.
+        (function () {
+            $('#letrinhas-add-form').validate();
+        }());
+
         
