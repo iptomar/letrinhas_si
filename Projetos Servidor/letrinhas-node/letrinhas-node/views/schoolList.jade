@@ -11,6 +11,7 @@ block content
       td Ver turmas da escola
       td Ver professores da escola
       td Ver alunos da escola
+      td Editar dados da escola
        -for (var id in items)
         - var item = items[id]
          tr
@@ -24,4 +25,6 @@ block content
             a(href="/BackOffice/Professors/All?schoolId=#{item.id}") Ver Professores
           td 
             a(href="/BackOffice/Students/All?schoolId=#{item.id}") Ver Alunos 
+          td 
+            a(href="/BackOffice/Schools/Edit?schoolId=#{item.id}") Editar
     a(href="/") Voltar

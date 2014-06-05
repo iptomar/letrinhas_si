@@ -72,3 +72,30 @@ export function getId(onResult) {
     });
 }
 exports.getAllSchools = getAllSchools;
+
+/**
+ * Devolve os detalhes de uma escola selecionada
+ * @author luisfmoliveira (Luís Oliveira)
+ */
+export function schoolDetails(schoolId?: number): Q.Promise<Array<any>> {
+    var sql = "select * from Schools where id";
+
+    if (!isNaN(schoolId)) {
+        sql = mysql.format(sql + '= ?', [schoolId]);
+    }
+
+    return poolQuery(sql)
+        .then((results) => results[0]);
+}
+
+
+export function updateSchool(s: School){
+    // eg: appContent/Schools/uuid/logo.jpg
+    var sql = mysql.format("UPDATE Schools SET schoolAddress = ?, schoolName= ? WHERE id = ?", [s.schoolAddress, s.schoolName, s.id]);
+    return poolQuery(sql);
+}
+
+export function allSchoolClasses(): Q.Promise<Array<School>> {
+    return poolQuery('select s.id as idEscola, s.schoolName, c.id as idTurma, c.classLevel, c.className, c.classYear from Schools as s, Classes as c where s.id = c.schoolId')
+        .then((results) => results[0]);
+}

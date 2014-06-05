@@ -233,13 +233,22 @@ export function submitResult(tc: TestCorrection, filePath?: string): Q.Promise<v
 /**
  * Returns a list of submissions for (optionally) a test, student and test.
  */
-export function submissions(isCorrected = null, studentId = null, testId = null): Q.Promise<Array<TestCorrection>> {
+export function readingSubmissions(isCorrected = null, studentId = null, testId = null): Q.Promise<Array<TestCorrection>> {
     var sql = "select tc.testId,tc.studentId,tc.executionDate,tc.type,rtc.soundFileUrl,rtc.professorObservations,rtc.wordsPerMinute,rtc.correctWordCount,rtc.readingPrecision,rtc.readingSpeed,rtc.expressiveness,rtc.rhythm,rtc.details,rtc.wasCorrected from TestCorrections as tc join ReadingTestCorrections as rtc on tc.testId = rtc.testId and tc.studentId = rtc.studentId and tc.executionDate = rtc.executionDate where true ";
-
 
     if (isCorrected !== null) { sql += mysql.format(' and rtc.wasCorrected = ?', [isCorrected]); }
     if (studentId !== null) { sql += mysql.format(" and tc.studentId = ?", [studentId]); }
     if (testId !== null) { sql += mysql.format(" and tc.testId = ?", [testId]); }
+
+    return poolQuery(sql)
+        .then((results) => results[0]);
+}
+
+export function multimediaSubmisssions(studentId = null, testId = null): Q.Promise<Array<TestCorrection>> {
+    var sql = 'select * from MultimediaTestCorrections where true ';
+
+    if (studentId !== null) { sql += mysql.format(" and studentId = ?", [studentId]); }
+    if (testId !== null) { sql += mysql.format(" and testId = ?", [testId]); }
 
     return poolQuery(sql)
         .then((results) => results[0]);

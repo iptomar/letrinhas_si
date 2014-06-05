@@ -6,13 +6,13 @@ block content
         h1 Adicionar teste de leitura
 
         | Titulo:
-        input(type='text', name = "title")
+        input(type='text', name = "title" required)
         br
         | Pergunta:
-        input(type='text', name = "mainText")
+        input(type='text', name = "mainText" required)
         br
         | Texto:
-        textarea(name="textContent")
+        textarea(name="textContent" required)
         br
         | Grau Escolar:
         select(name="grade")
@@ -22,7 +22,7 @@ block content
             option(value="4") 4º Ano
         br
         | Tipo:
-        input(type="radio", name="type", value="0")
+        input(type="radio", name="type", value="0" checked)
         | Texto
         input(type="radio", name="type", value="3")
         | Poema

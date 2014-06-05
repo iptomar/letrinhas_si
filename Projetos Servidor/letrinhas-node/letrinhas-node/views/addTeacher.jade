@@ -1,36 +1,56 @@
 ﻿extends layout
 
 block content
-    form(id="test", method="POST", action="/BackOffice/Professors/Create" enctype="multipart/form-data") 
-        h1 Adicionar Professor
-        | Nome do Professor:
-        input(type='text', name = "name")
-        br
-        | Email:
-        input(type='text', name = "mail")
-        br
-        | Telefone:
-        input(type='text', name = "phone")
-        br
-        | Estado de Atividade:
-        input(type="radio", name="state_filter", value="0")
-        | Inativo
-        input(type="radio", name="state_filter", value="1")
-        | Ativo
-        br
-        | Username:
-        input(type='text', name = "username")
-        br
-        | Password:
-        input(type='password', name = "password")
-        br
-        | ID Escola:
-        input(type='text', name = "schoolId")
-        br
-        | Foto:
-        input(type="file" name="photo")
-        br
-        input(type="submit")
-    script(type="text/javascript", src="/scripts/formtest.js")
+    
+    h1 Adicionar Professor
+
+    form(class="form-horizontal", role="form", method="POST", action="/BackOffice/Professors/Create" enctype="multipart/form-data")
+        div(class="form-group")
+            label(for="name", class="control-label col-sm-2") Nome
+
+            div(class="col-sm-10")
+                input(type="text", name="name", required, class="form-control")
+
+        div(class="form-group")
+            label(for="mail", class="control-label col-sm-2") Endereço de e-mail
+
+            div(class="col-sm-10")
+                input(type="email", name="mail", required, class="form-control")
+
+        div(class="form-group")
+            label(for="phone", class="control-label col-sm-2") Nº de Telefone
+
+            div(class="col-sm-10")
+                input(type="tel", name="phone", required, maxlength="9", class="form-control")
+
+        div(class="form-group")
+            label(for="username", class="control-label col-sm-2") Username
+
+            div(class="col-sm-10")
+                input(type="text", name="username", required, maxlength="9", class="form-control")
+
+        div(class="form-group")
+            label(for="password", class="control-label col-sm-2") PIN
+
+            div(class="col-sm-10")
+                input(type="number", name="password", required, maxlength="4", min="0000", max="9999", class="form-control")
+        
+        div(class="form-group")
+            label(for="schoolId", class="control-label col-sm-2") Escola
+
+            div(class="col-sm-10")
+                select(name="schoolId", class="form-control")
+                    each school in escolas
+                        option(value="#{school.id}")= school.schoolName
+        
+        div(class="form-group")
+            label(for="photo", class="control-label col-sm-2") Fotografia
+
+            div(class="col-sm-10")
+                input(type="file", name="photo", required, class="form-control-static", accept="image/*")
+
+       div(class="form-group")
+            div(class="col-sm-offset-2 col-sm-10")
+                input(type="submit", class="btn btn-default")
 
  

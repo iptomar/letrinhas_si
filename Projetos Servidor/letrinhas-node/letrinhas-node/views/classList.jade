@@ -10,6 +10,7 @@ block content
       td Nome
       td Ano Letivo
       td Ver alunos da turma
+      td Editar dados da turma
        -for (var id in items)
         - var item = items[id]
          tr
@@ -19,4 +20,7 @@ block content
           td #{item.classYear}
           td
             a(href="/BackOffice/Students/All?schoolId=#{item.schoolId}&classId=#{item.id}") Ver Alunos 
+          td
+            a(href="/BackOffice/Classes/Edit?classId=#{item.id}") Ver Alunos 
+          
     a(href="/") Voltar

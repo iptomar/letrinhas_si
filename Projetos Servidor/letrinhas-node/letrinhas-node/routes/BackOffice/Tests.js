@@ -62,11 +62,11 @@ function mapRoutes(app) {
                         break;
                     case '1':
                         // Texto e imagens
-                        res.end('NYI');
+                        res.render('addMultimediaTest3');
                         break;
                     case '2':
                         // Só Imagens
-                        res.end('NYI');
+                        res.render('addMultimediaTest2');
                         break;
                     default:
                         res.render('multimediaTipoEscolhe');
@@ -93,6 +93,21 @@ function mapRoutes(app) {
                 // TODO: Talvez fazer uma view para 404, 500, etc.?
                 res.status(404).json({ error: 404 });
         }
+    });
+
+    app.get('/BackOffice/Tests/Submissions', function (req, res) {
+        var isCorrected = parseInt(req.query.isCorrected);
+
+        if (isNaN(isCorrected)) {
+            return res.status(400).render('Erros/400');
+        }
+
+        testService.submissions(isCorrected).then(function (submissions) {
+            res.render('submissionsList', { title: "Submissoes", items: submissions });
+        }).catch(function (err) {
+            console.error(err);
+            res.status(500).render('Erros/500');
+        });
     });
 
     app.get('/BackOffice/Tests/Details', function (req, res) {

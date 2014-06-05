@@ -1,9 +1,9 @@
 ﻿extends layout
 
 block content
-    form(id="test", method="POST", action="/BackOffice/Tests/Create/Multimedia" enctype="multipart/form-data")
+    form(id="test", method="POST", action="/BackOffice/Tests/Create/Multimedia3" enctype="multipart/form-data")
         
-        h1 Adicionar teste Multimédia só Texto
+        h1 Adicionar teste Multimédia Texto com Imagens
 
         | Titulo:
         input(type='text', name = "title")
@@ -12,11 +12,11 @@ block content
         input(type='text', name = "mainText")
         br
         input(type="radio", name="correct", value="1")
-        input(type='text', name = "opt1")
+        input(type='file', name = "opt1")
         input(type="radio", name="correct", value="2")
-        input(type='text', name = "opt2")
+        input(type='file', name = "opt2")
         input(type="radio", name="correct", value="3")
-        input(type='text', name = "opt3")
+        input(type='file', name = "opt3")
         br
         | Grau Escolar:
         select(name="grade")

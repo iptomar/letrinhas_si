@@ -1,6 +1,7 @@
 ﻿import express = require('express');
 
 import service = require('../../Scripts/services/studentService');
+import schoolService = require('../../Scripts/services/schoolService');
 import Student = require('../../Scripts/structures/schools/Student');
 
 export function mapRoutes(app) {
@@ -35,7 +36,7 @@ export function mapRoutes(app) {
         }
         else {
             // Obtemos os alunos de uma turma (opcionalmente para uma escola)...
-            service.studentClassDetails(options.schoolId, options.classId)
+            service.studentDetailsEdit(options.schoolId, options.classId)
                 .then((studentData) => {
                     res.render('studentList', {
                         title: 'Lista de alunos' + (typeof options.schoolId !== 'undefined' ? ' da escola ' + studentData[0].schoolName : ''),
@@ -54,7 +55,17 @@ export function mapRoutes(app) {
     app.all('/BackOffice/Students/Create', function (req, res) {
         switch (req.method) {
             case 'GET':
-                res.render('addStudent');
+                schoolService.allSchoolClasses()
+                    .then((schools) => {
+                        res.render('addStudent', {
+                            title: 'Adicionar aluno',
+                            escolas: schools
+                        });
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        res.status(500).json({ error: 500 });
+                    });
                 break;
             case 'POST':
 
@@ -62,9 +73,8 @@ export function mapRoutes(app) {
                 var body = req.body;
 
                 var aluno = <Student> {
-                    classId: parseInt(body.txtIdEscola),
-                    name: body.txtName,
-                    isActive: body.state_filter,
+                    classId: parseInt(body.schoolId),
+                    name: body.txtName
                 };
 
                 service.create(aluno, req.files.photo.path)
@@ -79,10 +89,8 @@ export function mapRoutes(app) {
         }
     });
 
-    app.all('/BackOffice/Students/Edit/:id', function (req, res) {
-        // TODO
-        throw 'NYI';
-
+    app.all('/BackOffice/Students/Edit', function (req, res) {
+          // TODO      
         switch (req.method) {
             case 'GET':
                 break;
