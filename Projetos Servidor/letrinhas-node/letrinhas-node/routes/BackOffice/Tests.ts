@@ -147,7 +147,6 @@ export function mapRoutes(app: express.Express) {
         // Obtemos os titulos dos testes (opcionalmente para uma turma)...
         testService.testDetails(options.testId)
             .then((testData) => {
-                console.log(testData);
                 res.render('testDetails', {
                     title: 'Detalhes de um teste' + (typeof options.professorId !== 'undefined' ? ' do professor ' + testData[0].name : ''),
                     test: testData
@@ -174,7 +173,7 @@ export function mapRoutes(app: express.Express) {
         testService.testTitles(options.professorId)
             .then((testTitleData) => {
                 res.render('testTitles', {
-                    title: 'Lista de testes' + (typeof options.professorId !== 'undefined' ? ' do professor ' + testTitleData.name : ''),
+                    title: 'Lista de testes' + (typeof options.professorId !== 'undefined' ? ' do professor ' + testTitleData[0].name : ''),
                     items: testTitleData
                 });
             })
