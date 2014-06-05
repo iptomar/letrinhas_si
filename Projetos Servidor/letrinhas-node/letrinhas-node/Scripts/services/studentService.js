@@ -46,8 +46,8 @@ function create(s, uploadedFilePath) {
 exports.create = create;
 
 /**
-* Devolve uma lista de alunos de uma turma, juntamente com o nome da escola respectiva.
-* @author luisfmoliveira (Luis Oliveira)
+* Devolve uma lista de alunos, juntamente com o nome da escola respectiva.
+* @author luisfmoliveira (Lu�s Oliveira)
 */
 function studentDetails(schoolId, classId) {
     if (typeof schoolId === "undefined") { schoolId = null; }
@@ -67,4 +67,31 @@ function studentDetails(schoolId, classId) {
     });
 }
 exports.studentDetails = studentDetails;
+
+/**
+* Devolve uma lista de alunos de uma turma, juntamente com o nome da escola respectiva.
+* @author luisfmoliveira (Lu�s Oliveira)
+*/
+function studentDetailsChangeClass(studentId) {
+    var sql = "select b.id, b.name as NomeAluno, b.photoUrl, b.isActive, a.schoolName, c.classLevel, c.className, c.classYear from Schools as a, Students as b, Classes as c where b.classId = c.id and c.schoolId = a.id";
+
+    if (!isNaN(studentId)) {
+        sql = mysql.format(sql + ' AND b.id = ?', [studentId]);
+    }
+
+    return poolQuery(sql).then(function (results) {
+        return results[0];
+    });
+}
+exports.studentDetailsChangeClass = studentDetailsChangeClass;
+
+function editStudentClass(s) {
+    var sql = "Update Students SET";
+    if (!isNaN(s.id) || !isNaN(s.classId)) {
+        sql = mysql.format(sql + " classId = ?, name = ? WHERE id = ?", [s.classId, s.name, s.id]);
+    }
+
+    return poolQuery(sql);
+}
+exports.editStudentClass = editStudentClass;
 //# sourceMappingURL=studentService.js.map

@@ -41,10 +41,9 @@ export function create(s: Student, uploadedFilePath: string) {
         .then((_) => poolQuery(sql));
 }
 
-
 /**
- * Devolve uma lista de alunos de uma turma, juntamente com o nome da escola respectiva.
- * @author luisfmoliveira (Luis Oliveira)
+ * Devolve uma lista de alunos, juntamente com o nome da escola respectiva.
+ * @author luisfmoliveira (Luís Oliveira)
  */
 export function studentDetails(schoolId = null, classId = null): Q.Promise<Array<any>> {
     var sql =
@@ -64,4 +63,26 @@ export function studentDetails(schoolId = null, classId = null): Q.Promise<Array
 
     return poolQuery(sql)
         .then((results) => results[0]);
+}
+
+
+export function studentDetailsChangeClass(studentId?: number): Q.Promise<Array<any>> {
+    var sql = "select b.id, b.name as NomeAluno, b.photoUrl, b.isActive, a.schoolName, c.classLevel, c.className, c.classYear from Schools as a, Students as b, Classes as c where b.classId = c.id and c.schoolId = a.id";
+
+    if (!isNaN(studentId)) {
+        sql = mysql.format(sql + ' AND b.id = ?', [studentId]);
+    }
+
+    return poolQuery(sql)
+        .then((results) => results[0]);
+}
+
+export function editStudentClass(s: Student) {
+
+    var sql = "Update Students SET"
+    if (!isNaN(s.id) || !isNaN(s.classId)) {
+        sql = mysql.format(sql + " classId = ?, name = ? WHERE id = ?", [s.classId, s.name, s.id]);
+    }
+
+    return poolQuery(sql);
 }

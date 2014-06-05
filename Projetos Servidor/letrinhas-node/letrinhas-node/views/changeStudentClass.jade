@@ -1,0 +1,48 @@
+﻿extends layout
+
+block content
+    
+    h1 Alterar dados do aluno
+
+    form(novalidate, id="letrinhas-change-class", class="form-horizontal", role="form", method="POST", action="/BackOffice/Students/Edit/Class")
+         - var item = itemsStudent[0]
+            div(class="form-group")
+                label(for="name", class="control-label col-sm-2") Nome do Aluno
+            
+                div(class="col-sm-10")
+                    input(type="text", id="name", name="name", class="form-control", value="#{item.NomeAluno}", required)
+
+            div(class="form-group")
+                label(for="name", class="control-label col-sm-2" ) Turma atual do aluno
+            
+                div(class="col-sm-10")
+                    p #{item.schoolName} - #{item.classLevel}º #{item.className} do ano lectivo #{item.classYear}
+        
+            div(class="form-group")
+                label(for="name", class="control-label col-sm-2") Alterar para
+            
+                div(class="col-sm-10")
+                    select(name="newClass", id="newClass", class="form-control")
+                        each school in itemsClass 
+                             option(value="#{school.idTurma}")= school.schoolName +" - "+ school.classLevel+"º "+school.className +" - "+ school.classYear
+        
+            input(type="hidden" value="#{item.id}" name ="id" id="id")
+            div(class="form-group")
+                div(class="col-sm-offset-2 col-sm-10")
+                    input(type="submit", class="btn btn-primary" id="form-submit", value="Adicionar")
+
+
+block additionalScripts
+    script(src="/scripts/jquery/jquery.validate.min.js")
+    script(src="/scripts/jquery/messages_pt_PT.js")
+
+    script.
+        (function () {
+            $('#lletrinhas-change-class').validate({
+               
+            });
+        }());
+        
+
+       
+                

@@ -12,17 +12,36 @@ function mapRoutes(app) {
             options.classId = parseInt(req.query.classId, 10);
         }
 
-        service.studentDetails(isNaN(options.schoolId) ? undefined : options.schoolId, isNaN(options.classId) ? undefined : options.classId).then(function (studentData) {
-            res.render('studentList', {
-                title: 'Lista de alunos',
-                items: studentData
-            });
-        }).catch(function (err) {
-            console.error(err);
+        console.log(options.schoolId);
+        console.log(options.classId);
 
-            // TODO: Uma view de 500.
-            res.status(500).render('Erros/500');
-        });
+        if (isNaN(options.classId)) {
+            // Obtemos os alunos (opcionalmente para uma escola)...
+            service.studentDetails(options.schoolId).then(function (studentData) {
+                res.render('studentList', {
+                    title: 'Lista de alunos' + (typeof options.schoolId !== 'undefined' ? ' da escola ' + studentData[0].schoolName : ''),
+                    items: studentData
+                });
+            }).catch(function (err) {
+                console.error(err);
+
+                // TODO: Uma view de 500.
+                res.render('listError');
+            });
+        } else {
+            // Obtemos os alunos de uma turma (opcionalmente para uma escola)...
+            service.studentDetails(options.schoolId, options.classId).then(function (studentData) {
+                res.render('studentList', {
+                    title: 'Lista de alunos' + (typeof options.schoolId !== 'undefined' ? ' da escola ' + studentData[0].schoolName : ''),
+                    items: studentData
+                });
+            }).catch(function (err) {
+                console.error(err);
+
+                // TODO: Uma view de 500.
+                res.render('listError');
+            });
+        }
     });
 
     app.all('/BackOffice/Students/Create', function (req, res) {
@@ -59,11 +78,52 @@ function mapRoutes(app) {
         }
     });
 
-    app.all('/BackOffice/Students/Edit', function (req, res) {
+    app.all('/BackOffice/Students/Edit/Class', function (req, res) {
         switch (req.method) {
             case 'GET':
+                // objecto de opções.
+                var options = Object.create(null);
+
+                // Verificar se temos um id de escola válido. Ignoramo-lo se não for
+                if (!isNaN(req.query.studentId)) {
+                    options.studentId = parseInt(req.query.studentId, 10);
+                }
+                var studentDetails;
+                var classDetails;
+
+                // Obtemos as turmas (opcionalmente para uma turma)...
+                service.studentDetailsChangeClass(options.studentId).then(function (studentData) {
+                    studentDetails = studentData;
+                }).then(function (_) {
+                    return schoolService.allSchoolClasses();
+                }).then(function (classData) {
+                    classDetails = classData;
+                }).then(function (_) {
+                    res.render('changeStudentClass', {
+                        title: 'Alterar turma',
+                        itemsStudent: studentDetails,
+                        itemsClass: classDetails
+                    });
+                }).catch(function (err) {
+                    console.error(err);
+
+                    // TODO: Uma view de 500.
+                    res.status(500).render('Erros/500');
+                });
                 break;
             case 'POST':
+                var body = req.body;
+                var aluno = {
+                    id: parseInt(body.id),
+                    classId: parseInt(body.newClass),
+                    name: body.name
+                };
+                service.editStudentClass(aluno).then(function (_) {
+                    return res.render('editSucess');
+                }).catch(function (err) {
+                    console.error(err);
+                    res.status(500).json({ error: 500 });
+                });
                 break;
             default:
                 break;
