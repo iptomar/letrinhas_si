@@ -1,39 +1,98 @@
 ﻿extends layout
 
 block content
-    form(id="test", method="POST", action="/BackOffice/Tests/Create/Multimedia3" enctype="multipart/form-data")
+
+    h1 Adicionar teste de escolha múltipla (misto)
+
+    hr
+
+    form(novalidate, id="letrinhas-add-form", class="form-horizontal", method="POST", action="/BackOffice/Tests/Create/Multimedia", enctype="multipart/form-data")
+
+        input(type="hidden" name="type" value="1")
         
-        h1 Adicionar teste Multimédia Texto com Imagens
+        div(class="form-group")
+            label(for="title", class="control-label col-sm-2") Título do teste
 
-        | Titulo:
-        input(type='text', name = "title")
-        br
-        | Cabeçalho:
-        input(type='text', name = "mainText")
-        br
-        input(type="radio", name="correct", value="1")
-        input(type='file', name = "opt1")
-        input(type="radio", name="correct", value="2")
-        input(type='file', name = "opt2")
-        input(type="radio", name="correct", value="3")
-        input(type='file', name = "opt3")
-        br
-        | Grau Escolar:
-        select(name="grade")
-            option(value="1") 1º Ano
-            option(value="2") 2º Ano
-            option(value="3") 3º Ano
-            option(value="4") 4º Ano
-        br
-        | Professor Id:
-        input(type='text', name = "professorId")
-        br
-        | Área:
-        select(name="areaId")
-            option(value="1") Português
-            option(value="2") Inglês
-            option(value="3") Estudo do Meio
-            option(value="4") Matemática
+            div(class="col-sm-10")
+                input(type="text", id="title", name="title", required, class="form-control", placeholder="A História da Carochinha")
 
-        br
-        input(type="submit")
+        div(class="form-group")
+            label(for="mainText", class="control-label col-sm-2") Subtítulo
+
+            div(class="col-sm-10")
+                input(type="text", id="mainText", name="mainText", required, class="form-control", placeholder="Resolve o seguinte problema")
+
+        div(class="form-group")
+            label(for="areaId", class="control-label col-sm-2") Disciplina
+            div(class="col-sm-10")
+                select(name="areaId", id="areaId", class="form-control")
+                    option(value="1") Português
+                    option(value="2") Inglês
+                    option(value="3") Estudo do Meio
+                    option(value="4") Matemática
+
+        div(class="form-group")
+            label(for="questionContent", class="control-label col-sm-2") Pergunta
+
+            div(class="col-sm-10")
+                textarea(id="questionContent" rows="5" name="questionContent", required, class="form-control", placeholder="Quanto é que é 5 + 2?")
+
+        div(class="form-group")
+            label(for="option1", class="control-label col-sm-2") Opção 1
+
+            div(class="col-sm-10")
+                div(class="input-group")
+                    span(class="input-group-addon")
+                        input(type="radio" name="correctOption" value="1" checked)
+
+                    input(type="file", id="option1", name="option1", required, accept="image/*" class="form-control")
+
+        div(class="form-group")
+            label(for="option2", class="control-label col-sm-2") Opção 2
+
+            div(class="col-sm-10")
+                div(class="input-group")
+                    span(class="input-group-addon")
+                        input(type="radio" name="correctOption" value="2")
+
+                    input(type="file", id="option2", name="option2", required, accept="image/*" class="form-control")
+
+        div(class="form-group")
+            label(for="option3", class="control-label col-sm-2") Opção 3
+
+            div(class="col-sm-10")
+                div(class="input-group")
+                    span(class="input-group-addon")
+                        input(type="radio" name="correctOption" value="3")
+
+                    input(type="file", id="option3", name="option3", required, accept="image/*" class="form-control")
+        
+        div(class="form-group")
+            label(for="grade", class="control-label col-sm-2") Grau escolar
+            div(class="col-sm-10")
+                select(name="grade", id="grade", class="form-control")
+                    option(value="1") 1º
+                    option(value="2") 2º
+                    option(value="3") 3º
+                    option(value="4") 4º
+        
+        div(class="form-group")
+            label(for="professorId", class="control-label col-sm-2") Professor
+
+            div(class="col-sm-10")
+                select(name="professorId" class="form-control")
+                    each prof in professorList
+                        option(value="#{prof.id}")= prof.name
+
+        div(class="form-group")
+            div(class="col-sm-offset-2 col-sm-10")
+                input(type="submit", class="btn btn-primary" id="form-submit", value="Adicionar")
+
+block additionalScripts
+    script(src="/scripts/jquery/jquery.validate.min.js")
+    script(src="/scripts/jquery/messages_pt_PT.js")
+
+    script.
+        (function () {
+            $('#letrinhas-add-form').validate();
+        }());

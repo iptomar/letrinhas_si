@@ -1,4 +1,10 @@
-﻿var testService = require('../../Scripts/services/testService');
+﻿var pool = require('../../configs/mysql');
+
+var Q = require('q');
+
+var poolQuery = Q.nbind(pool.query, pool);
+
+var testService = require('../../Scripts/services/testService');
 var professorService = require('../../Scripts/services/professorService');
 
 function mapRoutes(app) {
@@ -51,30 +57,38 @@ function mapRoutes(app) {
     });
 
     app.all('/BackOffice/Tests/Create/Multimedia', function (req, res) {
-        // TODO
-        console.log(req);
-
         switch (req.method) {
             case 'GET':
-                switch (req.query.type) {
-                    case '0':
-                        res.render('addMultimediaTest');
-                        break;
-                    case '1':
-                        // Texto e imagens
-                        res.render('addMultimediaTest3');
-                        break;
-                    case '2':
-                        // Só Imagens
-                        res.render('addMultimediaTest2');
-                        break;
-                    default:
-                        res.render('multimediaTipoEscolhe');
+                var sql = 'SELECT id, name FROM Professors';
 
-                        break;
-                }
+                return poolQuery(sql).then(function (result) {
+                    switch (req.query.type) {
+                        case '0':
+                            res.render('addMultimediaTest', {
+                                professorList: result[0]
+                            });
+                            break;
+                        case '1':
+                            // Texto e imagens
+                            res.render('addMultimediaTest3', {
+                                professorList: result[0]
+                            });
+                            break;
+                        case '2':
+                            // Só Imagens
+                            res.render('addMultimediaTest2', {
+                                professorList: result[0]
+                            });
+                            break;
+                        default:
+                            res.render('multimediaTipoEscolhe');
 
-                break;
+                            break;
+                    }
+                }).catch(function (err) {
+                    console.error(err);
+                    res.render('Erros/500');
+                });
             case 'POST':
                 var body = req.body;
 
@@ -83,12 +97,24 @@ function mapRoutes(app) {
                     professorId: body.professorId,
                     areaId: body.areaId,
                     mainText: body.mainText,
-                    type: body.type
+                    type: 1,
+                    correctOption: body.correctOption,
+                    questionContent: body.type === '0' || body.type === '1' ? body.questionContent : req.files.questionContent.path,
+                    contentIsUrl: body.type === '2',
+                    option1: body.type === '0' ? body.option1 : req.files.option1.path,
+                    option1IsUrl: body.type !== '0',
+                    option2: body.type === '0' ? body.option2 : req.files.option2.path,
+                    option2IsUrl: body.type !== '0',
+                    option3: body.type === '0' ? body.option3 : req.files.option3.path,
+                    option3IsUrl: body.type !== '0'
                 };
 
-                console.log(teste);
-
-                break;
+                return testService.createMultimediaTest(teste).then(function (_) {
+                    return res.redirect('/');
+                }).catch(function (err) {
+                    console.error(err);
+                    return res.status(500).render('Erros/500');
+                });
             default:
                 // TODO: Talvez fazer uma view para 404, 500, etc.?
                 res.status(404).json({ error: 404 });
