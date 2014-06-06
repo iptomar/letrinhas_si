@@ -47,7 +47,7 @@ exports.create = create;
 
 /**
 * Devolve uma lista de alunos, juntamente com o nome da escola respectiva.
-* @author luisfmoliveira (Lu�s Oliveira)
+* @author luisfmoliveira (Luís Oliveira)
 */
 function studentDetails(schoolId, classId) {
     if (typeof schoolId === "undefined") { schoolId = null; }
@@ -68,10 +68,6 @@ function studentDetails(schoolId, classId) {
 }
 exports.studentDetails = studentDetails;
 
-/**
-* Devolve uma lista de alunos de uma turma, juntamente com o nome da escola respectiva.
-* @author luisfmoliveira (Lu�s Oliveira)
-*/
 function studentDetailsChangeClass(studentId) {
     var sql = "select b.id, b.name as NomeAluno, b.photoUrl, b.isActive, a.schoolName, c.classLevel, c.className, c.classYear from Schools as a, Students as b, Classes as c where b.classId = c.id and c.schoolId = a.id";
 
