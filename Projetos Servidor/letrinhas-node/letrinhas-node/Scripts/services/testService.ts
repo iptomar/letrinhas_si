@@ -127,7 +127,7 @@ export function createReadTest(t: ReadingTest, uploadedFilePath: string): Q.Prom
     // eg: appContent/Tests/uuid/demo.mp3
     var filePath = path.join('appContent/Tests', uuid.v4(), 'demo' + path.extname(uploadedFilePath)).replace(/\\/g, '/');
 
-    var sql = mysql.format("CALL insertReadingTest(?,?,?,?,?,?,?,?,?)", [t.areaId, t.professorId, t.title, t.mainText, t.creationDate, t.grade, t.type, t.textContent, filePath]);
+    var sql = mysql.format("CALL insertReadingTest(?,?,?,?,?,?,?,?,?)", [t.areaId, t.professorId, t.title, t.mainText, Date.now(), t.grade, t.type, t.textContent, filePath]);
 
     console.log(sql);
 
@@ -139,21 +139,70 @@ export function createReadTest(t: ReadingTest, uploadedFilePath: string): Q.Prom
 /**
  * Só para texto.
  */
-export function saveMultimediaTest(teste: MultimediaTest): Q.Promise<void> {
+export function createMultimediaTest(t: MultimediaTest): Q.Promise<void> {
     // Construir o caminho-base para guardar o teste.
-    var caminhoBase = 'appContent/Tests/' + uuid.v4(),
-        camOp1, camOp2, camOp3, camConteudo;
+    var basePath = 'appContent/Tests/' + uuid.v4(),
+        oldOption1Path, oldOption2Path, oldOption3Path, oldQuestionContentPath;
+
+    var mvOperations = [];
 
     // if's para cada um dos campos isUrl
-    if (teste.contentIsUrl === true) {
-        // Guardar o ficheiro relativo ao conteúdo.
-        camConteudo = caminhoBase + '/pergunta' + path.extname(teste.questionContent);
-    } else {
+    if (t.contentIsUrl) {
+        oldQuestionContentPath = t.questionContent;
 
+        t.questionContent = basePath + '/questionContent' + path.extname(t.questionContent);
+        mvOperations.push(Q.nfcall(mv, oldQuestionContentPath, path.join(app.rootDir, t.questionContent), { mkdirp: true }));
     }
 
-    return Q.reject('Ainda nao está implementado!');
+    if (t.option1IsUrl) {
+        oldOption1Path = t.option1;
 
+        t.option1 = basePath + '/option1' + path.extname(t.option1);
+
+        mvOperations.push(Q.nfcall(mv, oldOption1Path, path.join(app.rootDir, t.option1), { mkdirp: true }));
+    }
+
+    if (t.option2IsUrl) {
+        oldOption2Path = t.option2;
+
+        t.option2 = basePath + '/option2' + path.extname(t.option2);
+
+        mvOperations.push(Q.nfcall(mv, oldOption2Path, path.join(app.rootDir, t.option2), { mkdirp: true }));
+    }
+
+    if (t.option3IsUrl) {
+        oldOption3Path = t.option3;
+
+        t.option3 = basePath + '/option3' + path.extname(t.option3);
+
+        mvOperations.push(Q.nfcall(mv, oldOption3Path, path.join(app.rootDir, t.option3), { mkdirp: true }));
+    }
+
+    return Q.all(mvOperations)
+        .then((_) => {
+            var sql = 'CALL insertMultimediaTest(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+
+            sql = mysql.format(sql, [
+                t.areaId,
+                t.professorId,
+                t.title,
+                t.mainText,
+                Date.now(),
+                t.grade,
+                1,
+                t.questionContent,
+                t.contentIsUrl,
+                t.option1,
+                t.option1IsUrl,
+                t.option2,
+                t.option2IsUrl,
+                t.option3,
+                t.option3IsUrl,
+                t.correctOption
+            ]);
+
+            return poolQuery(sql);
+        });
 }
 
 
