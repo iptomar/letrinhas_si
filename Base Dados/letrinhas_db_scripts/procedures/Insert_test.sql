@@ -4,7 +4,7 @@ drop procedure if exists insertReadingTest $$
 
 create procedure insertReadingTest(in areaId int, in professorId int,
                    in title varchar(50), in mainText varchar(80),
-                   in creationDate int, in grade int(1), in type int,
+                   in creationDate bigint, in grade int(1), in type int,
                    textContent text, professorAudioUrl varchar(100))
 BEGIN
   declare continue handler for sqlexception
@@ -36,7 +36,7 @@ drop procedure if exists insertMultimediaTest $$
 create procedure insertMultimediaTest(
   in areaId int, in professorId int,
   in title varchar(50), in mainText varchar(80),
-  in creationDate int, in grade int(1), in type int,
+  in creationDate bigint, in grade int(1), in type int,
   in questionContent varchar(255), in contentIsUrl boolean,
   in option1 varchar(255), in option1IsUrl boolean,
   in option2 varchar(255), in option2IsUrl boolean,

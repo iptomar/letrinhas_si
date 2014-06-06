@@ -3,7 +3,7 @@ delimiter $$
 drop procedure if exists insertReadingTestCorrection $$
 
 create procedure insertReadingTestCorrection(
-  in testId int, in studentId int, in executionDate int,
+  in testId int, in studentId int, in executionDate bigint,
   in soundFileUrl varchar(100), in professorObservations text,
   in wordsPerMinute float, in correctWordCount int, 
   in readingPrecision float, in readingSpeed float,
@@ -66,7 +66,7 @@ delimiter $$
 drop procedure if exists insertMultimediaTestCorrection $$
 
 create procedure insertMultimediaTestCorrection(
-  in testId int, in studentId int, in executionDate int,
+  in testId int, in studentId int, in executionDate bigint,
   in optionChosen int, in isCorrect BOOLEAN
 )
 BEGIN

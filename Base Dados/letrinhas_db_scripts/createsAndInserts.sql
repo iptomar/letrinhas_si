@@ -40,7 +40,7 @@ CREATE TABLE Tests (
   professorId INT,
   title VARCHAR(50),
   mainText VARCHAR(80),
-  creationDate int,
+  creationDate bigint,
   grade INT(1),
   type int,
 
@@ -82,7 +82,7 @@ CREATE TABLE TestCorrections (
 
   testId INT,
   studentId INT,
-  executionDate INT,
+  executionDate bigint,
   type INT,
 
   PRIMARY KEY (testId, studentId, executionDate),
@@ -97,7 +97,7 @@ CREATE TABLE ReadingTestCorrections (
 
   testId INT,
   studentId INT,
-  executionDate INT,
+  executionDate bigint,
 
   soundFileUrl VARCHAR(255),
   professorObservations TEXT,
@@ -124,7 +124,7 @@ DROP TABLE IF EXISTS MultimediaTestCorrections;
 CREATE TABLE MultimediaTestCorrections(
   testId INT,
   studentId INT,
-  executionDate INT,
+  executionDate bigint,
   
   optionChosen INT,
   isCorrect BOOLEAN,

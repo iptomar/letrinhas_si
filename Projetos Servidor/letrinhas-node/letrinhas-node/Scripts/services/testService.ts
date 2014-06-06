@@ -127,7 +127,7 @@ export function createReadTest(t: ReadingTest, uploadedFilePath: string): Q.Prom
     // eg: appContent/Tests/uuid/demo.mp3
     var filePath = path.join('appContent/Tests', uuid.v4(), 'demo' + path.extname(uploadedFilePath)).replace(/\\/g, '/');
 
-    var sql = mysql.format("CALL insertReadingTest(?,?,?,?,?,?,?,?,?)", [t.areaId, t.professorId, t.title, t.mainText, t.creationDate, t.grade, t.type, t.textContent, filePath]);
+    var sql = mysql.format("CALL insertReadingTest(?,?,?,?,?,?,?,?,?)", [t.areaId, t.professorId, t.title, t.mainText, Date.now(), t.grade, t.type, t.textContent, filePath]);
 
     console.log(sql);
 
