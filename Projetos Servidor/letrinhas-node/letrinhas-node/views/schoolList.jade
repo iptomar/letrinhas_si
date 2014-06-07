@@ -3,32 +3,36 @@
 block content
     h1 Lista de Escolas
 
-    table(class="table table-striped")
-        thead
-            th Logótipo
-            th Nome
-            th Morada
-            th Ações
+    if (items.length === 0)
+        div(class="alert alert-warning") Sem resultados
+    else
+        div(class="table-responsive")
+            table(class="table table-striped")
+                thead
+                    th Logótipo
+                    th Nome
+                    th Morada
+                    th Ações
 
-        each item in items
-            tr
-                td
-                    img(src="/#{item.photo}" height="50" width="50")
-                td #{item.name} 
-                td #{item.address}
-                td
-                    a(href="/BackOffice/Classes/All?schoolId=#{item.id}") Turmas
+                each item in items
+                    tr
+                        td
+                            img(src="/#{item.photo}" height="50" width="50")
+                        td #{item.name} 
+                        td #{item.address}
+                        td
+                            a(href="/BackOffice/Classes/All?schoolId=#{item.id}") Turmas
 
-                    &nbsp;
-                    
-                    a(href="/BackOffice/Professors/All?schoolId=#{item.id}") Professores
-                    
-                    &nbsp;
+                            | &nbsp;
+                            
+                            a(href="/BackOffice/Professors/All?schoolId=#{item.id}") Professores
+                            
+                            | &nbsp;
 
-                    a(href="/BackOffice/Students/All?schoolId=#{item.id}") Alunos
+                            a(href="/BackOffice/Students/All?schoolId=#{item.id}") Alunos
 
-                    &nbsp;
-                    
-                    a(href="/BackOffice/Schools/Edit?schoolId=#{item.id}") Editar
+                            | &nbsp;
+                            
+                            a(href="/BackOffice/Schools/Edit?schoolId=#{item.id}") Editar
 
     a(href="/") Voltar

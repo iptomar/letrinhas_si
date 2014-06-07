@@ -6,25 +6,26 @@ block content
     if (items.length === 0)
         div(class="alert alert-warning") Sem resultados
     else
-        table(class="table table-striped")
-            thead
-                th Foto do Aluno
-                th Nome
-                th Escola
-                th Ano
-                th Turma
-                th Estado
-                th Ações
+        div(class="table-responsive")
+            table(class="table table-striped")
+                thead
+                    th Foto do Aluno
+                    th Nome
+                    th Escola
+                    th Ano
+                    th Turma
+                    th Estado
+                    th Ações
 
-            each item in items
-                tr
-                    td  
-                        img(src= "/#{item.photoUrl}" height="50" width="50")
-                    td #{item.name} 
-                    td #{item.schoolName}
-                    td #{item.classLevel}
-                    td #{item.className}
-                    td #{item.isActive}
-                    td 
-                        a(href="/BackOffice/Students/Edit?studentId=#{item.id}") Editar detalhes
+                each item in items
+                    tr
+                        td  
+                            img(src= "/#{item.photoUrl}" height="50" width="50")
+                        td #{item.name} 
+                        td #{item.schoolName}
+                        td #{item.classLevel}
+                        td #{item.className}
+                        td #{item.isActive}
+                        td 
+                            a(href="/BackOffice/Students/Edit?studentId=#{item.id}") Editar detalhes
     a(href="/") Voltar

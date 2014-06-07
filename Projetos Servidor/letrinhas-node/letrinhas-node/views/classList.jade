@@ -3,25 +3,29 @@
 block content
     h1 Lista de Turmas
 
-    table(class="table table-striped")
-        thead
-            th Escola
-            th Ano
-            th Nome
-            th Ano Letivo
-            th Ações
+    if (items.length === 0)
+        div(class="alert alert-warning") Sem resultados
+    else
+        div(class="table-responsive")
+            table(class="table table-striped")
+                thead
+                    th Escola
+                    th Ano
+                    th Nome
+                    th Ano Letivo
+                    th Ações
 
-        each item in items
-            tr
-                td #{item.schoolName} 
-                td #{item.classLevel} 
-                td #{item.className}
-                td #{item.classYear}
-                td
-                    a(href="/BackOffice/Students/All?schoolId=#{item.schoolId}&classId=#{item.id}") Ver Alunos 
-                    
-                    &nbsp;
+                each item in items
+                    tr
+                        td #{item.schoolName} 
+                        td #{item.classLevel} 
+                        td #{item.className}
+                        td #{item.classYear}
+                        td
+                            a(href="/BackOffice/Students/All?schoolId=#{item.schoolId}&classId=#{item.id}") Ver Alunos 
+                            
+                            | &nbsp;
 
-                    a(href="/BackOffice/Classes/Edit?classId=#{item.id}") Editar
+                            a(href="/BackOffice/Classes/Edit?classId=#{item.id}") Editar
                 
     a(href="/") Voltar
