@@ -97,6 +97,7 @@ function mapRoutes(app) {
                     professorId: body.professorId,
                     areaId: body.areaId,
                     mainText: body.mainText,
+                    grade: body.grade,
                     type: 1,
                     correctOption: body.correctOption,
                     questionContent: body.type === '0' || body.type === '1' ? body.questionContent : req.files.questionContent.path,
@@ -117,7 +118,7 @@ function mapRoutes(app) {
                 });
             default:
                 // TODO: Talvez fazer uma view para 404, 500, etc.?
-                res.status(404).json({ error: 404 });
+                res.status(404).render('Erros/404');
         }
     });
 
