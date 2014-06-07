@@ -4,7 +4,7 @@ block content
     
     h1 Adicionar Professor
 
-    form(novalidate, id="letrinhas-edit-prof", class="form-horizontal", role="form", method="POST", action="/BackOffice/Professors/Edit")
+    form(novalidate, id="letrinhas-edit-prof", class="form-horizontal", role="form", method="POST", action="/BackOffice/Professors/Edit/#{itemsProfessor[0].id}")
         -var items = itemsProfessor[0]
             input(type="hidden", id="id", name = "id", value ="#{items.id}")
             div(class="form-group")
@@ -38,14 +38,12 @@ block content
                     input(type="text", id="password", name="password",  value ="#{items.password}",  required, minlength="4", maxlength="4" class="form-control", placeholder="1234")
                     
             div(class="form-group")
-                label(for="state", class="control-label col-sm-2") Estado do professor
+                label(for="state_filter", class="control-label col-sm-2") Estado do professor
                     
                 div(class="col-sm-10")
-                    input(type="radio", name="state_filter", value="1", checked= "#{items.isActive}"=="1")
-                    | Ativo
-                    &nbsp;
-                    input(type="radio", name="state_filter", value="0", checked="#{items.isActive}"== "0")
-                    | Inativo
+                    select(name="state_filter", class="form-control")
+                        option(value="1", selected=items.isActive === 1) Ativo
+                        option(value="0", selected=items.isActive === 0) Inativo
            
             div(class="form-group")
                 label(for="schoolId", class="control-label col-sm-2") Escola

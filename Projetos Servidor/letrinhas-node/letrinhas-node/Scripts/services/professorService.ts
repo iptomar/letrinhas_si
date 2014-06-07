@@ -1,4 +1,10 @@
-﻿
+﻿/// <reference path="../typings/q/q.d.ts" />
+/// <reference path="../typings/mysql/mysql.d.ts" />
+/// <reference path="../typings/node-uuid/node-uuid.d.ts" />
+/// <reference path="../typings/node/node.d.ts" />
+/// <reference path="../typings/mv/mv.d.ts" />
+
+
 import pool = require('../../configs/mysql');
 import Q = require('q');
 import mysql = require('mysql');

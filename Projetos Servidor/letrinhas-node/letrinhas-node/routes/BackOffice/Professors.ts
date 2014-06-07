@@ -40,9 +40,6 @@ export function mapRoutes(app: express.Express) {
             });
     });
 
-
-
-
     app.all('/BackOffice/Professors/Create', function (req, res) {
 
         switch (req.method) {
@@ -127,17 +124,20 @@ export function mapRoutes(app: express.Express) {
         });
     });
 
-    app.all('/BackOffice/Professors/Edit', function (req, res) {
+    app.all('/BackOffice/Professors/Edit/:id', function (req, res) {
         // TODO
         switch (req.method) {
             case 'GET':
                 // objecto de opções.
                 var options = Object.create(null);
                 
-                // Verificar se temos um id de professor válido. Ignoramo-lo se não for
-                if (!isNaN(req.query.professorId)) {
-                    options.professorId = parseInt(req.query.professorId, 10);
+                // Verificar se temos um id de professor válido.
+                if (!isNaN(req.params.id)) {
+                    options.professorId = parseInt(req.params.id, 10);
+                } else {
+                    return res.status(400).render('Erros/400');
                 }
+
                 var professorDetails;
                 var schoolDetails;
        
@@ -176,7 +176,7 @@ export function mapRoutes(app: express.Express) {
                     id: body.id,
                     isActive : body.state_filter 
                 };
-                ;
+
                 service.editProfessor(professor)
                     .then((_) => res.render('editSucess'))
                     .catch((err) => {
