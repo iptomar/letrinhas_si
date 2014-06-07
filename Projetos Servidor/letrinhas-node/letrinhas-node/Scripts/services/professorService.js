@@ -150,7 +150,20 @@ function editProfessor(p) {
         sql = mysql.format(sql + " schoolId = ?, name = ?, username = ?, password = ?, emailAddress = ?, telephoneNumber = ?, isActive = ? WHERE id = ? ", [p.schoolId, p.name, p.username, p.password, p.emailAddress, p.telephoneNumber, p.isActive, p.id]);
     }
 
-    return poolQuery(sql);
+    return poolQuery(sql).then(function (_) {
+        return poolQuery(mysql.format('DELETE FROM ProfessorClass WHERE professorId = ?', [p.id]));
+    }).then(function (_) {
+        var classPairs = [];
+
+        for (var i = 0; i < p.classIds.length; i++) {
+            classPairs.push([p.id, p.classIds[i]]);
+        }
+
+        // Inserir o professor numa turma.
+        sql = 'insert into ProfessorClass(professorId, classId) VALUES ?';
+
+        return poolQuery(sql, [classPairs]);
+    });
 }
 exports.editProfessor = editProfessor;
 //# sourceMappingURL=professorService.js.map

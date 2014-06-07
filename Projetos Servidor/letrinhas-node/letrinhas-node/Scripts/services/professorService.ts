@@ -147,7 +147,23 @@ export function editProfessor(p: Professor) {
     if (!isNaN(p.id) || !isNaN(p.schoolId)) {
         sql = mysql.format(sql + " schoolId = ?, name = ?, username = ?, password = ?, emailAddress = ?, telephoneNumber = ?, isActive = ? WHERE id = ? ", [p.schoolId, p.name, p.username, p.password, p.emailAddress, p.telephoneNumber,p.isActive, p.id]);
     }
-    
-    return poolQuery(sql);
+
+    return poolQuery(sql)
+    // Drastic approach, but it works... TODO: Do this properly with an UPDATE statement.
+        .then((_) => poolQuery(mysql.format('DELETE FROM ProfessorClass WHERE professorId = ?', [p.id])))
+        .then((_) => {
+            var classPairs = [];
+
+            // Create the professor-class pairs.
+            // eg., [[1, 2], [3, 4], [1, 4]]
+            for (var i = 0; i < p.classIds.length; i++) {
+                classPairs.push([p.id, p.classIds[i]]);
+            }
+
+            // Inserir o professor numa turma.
+            sql = 'insert into ProfessorClass(professorId, classId) VALUES ?';
+
+            return poolQuery(sql, [classPairs]);
+        });
 
 }

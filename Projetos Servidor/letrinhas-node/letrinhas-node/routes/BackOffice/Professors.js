@@ -148,7 +148,8 @@ function mapRoutes(app) {
                     emailAddress: body.mail,
                     telephoneNumber: body.phone,
                     id: body.id,
-                    isActive: body.state_filter
+                    isActive: body.state_filter,
+                    classIds: properlyHandleMultipleIds(body.classIds)
                 };
 
                 service.editProfessor(professor).then(function (_) {
@@ -185,8 +186,7 @@ function properlyHandleMultipleIds(idList, dst) {
         }
     }
 
-    console.log(dst);
-
+    // console.log(dst);
     return dst;
 }
 //# sourceMappingURL=Professors.js.map

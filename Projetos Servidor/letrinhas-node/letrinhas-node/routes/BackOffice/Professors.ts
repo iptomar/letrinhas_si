@@ -202,7 +202,8 @@ export function mapRoutes(app: express.Express) {
                     emailAddress: body.mail,
                     telephoneNumber: body.phone,
                     id: body.id,
-                    isActive : body.state_filter 
+                    isActive: body.state_filter,
+                    classIds: properlyHandleMultipleIds(body.classIds)
                 };
 
                 service.editProfessor(professor)
@@ -228,7 +229,7 @@ export function mapRoutes(app: express.Express) {
  * 
  * @author redroserade
  */
-function properlyHandleMultipleIds(idList: any[], dst = <string[]>[]) {
+function properlyHandleMultipleIds(idList: any[], dst = <any[]>[]) {
     for (var i = 0; i < idList.length; i++) {
         if (isNaN(idList[i])) {
             // dst = dst.concat(properlyHandleMultipleIds(idList[i], dst));
@@ -238,7 +239,7 @@ function properlyHandleMultipleIds(idList: any[], dst = <string[]>[]) {
         }
     }
 
-    console.log(dst);
+    // console.log(dst);
 
     return dst;
 }
