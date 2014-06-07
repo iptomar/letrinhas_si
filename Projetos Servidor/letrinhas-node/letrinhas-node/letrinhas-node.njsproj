@@ -99,6 +99,7 @@
     <Content Include="views\classList.jade" />
     <Content Include="views\editSchool.jade" />
     <Content Include="views\editSucess.jade" />
+    <Content Include="views\editTeacher.jade" />
     <Content Include="views\Erros\400.jade" />
     <Content Include="views\Erros\404.jade" />
     <Content Include="views\Erros\500.jade" />

@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Routes related to tests.
 */
 var pool = require('../../configs/mysql');
