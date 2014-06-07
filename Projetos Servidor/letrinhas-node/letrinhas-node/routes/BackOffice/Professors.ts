@@ -1,5 +1,15 @@
 ﻿import express = require('express');
 
+import pool = require('../../configs/mysql');
+import Q = require('q');
+import mysql = require('mysql');
+import path = require('path');
+import uuid = require('node-uuid');
+import app = require('../../app');
+import mv = require('mv');
+
+var poolQuery = Q.nbind<any>(pool.query, pool);
+
 import service = require('../../Scripts/services/professorService');
 import Professor = require('../../Scripts/structures/schools/Professor');
 import schoolService = require('../../Scripts/services/schoolService');
@@ -37,20 +47,48 @@ export function mapRoutes(app: express.Express) {
 
         switch (req.method) {
             case 'GET':
-                schoolService.all()
-                    .then((schools) => {
-                        res.render('addTeacher', {
+
+                var schoolList,
+                    classList;
+
+                var sqlClasses =
+                    'select c.id, c.classLevel, c.className, c.schoolId, ' +
+                    'c.classYear, s.schoolName ' +
+                    'from Classes as c ' +
+                    'join Schools as s on s.id = c.schoolId';
+
+                var sqlSchools = 'select id, schoolName from Schools;';
+
+                return poolQuery(sqlClasses)
+                    .then((result) => classList = result[0])
+                    .then((_) => poolQuery(sqlSchools))
+                    .then((result) => schoolList = result[0])
+                    .then((_) => {
+                        return res.render('addTeacher', {
                             title: 'Adicionar Professor',
-                            escolas: schools
+                            schoolList: schoolList,
+                            classList: classList
                         });
                     })
                     .catch((err) => {
                         console.error(err);
-                        res.status(500).json({ error: 500 });
+                        res.status(500).render('Erros/500');
                     });
-                break;
+                
+
+                //schoolService.all()
+                //    .then((schools) => {
+                //        res.render('addTeacher', {
+                //            title: 'Adicionar Professor',
+                //            escolas: schools
+                //        });
+                //    })
+                //    .catch((err) => {
+                //        console.error(err);
+                //        res.status(500).json({ error: 500 });
+                //    });
+                //break;
             case 'POST':
-                // TODO: Meter dados na BD.
                 var body = req.body;
                 var professor = <Professor> {
                     schoolId: body.schoolId,
@@ -59,17 +97,20 @@ export function mapRoutes(app: express.Express) {
                     password: body.password,
                     emailAddress: body.mail,
                     telephoneNumber: body.phone,
+                    classIds: body.classIds
                 };
+
+                console.log(body);
 
                 service.createProfessor(professor, req.files.photo.path)
                     .then((_) => res.end('Dados inseridos com sucesso!'))
                     .catch((err) => {
                         console.error(err);
-                        res.status(500).json({ error: 500 })
+                        res.status(500).render('Erros/500');
                 });
                 break;
             default:
-                res.status(404).json({ error: 404 });
+                res.status(404).render('Erros/404');
         }
     });
 

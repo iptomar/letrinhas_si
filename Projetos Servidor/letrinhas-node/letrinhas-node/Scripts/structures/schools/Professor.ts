@@ -40,6 +40,8 @@ class Professor {
      * user, both in back-office and in the tablet.
      */
     password: string;
+
+    classIds: number[];
 }
 
 export = Professor;

@@ -1,4 +1,9 @@
-﻿var service = require('../../Scripts/services/professorService');
+﻿var pool = require('../../configs/mysql');
+var Q = require('q');
+
+var poolQuery = Q.nbind(pool.query, pool);
+
+var service = require('../../Scripts/services/professorService');
 
 var schoolService = require('../../Scripts/services/schoolService');
 
@@ -29,18 +34,30 @@ function mapRoutes(app) {
     app.all('/BackOffice/Professors/Create', function (req, res) {
         switch (req.method) {
             case 'GET':
-                schoolService.all().then(function (schools) {
-                    res.render('addTeacher', {
+                var schoolList, classList;
+
+                var sqlClasses = 'select c.id, c.classLevel, c.className, c.schoolId, ' + 'c.classYear, s.schoolName ' + 'from Classes as c ' + 'join Schools as s on s.id = c.schoolId';
+
+                var sqlSchools = 'select id, schoolName from Schools;';
+
+                return poolQuery(sqlClasses).then(function (result) {
+                    return classList = result[0];
+                }).then(function (_) {
+                    return poolQuery(sqlSchools);
+                }).then(function (result) {
+                    return schoolList = result[0];
+                }).then(function (_) {
+                    return res.render('addTeacher', {
                         title: 'Adicionar Professor',
-                        escolas: schools
+                        schoolList: schoolList,
+                        classList: classList
                     });
                 }).catch(function (err) {
                     console.error(err);
-                    res.status(500).json({ error: 500 });
+                    res.status(500).render('Erros/500');
                 });
-                break;
+
             case 'POST':
-                // TODO: Meter dados na BD.
                 var body = req.body;
                 var professor = {
                     schoolId: body.schoolId,
@@ -48,18 +65,21 @@ function mapRoutes(app) {
                     username: body.username,
                     password: body.password,
                     emailAddress: body.mail,
-                    telephoneNumber: body.phone
+                    telephoneNumber: body.phone,
+                    classIds: body.classIds
                 };
+
+                console.log(body);
 
                 service.createProfessor(professor, req.files.photo.path).then(function (_) {
                     return res.end('Dados inseridos com sucesso!');
                 }).catch(function (err) {
                     console.error(err);
-                    res.status(500).json({ error: 500 });
+                    res.status(500).render('Erros/500');
                 });
                 break;
             default:
-                res.status(404).json({ error: 404 });
+                res.status(404).render('Erros/404');
         }
     });
 

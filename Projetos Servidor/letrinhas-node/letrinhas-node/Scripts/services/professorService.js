@@ -5,6 +5,7 @@ var uuid = require('node-uuid');
 var path = require('path');
 var mv = require('mv');
 var app = require('../../app');
+var fs = require('fs');
 
 var poolQuery = Q.nbind(pool.query, pool);
 
@@ -34,6 +35,20 @@ function createProfessor(p, uploadedFilePath) {
     var sql = mysql.format("Insert Into Professors(`schoolId`,`name`,`username`,`password`,`emailAddress`,`telephoneNumber`,`isActive`,`photoUrl`) VALUES(?,?,?,?,?,?,?,?)", [p.schoolId, p.name, p.username, p.password, p.emailAddress, p.telephoneNumber, true, filePath]);
     return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, filePath), { mkdirp: true }).then(function (_) {
         return poolQuery(sql);
+    }).then(function (result) {
+        var insertedProfId = result[0].insertId;
+        var classPairs = [];
+
+        for (var i = 0; i < p.classIds.length; i++) {
+            classPairs.push([insertedProfId, p.classIds[i]]);
+        }
+
+        // Inserir o professor numa turma.
+        sql = 'insert into ProfessorClass(professorId, classId) VALUES ?';
+
+        return poolQuery(sql, [classPairs]);
+    }).catch(function (err) {
+        return Q.nfcall(fs.unlink, path.join(app.rootDir, filePath)).thenReject(err);
     });
 }
 exports.createProfessor = createProfessor;

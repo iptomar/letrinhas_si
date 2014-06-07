@@ -6,6 +6,7 @@ import uuid = require('node-uuid');
 import path = require('path');
 import mv = require('mv');
 import app = require('../../app');
+import fs = require('fs');
 
 var poolQuery = Q.nbind<any>(pool.query, pool);
 
@@ -30,10 +31,27 @@ export function createProfessor(p: Professor, uploadedFilePath: string): Q.Promi
     // eg: appContent/Professors/uuid/picture.jpg
     var filePath = path.join('appContent/Professors', uuid.v4(), 'picture' + path.extname(uploadedFilePath)).replace(/\\/g, '/');
 
-
     var sql = mysql.format("Insert Into Professors(`schoolId`,`name`,`username`,`password`,`emailAddress`,`telephoneNumber`,`isActive`,`photoUrl`) VALUES(?,?,?,?,?,?,?,?)", [p.schoolId, p.name, p.username, p.password, p.emailAddress, p.telephoneNumber, true, filePath]);
     return Q.nfcall(mv, uploadedFilePath, path.join(app.rootDir, filePath), { mkdirp: true })
-        .then((_) => poolQuery(sql));
+        .then((_) => poolQuery(sql))
+        // Insert professors into classes.
+        .then((result) => {
+            var insertedProfId = result[0].insertId;
+            var classPairs = [];
+
+            // Create the professor-class pairs.
+            // eg., [[1, 2], [3, 4], [1, 4]]
+            for (var i = 0; i < p.classIds.length; i++) {
+                classPairs.push([insertedProfId, p.classIds[i]]);
+            }
+
+            // Inserir o professor numa turma.
+            sql = 'insert into ProfessorClass(professorId, classId) VALUES ?';
+
+            return poolQuery(sql, [classPairs]);
+        })
+        // Remove the created file, in case of error.
+        .catch((err) => Q.nfcall(fs.unlink, path.join(app.rootDir, filePath)).thenReject(err));
 }
 
 export function getAllProfessors(onResult) {
