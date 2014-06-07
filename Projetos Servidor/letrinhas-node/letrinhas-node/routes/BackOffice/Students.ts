@@ -83,25 +83,20 @@ export function mapRoutes(app) {
                 }
                 var studentDetails;
                 var classDetails;
-                // Obtemos as turmas (opcionalmente para uma turma)...
+
                 service.studentDetailsChangeClass(options.studentId)
-                    .then((studentData) => {
-                        studentDetails = studentData
-                    })
+                    .then((studentData) => studentDetails = studentData)
                     .then((_) => schoolService.allSchoolClasses())
-                    .then((classData) => {
-                        classDetails = classData
-                    })
-                    .then((_) =>{
+                    .then((classData) => classDetails = classData)
+                    .then((_) => {
                         res.render('changeStudentClass', {
-                            title: 'Alterar turma',
-                            itemsStudent: studentDetails,
+                            title: 'Alterar dados do estudante',
+                            studentDetails: studentDetails,
                             itemsClass : classDetails
                         });
                     })
                     .catch((err) => {
                         console.error(err);
-                        // TODO: Uma view de 500.
                         res.status(500).render('Erros/500');
                     });
                 break;

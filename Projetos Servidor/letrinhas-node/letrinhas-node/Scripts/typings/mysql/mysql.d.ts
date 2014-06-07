@@ -102,7 +102,7 @@
         on(event: string, onConnect: (connection: Connection) => void): void;
 
         query(sql: string, callback: (err: Error, rows: Array<any>, fields: any) => void): void;
-        query(sql: string, data: any, callback: (err: Error, result: any) => void): void;
+        query(sql: string, data: any, callback: (err: Error, result: any, fields: any) => void): void;
 
         escape(sql: string): string;
     }
@@ -111,7 +111,7 @@
         getConnection(onConnection: (err: Error, connection: Connection) => void): void;
 
         query(sql: string, callback: (err: Error, rows: Array<any>, fields: any) => void): void;
-        query(sql: string, data: any, callback: (err: Error, result: any) => void): void;
+        query(sql: string, data: any, callback: (err: Error, result: any, fields: any) => void): void;
 
         escape(sql: string): string;
     }

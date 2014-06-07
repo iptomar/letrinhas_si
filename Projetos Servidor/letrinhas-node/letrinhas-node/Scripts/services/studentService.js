@@ -69,14 +69,14 @@ function studentDetails(schoolId, classId) {
 exports.studentDetails = studentDetails;
 
 function studentDetailsChangeClass(studentId) {
-    var sql = "select b.id, b.name as NomeAluno, b.photoUrl, b.isActive, a.schoolName, c.classLevel, c.className, c.classYear from Schools as a, Students as b, Classes as c where b.classId = c.id and c.schoolId = a.id";
+    var sql = "select b.id, b.classId, b.name as NomeAluno, b.photoUrl, b.isActive, a.schoolName, c.classLevel, c.className, c.classYear from Schools as a, Students as b, Classes as c where b.classId = c.id and c.schoolId = a.id";
 
     if (!isNaN(studentId)) {
         sql = mysql.format(sql + ' AND b.id = ?', [studentId]);
     }
 
     return poolQuery(sql).then(function (results) {
-        return results[0];
+        return results[0][0];
     });
 }
 exports.studentDetailsChangeClass = studentDetailsChangeClass;

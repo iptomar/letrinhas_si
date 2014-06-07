@@ -66,15 +66,15 @@ export function studentDetails(schoolId = null, classId = null): Q.Promise<Array
 }
 
 
-export function studentDetailsChangeClass(studentId?: number): Q.Promise<Array<any>> {
-    var sql = "select b.id, b.name as NomeAluno, b.photoUrl, b.isActive, a.schoolName, c.classLevel, c.className, c.classYear from Schools as a, Students as b, Classes as c where b.classId = c.id and c.schoolId = a.id";
+export function studentDetailsChangeClass(studentId?: number): Q.Promise<any> {
+    var sql = "select b.id, b.classId, b.name as NomeAluno, b.photoUrl, b.isActive, a.schoolName, c.classLevel, c.className, c.classYear from Schools as a, Students as b, Classes as c where b.classId = c.id and c.schoolId = a.id";
 
     if (!isNaN(studentId)) {
         sql = mysql.format(sql + ' AND b.id = ?', [studentId]);
     }
 
     return poolQuery(sql)
-        .then((results) => results[0]);
+        .then((results) => results[0][0]);
 }
 
 export function editStudentClass(s: Student) {

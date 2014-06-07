@@ -5,31 +5,33 @@ block content
     h1 Alterar dados do aluno
 
     form(novalidate, id="letrinhas-change-class", class="form-horizontal", role="form", method="POST", action="/BackOffice/Students/Edit")
-         - var item = itemsStudent[0]
+        
             div(class="form-group")
                 label(for="name", class="control-label col-sm-2") Nome do Aluno
             
                 div(class="col-sm-10")
-                    input(type="text", id="name", name="name", class="form-control", value="#{item.NomeAluno}", required)
+                    input(type="text", id="name", name="name", class="form-control", value="#{studentDetails.NomeAluno}", required)
 
             div(class="form-group")
                 label(for="name", class="control-label col-sm-2" ) Turma atual do aluno
             
                 div(class="col-sm-10")
-                    p #{item.schoolName} - #{item.classLevel}º #{item.className} do ano lectivo #{item.classYear}
+                    p(class="form-control-static") #{studentDetails.schoolName} - #{studentDetails.classLevel}º #{studentDetails.className} do ano lectivo #{studentDetails.classYear}
         
             div(class="form-group")
                 label(for="name", class="control-label col-sm-2") Alterar para
             
                 div(class="col-sm-10")
                     select(name="newClass", id="newClass", class="form-control")
-                        each school in itemsClass 
-                             option(value="#{school.idTurma}")= school.schoolName +" - "+ school.classLevel+"º "+school.className +" - "+ school.classYear
+                        each classItem in itemsClass 
+                            option(value="#{classItem.idTurma}" selected=classItem.idTurma == studentDetails.classId)= classItem.schoolName +" - "+ classItem.classLevel+"º "+classItem.className +" - "+ classItem.classYear
         
-            input(type="hidden" value="#{item.id}" name ="id" id="id")
+            input(type="hidden" value="#{studentDetails.id}" name ="id" id="id")
+
             div(class="form-group")
-                div(class="col-sm-offset-2 col-sm-10")
-                    input(type="submit", class="btn btn-primary" id="form-submit", value="Adicionar")
+                div(class="col-sm-offset-2 col-sm-10 btn-group")
+                    input(type="submit", class="btn btn-primary" id="form-submit", value="Terminar")
+                    a(href="/" class="btn btn-default") Voltar
 
 
 block additionalScripts
