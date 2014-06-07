@@ -94,10 +94,10 @@ export function mapRoutes(app: express.Express) {
                     password: body.password,
                     emailAddress: body.mail,
                     telephoneNumber: body.phone,
-                    classIds: body.classIds
+                    classIds: properlyHandleMultipleIds(body.classIds)
                 };
 
-                console.log(body);
+                console.log(professor);
 
                 service.createProfessor(professor, req.files.photo.path)
                     .then((_) => res.end('Dados inseridos com sucesso!'))
@@ -138,31 +138,59 @@ export function mapRoutes(app: express.Express) {
                     return res.status(400).render('Erros/400');
                 }
 
-                var professorDetails;
-                var schoolDetails;
+                var professorDetails: Professor;
+                var schoolList, classList;
+
+                var sqlProfessor = mysql.format('SELECT * FROM Professors WHERE id = ?', [options.professorId]);
+                var sqlSchools = 'SELECT id, schoolName FROM Schools';
+                var sqlClasses = 'SELECT c.id, c.classLevel, c.classYear, c.className, ' + 
+                                 'if ((select count(*) from ProfessorClass as pc where pc.classId = c.id and pc.professorId = ?) > 0, 1, 0) as isInClass ' +
+                                 'from Classes as c;';
+
+                sqlClasses = mysql.format(sqlClasses, options.professorId);
+
+                return poolQuery(sqlProfessor)
+                .then((profResults) => {
+                    professorDetails = profResults[0][0];
+                    return poolQuery(sqlSchools);
+                })
+                .then((schoolResults) => {
+                    schoolList = schoolResults[0];
+                    return poolQuery(sqlClasses);
+                })
+                .then((classResults) => res.render('editTeacher', {
+                    title: 'Editar professor ' + professorDetails.name,
+                    data: professorDetails,
+                    schoolList: schoolList,
+                    classList: classResults[0]
+                }))
+                .catch((err) => {
+                    console.error(err);
+                    return res.status(500).render('Erros/500');
+                });
        
-                service.professorDetailsEdit(options.professorId)
+                /*service.professorDetailsEdit(options.professorId)
                     .then((professorData) => {
                         professorDetails = professorData
                     })
                     .then((_) => schoolService.all())
                     .then((schoolData) => {
-                        schoolDetails = schoolData
+                        schoolList = schoolData
                     })
                     .then((_) => {
                         res.render('editTeacher', {
                             title: 'Modificar dados de um professor',
                             itemsProfessor: professorDetails,
-                            itemsSchool: schoolDetails
+                            itemsSchool: schoolList
                         });
-                        console.log(professorDetails.lenght);
+                        console.log(professorDetails.length);
                     })
                     .catch((err) => {
                         console.error(err);
                         // TODO: Uma view de 500.
                         res.status(500).render('Erros/500');
                     });
-                break;
+                break;*/
             case 'POST':
                 var body = req.body;
               
@@ -187,4 +215,30 @@ export function mapRoutes(app: express.Express) {
         }
     });
 
+}
+
+/**
+ * This function unravels the mess that is the id list
+ * when more than 2 fields come.
+ * 
+ * For some reason, the parser, for values 1, 3 and 9, for example,
+ * does: [[1, 3], 9].
+ * 
+ * This takes that array and linearizes it, like this: [1, 3, 9].
+ * 
+ * @author redroserade
+ */
+function properlyHandleMultipleIds(idList: any[], dst = <string[]>[]) {
+    for (var i = 0; i < idList.length; i++) {
+        if (isNaN(idList[i])) {
+            // dst = dst.concat(properlyHandleMultipleIds(idList[i], dst));
+            properlyHandleMultipleIds(idList[i], dst);
+        } else if (dst.indexOf(idList[i]) === -1) {
+            dst.push(idList[i]);
+        }
+    }
+
+    console.log(dst);
+
+    return dst;
 }

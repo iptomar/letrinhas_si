@@ -34,7 +34,7 @@ export function mapRoutes(app: express.Express) {
                     })
                     .catch((err) => {
                         console.error(err);
-                        res.status(500).json({ error: 500 });
+                        res.status(500).render('Erros/500');
                     });
 
 
@@ -42,7 +42,7 @@ export function mapRoutes(app: express.Express) {
             case 'POST':
 
                 if (typeof req.files.audio === 'undefined') {
-                    return res.status(400).json({ error: 400 });
+                    return res.status(500).render('Erros/400');
                 }
 
                 var body = req.body;
@@ -58,19 +58,15 @@ export function mapRoutes(app: express.Express) {
                     type: body.type,
                 };
 
-                console.log(teste);
-
                 testService.createReadTest(teste, req.files.audio.path)
-                // TODO: Talvez fazer redirect para a lista.
                     .then((_) => res.redirect('/'))
                     .catch((err) => {
                         console.error(err);
-                        res.status(500).json({ error: 500 })
+                        res.status(500).render('Erros/500');
                 });
                 break;
             default:
-                // TODO: Talvez fazer uma view para 404, 500, etc.?
-                res.status(404).json({ error: 404 });
+                res.status(404).render('Erros/404');
         }
     });
 
@@ -82,31 +78,27 @@ export function mapRoutes(app: express.Express) {
                 return poolQuery(sql).then((result) => {
                     switch (req.query.type) {
                         case '0':
-                            res.render('addMultimediaTest', {
+                            return res.render('addMultimediaTest', {
                                 professorList: result[0]
                             });
-                            break;
                         case '1':
                             // Texto e imagens
-                            res.render('addMultimediaTest3', {
+                            return res.render('addMultimediaTest3', {
                                 professorList: result[0]
                             });
-                            break;
                         case '2':
                             // Só Imagens
-                            res.render('addMultimediaTest2', {
+                            return res.render('addMultimediaTest2', {
                                 professorList: result[0]
                             });
-                            break;
                         default:
-                            res.render('multimediaTipoEscolhe');
                             // Perguntar pelo tipo de teste
-                            break;
+                            return res.render('multimediaTipoEscolhe');
                     }
                 })
                     .catch((err) => {
                         console.error(err);
-                        res.render('Erros/500');
+                        res.status(500).render('Erros/500');
                     });
             case 'POST':
                 var body = req.body;
@@ -185,8 +177,7 @@ export function mapRoutes(app: express.Express) {
             })
             .catch((err) => {
                 console.error(err);
-                // TODO: Uma view de 500.
-                res.render('listError');
+                res.status(500).render('Erros/500');
             });
     });
 
@@ -210,8 +201,7 @@ export function mapRoutes(app: express.Express) {
             })
             .catch((err) => {
                 console.error(err);
-                // TODO: Uma view de 500.
-                res.render('listError');
+                res.status(500).render('Erros/500');
             });
     });
 }

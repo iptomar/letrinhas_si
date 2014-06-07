@@ -1,7 +1,6 @@
 ﻿/// <reference path="../Scripts/typings/mysql/mysql.d.ts" />
 
 import mysql = require('mysql');
-import Q = require('q');
 
 /**
  * Connection pool for this app.

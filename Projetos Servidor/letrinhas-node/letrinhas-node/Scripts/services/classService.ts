@@ -1,4 +1,7 @@
-﻿
+﻿/// <reference path="../typings/q/q.d.ts" />
+/// <reference path="../typings/mysql/mysql.d.ts" />
+
+
 import Q = require('q');
 import pool = require('../../configs/mysql');
 import mysql = require('mysql');

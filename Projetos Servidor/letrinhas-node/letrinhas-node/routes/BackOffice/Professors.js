@@ -1,5 +1,6 @@
 ﻿var pool = require('../../configs/mysql');
 var Q = require('q');
+var mysql = require('mysql');
 
 var poolQuery = Q.nbind(pool.query, pool);
 
@@ -66,10 +67,10 @@ function mapRoutes(app) {
                     password: body.password,
                     emailAddress: body.mail,
                     telephoneNumber: body.phone,
-                    classIds: body.classIds
+                    classIds: properlyHandleMultipleIds(body.classIds)
                 };
 
-                console.log(body);
+                console.log(professor);
 
                 service.createProfessor(professor, req.files.photo.path).then(function (_) {
                     return res.end('Dados inseridos com sucesso!');
@@ -96,39 +97,46 @@ function mapRoutes(app) {
         });
     });
 
-    app.all('/BackOffice/Professors/Edit', function (req, res) {
+    app.all('/BackOffice/Professors/Edit/:id', function (req, res) {
         switch (req.method) {
             case 'GET':
                 // objecto de opções.
                 var options = Object.create(null);
 
-                // Verificar se temos um id de professor válido. Ignoramo-lo se não for
-                if (!isNaN(req.query.professorId)) {
-                    options.professorId = parseInt(req.query.professorId, 10);
+                // Verificar se temos um id de professor válido.
+                if (!isNaN(req.params.id)) {
+                    options.professorId = parseInt(req.params.id, 10);
+                } else {
+                    return res.status(400).render('Erros/400');
                 }
-                var professorDetails;
-                var schoolDetails;
 
-                service.professorDetailsEdit(options.professorId).then(function (professorData) {
-                    professorDetails = professorData;
-                }).then(function (_) {
-                    return schoolService.all();
-                }).then(function (schoolData) {
-                    schoolDetails = schoolData;
-                }).then(function (_) {
-                    res.render('editTeacher', {
-                        title: 'Modificar dados de um professor',
-                        itemsProfessor: professorDetails,
-                        itemsSchool: schoolDetails
+                var professorDetails;
+                var schoolList, classList;
+
+                var sqlProfessor = mysql.format('SELECT * FROM Professors WHERE id = ?', [options.professorId]);
+                var sqlSchools = 'SELECT id, schoolName FROM Schools';
+                var sqlClasses = 'SELECT c.id, c.classLevel, c.classYear, c.className, ' + 'if ((select count(*) from ProfessorClass as pc where pc.classId = c.id and pc.professorId = ?) > 0, 1, 0) as isInClass ' + 'from Classes as c;';
+
+                sqlClasses = mysql.format(sqlClasses, options.professorId);
+
+                return poolQuery(sqlProfessor).then(function (profResults) {
+                    professorDetails = profResults[0][0];
+                    return poolQuery(sqlSchools);
+                }).then(function (schoolResults) {
+                    schoolList = schoolResults[0];
+                    return poolQuery(sqlClasses);
+                }).then(function (classResults) {
+                    return res.render('editTeacher', {
+                        title: 'Editar professor ' + professorDetails.name,
+                        data: professorDetails,
+                        schoolList: schoolList,
+                        classList: classResults[0]
                     });
-                    console.log(professorDetails.lenght);
                 }).catch(function (err) {
                     console.error(err);
-
-                    // TODO: Uma view de 500.
-                    res.status(500).render('Erros/500');
+                    return res.status(500).render('Erros/500');
                 });
-                break;
+
             case 'POST':
                 var body = req.body;
 
@@ -142,7 +150,7 @@ function mapRoutes(app) {
                     id: body.id,
                     isActive: body.state_filter
                 };
-                ;
+
                 service.editProfessor(professor).then(function (_) {
                     return res.render('editSucess');
                 }).catch(function (err) {
@@ -154,4 +162,31 @@ function mapRoutes(app) {
     });
 }
 exports.mapRoutes = mapRoutes;
+
+/**
+* This function unravels the mess that is the id list
+* when more than 2 fields come.
+*
+* For some reason, the parser, for values 1, 3 and 9, for example,
+* does: [[1, 3], 9].
+*
+* This takes that array and linearizes it, like this: [1, 3, 9].
+*
+* @author redroserade
+*/
+function properlyHandleMultipleIds(idList, dst) {
+    if (typeof dst === "undefined") { dst = []; }
+    for (var i = 0; i < idList.length; i++) {
+        if (isNaN(idList[i])) {
+            // dst = dst.concat(properlyHandleMultipleIds(idList[i], dst));
+            properlyHandleMultipleIds(idList[i], dst);
+        } else if (dst.indexOf(idList[i]) === -1) {
+            dst.push(idList[i]);
+        }
+    }
+
+    console.log(dst);
+
+    return dst;
+}
 //# sourceMappingURL=Professors.js.map
