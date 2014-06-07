@@ -116,6 +116,7 @@ export function mapRoutes(app: express.Express) {
                     professorId: body.professorId,
                     areaId: body.areaId,
                     mainText: body.mainText,
+                    grade: body.grade,
                     type: 1,
                     correctOption: body.correctOption,
 
@@ -140,7 +141,7 @@ export function mapRoutes(app: express.Express) {
                     });
             default:
                 // TODO: Talvez fazer uma view para 404, 500, etc.?
-                res.status(404).json({ error: 404 });
+                res.status(404).render('Erros/404');
         }
     });
 
