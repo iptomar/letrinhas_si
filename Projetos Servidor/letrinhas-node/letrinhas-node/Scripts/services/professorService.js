@@ -106,4 +106,31 @@ function professorDetails(schoolId) {
     });
 }
 exports.professorDetails = professorDetails;
+
+/**
+* Devolve um de professor, juntamente com o nome da escola respectiva.
+* @author luisfmoliveira (Luís Oliveira)
+*/
+function professorDetailsEdit(professorId) {
+    var sql = "SELECT * FROM Professors WHERE";
+
+    if (!isNaN(professorId)) {
+        sql = mysql.format(sql + ' id = ?', [professorId]);
+    }
+
+    return poolQuery(sql).then(function (results) {
+        return results[0];
+    });
+}
+exports.professorDetailsEdit = professorDetailsEdit;
+
+function editProfessor(p) {
+    var sql = "UPDATE Professors SET";
+    if (!isNaN(p.id) || !isNaN(p.schoolId)) {
+        sql = mysql.format(sql + " schoolId = ?, name = ?, username = ?, password = ?, emailAddress = ?, telephoneNumber = ?, isActive = ? WHERE id = ? ", [p.schoolId, p.name, p.username, p.password, p.emailAddress, p.telephoneNumber, p.isActive, p.id]);
+    }
+
+    return poolQuery(sql);
+}
+exports.editProfessor = editProfessor;
 //# sourceMappingURL=professorService.js.map

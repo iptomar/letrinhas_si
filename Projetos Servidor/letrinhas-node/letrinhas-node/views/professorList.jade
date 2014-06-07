@@ -13,6 +13,7 @@ block content
       th Estado
       th Escola onde leciona
       th Ações
+      th Modificar
     each item in items
       tr
         td  
@@ -24,6 +25,7 @@ block content
         td #{item.isActive}
         td #{item.schoolName}
         td 
-          a(href="/BackOffice/Tests/Titles?professorId=#{item.id}") Ver testes de leitura
-
+          a(href="/BackOffice/Tests/Titles?professorId=#{item.id}") Ver testes de leitura 
+        td
+          a(href="/BackOffice/Professors/Edit?professorId=#{item.id}") Editar Dados
   a(href="/") Voltar

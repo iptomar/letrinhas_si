@@ -101,3 +101,29 @@ export function professorDetails(schoolId?: number): Q.Promise<Array<any>> {
     return poolQuery(sql)
         .then((results) => results[0]);
 }
+
+/**
+ * Devolve um de professor, juntamente com o nome da escola respectiva.
+ * @author luisfmoliveira (Luís Oliveira)
+ */
+export function professorDetailsEdit(professorId?: number): Q.Promise<Array<any>> {
+    var sql = "SELECT * FROM Professors WHERE";
+
+    if (!isNaN(professorId)) {
+        sql = mysql.format(sql + ' id = ?', [professorId]);
+    }
+
+    return poolQuery(sql)
+        .then((results) => results[0]);
+}
+
+export function editProfessor(p: Professor) {
+    
+    var sql = "UPDATE Professors SET"
+    if (!isNaN(p.id) || !isNaN(p.schoolId)) {
+        sql = mysql.format(sql + " schoolId = ?, name = ?, username = ?, password = ?, emailAddress = ?, telephoneNumber = ?, isActive = ? WHERE id = ? ", [p.schoolId, p.name, p.username, p.password, p.emailAddress, p.telephoneNumber,p.isActive, p.id]);
+    }
+    
+    return poolQuery(sql);
+
+}

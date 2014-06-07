@@ -76,8 +76,61 @@ function mapRoutes(app) {
         });
     });
 
-    app.all('/BackOffice/Professors/Edit/:id', function (req, res) {
-        throw 'NYI';
+    app.all('/BackOffice/Professors/Edit', function (req, res) {
+        switch (req.method) {
+            case 'GET':
+                // objecto de opções.
+                var options = Object.create(null);
+
+                // Verificar se temos um id de professor válido. Ignoramo-lo se não for
+                if (!isNaN(req.query.professorId)) {
+                    options.professorId = parseInt(req.query.professorId, 10);
+                }
+                var professorDetails;
+                var schoolDetails;
+
+                service.professorDetailsEdit(options.professorId).then(function (professorData) {
+                    professorDetails = professorData;
+                }).then(function (_) {
+                    return schoolService.all();
+                }).then(function (schoolData) {
+                    schoolDetails = schoolData;
+                }).then(function (_) {
+                    res.render('editTeacher', {
+                        title: 'Modificar dados de um professor',
+                        itemsProfessor: professorDetails,
+                        itemsSchool: schoolDetails
+                    });
+                    console.log(professorDetails.lenght);
+                }).catch(function (err) {
+                    console.error(err);
+
+                    // TODO: Uma view de 500.
+                    res.status(500).render('Erros/500');
+                });
+                break;
+            case 'POST':
+                var body = req.body;
+
+                var professor = {
+                    schoolId: body.schoolId,
+                    name: body.name,
+                    username: body.username,
+                    password: body.password,
+                    emailAddress: body.mail,
+                    telephoneNumber: body.phone,
+                    id: body.id,
+                    isActive: body.state_filter
+                };
+                ;
+                service.editProfessor(professor).then(function (_) {
+                    return res.render('editSucess');
+                }).catch(function (err) {
+                    console.error(err);
+                    res.status(500).json({ error: 500 });
+                });
+                break;
+        }
     });
 }
 exports.mapRoutes = mapRoutes;
