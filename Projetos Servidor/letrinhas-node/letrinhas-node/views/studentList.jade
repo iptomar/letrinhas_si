@@ -25,7 +25,7 @@ block content
                         td #{item.schoolName}
                         td #{item.classLevel}
                         td #{item.className}
-                        td #{item.isActive}
+                        td #{item.isActive === 1 ? 'Ativo' : 'Inativo'}
                         td 
                             a(href="/BackOffice/Students/Edit?studentId=#{item.id}") Editar detalhes
     a(href="/") Voltar

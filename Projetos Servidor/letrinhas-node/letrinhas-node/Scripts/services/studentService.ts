@@ -47,7 +47,7 @@ export function create(s: Student, uploadedFilePath: string) {
  */
 export function studentDetails(schoolId = null, classId = null): Q.Promise<Array<any>> {
     var sql =
-        "select s.id, s.classId, s.name, s.photoUrl, s.isActive, t.schoolName, c.className " +
+        "select s.id, s.classId, s.name, s.photoUrl, s.isActive, t.schoolName, c.className, c.classLevel " +
         "from Students as s " +
         "join Classes as c on c.id = s.classId " +
         "join Schools as t on t.id = c.schoolId " +

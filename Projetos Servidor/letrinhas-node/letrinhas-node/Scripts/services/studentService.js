@@ -52,7 +52,7 @@ exports.create = create;
 function studentDetails(schoolId, classId) {
     if (typeof schoolId === "undefined") { schoolId = null; }
     if (typeof classId === "undefined") { classId = null; }
-    var sql = "select s.id, s.classId, s.name, s.photoUrl, s.isActive, t.schoolName, c.className " + "from Students as s " + "join Classes as c on c.id = s.classId " + "join Schools as t on t.id = c.schoolId " + "where true";
+    var sql = "select s.id, s.classId, s.name, s.photoUrl, s.isActive, t.schoolName, c.className, c.classLevel " + "from Students as s " + "join Classes as c on c.id = s.classId " + "join Schools as t on t.id = c.schoolId " + "where true";
 
     if (schoolId !== null && !isNaN(schoolId)) {
         sql = mysql.format(sql + ' and t.id = ?', [schoolId]);
