@@ -103,7 +103,6 @@
     <Content Include="views\Erros\400.jade" />
     <Content Include="views\Erros\404.jade" />
     <Content Include="views\Erros\500.jade" />
-    <Content Include="views\Home\about.jade" />
     <Content Include="views\index.jade" />
     <Content Include="views\listError.jade" />
     <Content Include="views\multimediaTestDetails.jade" />
