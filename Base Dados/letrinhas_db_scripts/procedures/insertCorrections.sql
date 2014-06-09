@@ -39,7 +39,7 @@ BEGIN
       rhythm, details, wasCorrected
     );
   else
-    -- Submission already exists. Update instead.
+    -- Submission already exists. Update instead, if the test was not corrected.
     update ReadingTestCorrections as rtc
       set rtc.professorObservations = professorObservations,
           rtc.wordsPerMinute = wordsPerMinute,
@@ -50,7 +50,8 @@ BEGIN
           rtc.wasCorrected = wasCorrected
       where rtc.testId = testId and 
             rtc.studentId = studentId and 
-            rtc.executionDate = executionDate;
+            rtc.executionDate = executionDate and
+            rtc.wasCorrected = 0;
   end if;
 
   -- Commit.
