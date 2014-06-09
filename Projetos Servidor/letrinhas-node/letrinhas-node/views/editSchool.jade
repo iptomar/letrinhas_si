@@ -1,7 +1,7 @@
 ﻿extends layout
 
 block content
-    h1 Adicionar escola
+    h1 Editar dados de uma escola
 
     form(novalidate class="form-horizontal" id="letrinhas-add-form", method="POST", action="/BackOffice/Schools/Edit?schoolId=#{school.id}")
         input(type="hidden" value="#{school.id}" name="id")
