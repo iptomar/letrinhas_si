@@ -106,6 +106,7 @@
     <Content Include="views\Home\about.jade" />
     <Content Include="views\index.jade" />
     <Content Include="views\listError.jade" />
+    <Content Include="views\multimediaTestDetails.jade" />
     <Content Include="views\multimediaTipoEscolhe.jade" />
     <Content Include="views\professorList.jade" />
     <Content Include="views\schoolList.jade" />

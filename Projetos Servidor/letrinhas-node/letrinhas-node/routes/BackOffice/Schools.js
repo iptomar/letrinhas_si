@@ -14,14 +14,14 @@ function mapRoutes(app) {
                 };
 
                 service.createSchool(school, req.files.photo.path).then(function (_) {
-                    return res.end('Dados inseridos com sucesso!');
+                    return res.redirect('/');
                 }).catch(function (err) {
                     console.error(err);
-                    res.status(500).json({ error: 500 });
+                    res.status(500).render('Erros/500');
                 });
                 break;
             default:
-                res.status(404).json({ error: 404 });
+                res.status(404).render('Erros/404');
         }
     });
 
@@ -39,8 +39,8 @@ function mapRoutes(app) {
                 // Obtemos a informação da escola
                 service.schoolDetails(options.schoolId).then(function (schoolDetails) {
                     res.render('editSchool', {
-                        title: 'Detalhes' + (typeof options.schoolId !== 'undefined' ? ' da escola ' + schoolDetails[0].schoolName : ''),
-                        items: schoolDetails
+                        title: 'Detalhes' + (typeof options.schoolId !== 'undefined' ? ' da escola ' + schoolDetails.schoolName : ''),
+                        school: schoolDetails
                     });
                 }).catch(function (err) {
                     console.error(err);
@@ -57,11 +57,13 @@ function mapRoutes(app) {
                     id: body.id
                 };
 
+                console.log(school);
+
                 service.updateSchool(school).then(function (_) {
-                    return res.render('editSucess');
+                    return res.redirect('/');
                 }).catch(function (err) {
                     console.error(err);
-                    res.status(500).json({ error: 500 });
+                    res.status(500).render('Erros/500');
                 });
         }
     });

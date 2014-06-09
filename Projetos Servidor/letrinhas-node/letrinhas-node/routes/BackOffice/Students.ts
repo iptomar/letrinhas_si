@@ -45,7 +45,7 @@ export function mapRoutes(app) {
                     })
                     .catch((err) => {
                         console.error(err);
-                        res.status(500).json({ error: 500 });
+                        res.status(500).render('Erros/500');
                     });
                 break;
             case 'POST':
@@ -59,14 +59,14 @@ export function mapRoutes(app) {
                 };
 
                 service.create(aluno, req.files.photo.path)
-                    .then((_) => res.end('Dados inseridos com sucesso!'))
+                    .then((_) => res.redirect('/'))
                     .catch((err) => {
                         console.error(err);
-                        res.status(500).json({ error: 500 })
+                        res.status(500).render('Erros/500');
                     });
                 break;
             default:
-                res.status(404).json({ error: 404 });
+                res.status(404).render('Erros/404');
         }
     });
 
@@ -108,10 +108,10 @@ export function mapRoutes(app) {
                     name: body.name
                 };
                 service.editStudentClass(aluno)
-                    .then((_) => res.render('editSucess'))
+                    .then((_) => res.redirect('/'))
                     .catch((err) => {
                         console.error(err);
-                        res.status(500).json({ error: 500 })
+                        res.status(500).render('Erros/500');
                 });
                 break;
             default:

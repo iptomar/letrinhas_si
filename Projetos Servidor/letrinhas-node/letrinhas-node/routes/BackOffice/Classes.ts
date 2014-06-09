@@ -61,7 +61,7 @@ export function mapRoutes(app: express.Express) {
                 };
 
                 classService.createClass(sClass)
-                    .then((_) => res.end('Dados inseridos com sucesso!'))
+                    .then((_) => res.redirect('/'))
                     .catch((err) => {
                         console.error(err);
                         res.status(500).json({ error: 500 })
@@ -70,13 +70,5 @@ export function mapRoutes(app: express.Express) {
             default:
                 res.status(404).json({ error: 404 });
         }
-    });
-
-    app.get('/BackOffice/Classes/bySchool/:id', function (req, res) {
-        // TODO
-        var id = req.query.id
-        console.log(id);
-
-        res.status(500).end('NYI');
     });
 }

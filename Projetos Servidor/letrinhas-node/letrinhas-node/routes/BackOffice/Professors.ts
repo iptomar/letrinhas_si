@@ -36,7 +36,7 @@ export function mapRoutes(app: express.Express) {
             .catch((err) => {
                 console.error(err);
                 // TODO: Uma view de 500.
-                res.render('listError');
+                res.status(500).render('Erros/500');
             });
     });
 
@@ -100,7 +100,7 @@ export function mapRoutes(app: express.Express) {
                 console.log(professor);
 
                 service.createProfessor(professor, req.files.photo.path)
-                    .then((_) => res.end('Dados inseridos com sucesso!'))
+                    .then((_) => res.redirect('/'))
                     .catch((err) => {
                         console.error(err);
                         res.status(500).render('Erros/500');
@@ -207,11 +207,11 @@ export function mapRoutes(app: express.Express) {
                 };
 
                 service.editProfessor(professor)
-                    .then((_) => res.render('editSucess'))
+                    .then((_) => res.redirect('/'))
                     .catch((err) => {
                         console.error(err);
-                        res.status(500).json({ error: 500 })
-                });
+                        res.status(500).render('Erros/500');
+                    });
                 break;
         }
     });

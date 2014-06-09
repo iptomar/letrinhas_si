@@ -54,7 +54,7 @@ function mapRoutes(app) {
                 };
 
                 classService.createClass(sClass).then(function (_) {
-                    return res.end('Dados inseridos com sucesso!');
+                    return res.redirect('/');
                 }).catch(function (err) {
                     console.error(err);
                     res.status(500).json({ error: 500 });
@@ -63,14 +63,6 @@ function mapRoutes(app) {
             default:
                 res.status(404).json({ error: 404 });
         }
-    });
-
-    app.get('/BackOffice/Classes/bySchool/:id', function (req, res) {
-        // TODO
-        var id = req.query.id;
-        console.log(id);
-
-        res.status(500).end('NYI');
     });
 }
 exports.mapRoutes = mapRoutes;

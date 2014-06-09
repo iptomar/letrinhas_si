@@ -28,7 +28,7 @@ function mapRoutes(app) {
             console.error(err);
 
             // TODO: Uma view de 500.
-            res.render('listError');
+            res.status(500).render('Erros/500');
         });
     });
 
@@ -73,7 +73,7 @@ function mapRoutes(app) {
                 console.log(professor);
 
                 service.createProfessor(professor, req.files.photo.path).then(function (_) {
-                    return res.end('Dados inseridos com sucesso!');
+                    return res.redirect('/');
                 }).catch(function (err) {
                     console.error(err);
                     res.status(500).render('Erros/500');
@@ -153,10 +153,10 @@ function mapRoutes(app) {
                 };
 
                 service.editProfessor(professor).then(function (_) {
-                    return res.render('editSucess');
+                    return res.redirect('/');
                 }).catch(function (err) {
                     console.error(err);
-                    res.status(500).json({ error: 500 });
+                    res.status(500).render('Erros/500');
                 });
                 break;
         }

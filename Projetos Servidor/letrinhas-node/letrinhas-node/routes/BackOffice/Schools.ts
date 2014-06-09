@@ -18,14 +18,14 @@ export function mapRoutes(app: express.Express) {
                 };
 
                 service.createSchool(school, req.files.photo.path)
-                    .then((_) => res.end('Dados inseridos com sucesso!'))
+                    .then((_) => res.redirect('/'))
                     .catch((err) => {
                         console.error(err);
-                        res.status(500).json({ error: 500 })
+                        res.status(500).render('Erros/500')
                 });
                 break;
             default:
-                res.status(404).json({ error: 404 });
+                res.status(404).render('Erros/404');
         }
     });
 
@@ -45,8 +45,8 @@ export function mapRoutes(app: express.Express) {
                 service.schoolDetails(options.schoolId)
                     .then((schoolDetails) => {
                         res.render('editSchool', {
-                            title: 'Detalhes' + (typeof options.schoolId !== 'undefined' ? ' da escola ' + schoolDetails[0].schoolName : ''),
-                            items: schoolDetails
+                            title: 'Detalhes' + (typeof options.schoolId !== 'undefined' ? ' da escola ' + schoolDetails.schoolName : ''),
+                            school: schoolDetails
                         });
                     })
                     .catch((err) => {
@@ -63,11 +63,13 @@ export function mapRoutes(app: express.Express) {
                     id: body.id
                 };
 
+                console.log(school);
+
                 service.updateSchool(school)
-                    .then((_) => res.render('editSucess'))
+                    .then((_) => res.redirect('/'))
                     .catch((err) => {
                         console.error(err);
-                        res.status(500).json({ error: 500 })
+                        res.status(500).render('Erros/500')
                 });
         }
     });

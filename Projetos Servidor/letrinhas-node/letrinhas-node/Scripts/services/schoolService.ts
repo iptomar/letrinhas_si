@@ -77,15 +77,11 @@ exports.getAllSchools = getAllSchools;
  * Devolve os detalhes de uma escola selecionada
  * @author luisfmoliveira (Luís Oliveira)
  */
-export function schoolDetails(schoolId?: number): Q.Promise<Array<any>> {
-    var sql = "select * from Schools where id";
-
-    if (!isNaN(schoolId)) {
-        sql = mysql.format(sql + '= ?', [schoolId]);
-    }
+export function schoolDetails(schoolId: number): Q.Promise<School> {
+    var sql = mysql.format("select * from Schools where id = ?", [schoolId]);
 
     return poolQuery(sql)
-        .then((results) => results[0]);
+        .then((results) => results[0][0]);
 }
 
 

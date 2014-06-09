@@ -85,14 +85,10 @@ exports.getAllSchools = exports.getAllSchools;
 * @author luisfmoliveira (Luís Oliveira)
 */
 function schoolDetails(schoolId) {
-    var sql = "select * from Schools where id";
-
-    if (!isNaN(schoolId)) {
-        sql = mysql.format(sql + '= ?', [schoolId]);
-    }
+    var sql = mysql.format("select * from Schools where id = ?", [schoolId]);
 
     return poolQuery(sql).then(function (results) {
-        return results[0];
+        return results[0][0];
     });
 }
 exports.schoolDetails = schoolDetails;

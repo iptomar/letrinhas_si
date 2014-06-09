@@ -322,13 +322,21 @@ exports.multimediaSubmisssions = multimediaSubmisssions;
 * @author luisfmoliveira (Luís Oliveira)
 */
 function testTitles(professorId) {
-    var sql = "select t.id, t.areaId, t.title, t.mainText, t.grade, p.name, t.professorId from Tests as t, Professors as p where t.professorId = p.id and t.type = 0";
+    var sql = "select t.id, t.areaId, t.title, t.mainText, t.grade, p.name, t.professorId, t.type, t.creationDate from Tests as t, Professors as p where t.professorId = p.id";
 
     if (!isNaN(professorId)) {
         sql = mysql.format(sql + ' AND t.professorId = ?', [professorId]);
     }
     return poolQuery(sql).then(function (results) {
-        return results[0];
+        var titles = results[0];
+
+        for (var i = 0; i < titles.length; i++) {
+            var d = new Date(titles[i].creationDate);
+
+            titles[i].creationDate = d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + (d.getDate() + 1);
+        }
+
+        return titles;
     });
 }
 exports.testTitles = testTitles;
@@ -345,4 +353,16 @@ function testDetails(testId) {
     });
 }
 exports.testDetails = testDetails;
+
+function testDetailsMultimedia(testId) {
+    var sql = "select m.id, m.questionContent, m.contentIsUrl, m.option1, m.option1IsUrl, m.option2, m.option2IsUrl, m.option3, m.option3IsUrl, m.correctOption from MultimediaTests as m, Tests as t where m.id = t.id";
+
+    if (!isNaN(testId)) {
+        sql = mysql.format(sql + ' AND m.id = ?', [testId]);
+    }
+    return poolQuery(sql).then(function (results) {
+        return results[0][0];
+    });
+}
+exports.testDetailsMultimedia = testDetailsMultimedia;
 //# sourceMappingURL=testService.js.map

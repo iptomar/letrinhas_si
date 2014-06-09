@@ -1,0 +1,53 @@
+﻿extends layout
+
+block content
+    h1 Detalhes do teste
+
+    h3= test.title
+
+    dl(class="dl-horizontal")
+        dt Pergunta
+        dd
+            if test.contentIsUrl === 1
+                img(src="/#{test.questionContent}" class="img-responsive" style="max-width: 500px;")
+            else
+                p= test.questionContent 
+
+        hr
+
+        div(class="row")
+            
+
+            div(class="col-sm-4")
+                dt Opção 1
+
+                dd
+
+                    if test.option1IsUrl === 1
+                        img(src="/#{test.option1}" style="max-width: 200px;")
+                    else
+                        span= test.option1
+            div(class="col-sm-4")
+                dt Opção 2
+
+                dd
+                    if test.option2IsUrl === 1
+                        img(src="/#{test.option2}" style="max-width: 200px;")
+                    else
+                        span= test.option2
+            div(class="col-sm-4")
+                dt Opção 3
+
+                dd
+                    if test.option3IsUrl === 1
+                        img(src="/#{test.option3}" style="max-width: 200px;")
+                    else
+                        span= test.option3
+
+        hr
+
+        dt Resposta certa
+        dd= test.correctOption
+
+            
+    a(href="/") Voltar

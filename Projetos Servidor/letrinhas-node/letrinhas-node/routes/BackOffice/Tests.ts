@@ -63,7 +63,7 @@ export function mapRoutes(app: express.Express) {
                     .catch((err) => {
                         console.error(err);
                         res.status(500).render('Erros/500');
-                });
+                    });
                 break;
             default:
                 res.status(404).render('Erros/404');
@@ -157,28 +157,34 @@ export function mapRoutes(app: express.Express) {
     //        });
     //});
 
-    app.get('/BackOffice/Tests/Details', function (req, res) {
-
-        // objecto de opções.
-        var options = Object.create(null);
-
-        // Verificar se temos um id de teste válido. Ignoramo-lo se não for
-        if (!isNaN(req.query.testId)) {
-            options.testId = parseInt(req.query.testId, 10);
-        }
-
-        // Obtemos os titulos dos testes (opcionalmente para uma turma)...
-        testService.testDetails(options.testId)
+    app.get('/BackOffice/Tests/Details/:id', function (req, res) {
+        
+        return testService.details(req.params.id)
             .then((testData) => {
-                res.render('testDetails', {
-                    title: 'Detalhes de um teste' + (typeof options.professorId !== 'undefined' ? ' do professor ' + testData[0].name : ''),
+                res.render(testData.type === 1 ? 'multimediaTestDetails' : 'testDetails', {
+                    title: 'Detalhes dum teste',
                     test: testData
                 });
             })
             .catch((err) => {
-                console.error(err);
+                console.log(err);
                 res.status(500).render('Erros/500');
             });
+
+        // Obtemos os titulos dos testes (opcionalmente para uma turma)...
+        //testService.testDetails(options.testId)
+        //    .then((testData) => {
+        //        res.render('testDetails', {
+        //            title: 'Detalhes de um teste' + (typeof options.professorId !== 'undefined' ? ' do professor ' + testData[0].name : ''),
+        //            test: testData
+        //        });
+        //    })
+        //    .catch((err) => {
+        //        console.error(err);
+        //        res.status(500).render('Erros/500');
+        //    });
+
+
     });
 
     app.get('/BackOffice/Tests/Titles', function (req, res) {
@@ -186,7 +192,7 @@ export function mapRoutes(app: express.Express) {
         // objecto de opções.
         var options = Object.create(null);
 
-        // Verificar se temos um id de escola válido. Ignoramo-lo se não for
+        // Verificar se temos um id de professor válido. Ignoramo-lo se não for
         if (!isNaN(req.query.professorId)) {
             options.professorId = parseInt(req.query.professorId, 10);
         }
@@ -195,7 +201,7 @@ export function mapRoutes(app: express.Express) {
         testService.testTitles(options.professorId)
             .then((testTitleData) => {
                 res.render('testTitles', {
-                    title: 'Lista de testes' + (typeof options.professorId !== 'undefined' ? ' do professor ' + testTitleData[0].name : ''),
+                    title: 'Lista de Testes',
                     items: testTitleData
                 });
             })

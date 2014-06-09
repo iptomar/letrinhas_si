@@ -1,7 +1,7 @@
 ﻿extends layout
 
 block content
-    h1 Listagem dos titulos de teste
+    h1 Testes
     
     if (items.length === 0)
         div(class="alert alert-warning") Sem resultados
@@ -12,8 +12,10 @@ block content
                     th Titulo
                     th Pergunta
                     th Ano
-                    th Professor 
-                    th Area
+                    th Professor
+                    th Data
+                    th Área
+                    th Tipo
                     th Ações
 
                 each item in items
@@ -21,9 +23,30 @@ block content
                         td #{item.title} 
                         td #{item.mainText}
                         td #{item.grade}
-                        td #{item.name} 
-                        td #{item.areaId}
+                        td #{item.name}
+                        td #{item.creationDate}
                         td
-                            a(href="/BackOffice/Tests/Details?testId=#{item.id}") Ver Detalhes
+                            case item.areaId
+                                when 1
+                                    span Português
+                                when 2
+                                    span Matemática
+                                when 3
+                                    span Estudo do Meio
+                                when 4
+                                    span Inglês
+
+                        td
+                            case item.type
+                                when 0
+                                    span Texto
+                                when 1
+                                    span Escolha Múltipla
+                                when 2
+                                    span Lista de Palavras
+                                when 3
+                                    span Poema
+                        td
+                            a(href="/BackOffice/Tests/Details/#{item.id}") Ver Detalhes
                 
         a(href="/") Voltar

@@ -308,13 +308,24 @@ export function multimediaSubmisssions(studentId = null, testId = null): Q.Promi
  * @author luisfmoliveira (Luís Oliveira)
  */
 export function testTitles(professorId?: number): Q.Promise<Array<any>> {
-    var sql = "select t.id, t.areaId, t.title, t.mainText, t.grade, p.name, t.professorId from Tests as t, Professors as p where t.professorId = p.id and t.type = 0";
+    var sql = "select t.id, t.areaId, t.title, t.mainText, t.grade, p.name, t.professorId, t.type, t.creationDate from Tests as t, Professors as p where t.professorId = p.id";
 
     if (!isNaN(professorId)) {
         sql = mysql.format(sql + ' AND t.professorId = ?', [professorId]);
     }
     return poolQuery(sql)
-        .then((results) => results[0]);
+        .then((results) => {
+            var titles: any[] = results[0];
+
+            // Converter o UNIX Timestamp para uma data "legivel"...
+            for (var i = 0; i < titles.length; i++) {
+                var d = new Date(titles[i].creationDate);
+
+                titles[i].creationDate = d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + (d.getDate() + 1);
+            }
+
+            return titles;
+        });
 }
 
 export function testDetails(testId?: number): Q.Promise<any> {
@@ -324,6 +335,17 @@ export function testDetails(testId?: number): Q.Promise<any> {
         sql = mysql.format(sql + ' AND r.id = ?', [testId]);
     }
 
+    return poolQuery(sql)
+        .then((results) => results[0][0]);
+}
+
+
+export function testDetailsMultimedia(testId?: number): Q.Promise<any> {
+    var sql = "select m.id, m.questionContent, m.contentIsUrl, m.option1, m.option1IsUrl, m.option2, m.option2IsUrl, m.option3, m.option3IsUrl, m.correctOption from MultimediaTests as m, Tests as t where m.id = t.id";
+
+    if (!isNaN(testId)) {
+        sql = mysql.format(sql + ' AND m.id = ?', [testId]);
+    }
     return poolQuery(sql)
         .then((results) => results[0][0]);
 }
